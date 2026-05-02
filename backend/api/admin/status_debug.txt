@@ -1,0 +1,12 @@
+[2026-05-01 12:36:58] Action: unblock | UserID: 12 | Session Email: admin@gmail.com
+[2026-05-01 12:37:02] Action: block | UserID: 12 | Session Email: admin@gmail.com
+[2026-05-01 13:01:58] Action: unblock | UserID: 12 | Session Email: admin@gmail.com
+[2026-05-02 07:05:01] Action: block | UserID: 2 | Session Email: admin@gmail.com
+[2026-05-02 07:05:27] Action: unblock | UserID: 2 | Session Email: admin@gmail.com
+[2026-05-02 07:05:31] Action: block | UserID: 10 | Session Email: admin@gmail.com
+[2026-05-02 07:05:48] Action: unblock | UserID: 10 | Session Email: admin@gmail.com
+[2026-05-02 07:06:26] Action: block | UserID: 7 | Session Email: admin@gmail.com
+[2026-05-02 07:07:52] Action: block | UserID: 12 | Session Email: admin@gmail.com
+[2026-05-02 07:08:11] Action: block | UserID: 10 | Session Email: admin@gmail.com
+[2026-05-02 07:11:32] Action: unblock | UserID: 10 | Session Email: admin@gmail.com
+[2026-05-02 07:12:15] Action: unblock | UserID: 12 | Session Email: admin@gmail.com

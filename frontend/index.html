@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy of Spices | Global Spice Trading Made Simple</title>
+    <meta name="description"
+        content="Connect with the world's finest spice producers and access real-time market analytics. Bulk industrial shipments and organic harvests.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                        'bg-dashboard': '#14110F',
+                        'card-bg': '#1C1917',
+                        'border-color': '#292524',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/images/logo.png" alt="Legacy of Spices" class="logo-img"
+                    style="mix-blend-mode: screen; filter: brightness(1.1) contrast(1.1);">
+                <h1>Legacy of Spices</h1>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="checkAuthAndRedirect('login')">Sign In</button>
+                <button class="btn btn-secondary"
+                    onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Contact
+                    Us</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <span class="badge-tag">GLOBAL TRADE HUB</span>
+            <h1>Global Spice Trading Made Simple</h1>
+            <p>From small-batch organic harvests to bulk industrial shipments connect with the world's finest spice
+                producers and access real-time market analytics.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-large" onclick="checkAuthAndRedirect('shop')">Shop
+                    Now
+                    <img src="https://api.iconify.design/lucide:shopping-bag.svg?color=white" alt=""></button>
+            </div>
+        </div>
+    </section>
+
+    <div class="ticker-bar">
+        <div class="ticker-content">
+            <!-- Set 1 -->
+            <div class="ticker-item"><span class="label">CLOVES (ZANZIBAR)</span> <span class="price">$9,100/MT</span>
+                <span class="change negative">- 0.8%</span>
+            </div>
+            <div class="ticker-item"><span class="label">TURMERIC (VIETNAM)</span> <span class="price">$2,650/MT</span>
+                <span class="change positive">+ 1.2%</span>
+            </div>
+            <div class="ticker-item"><span class="label">BLACK PEPPER (BRAZIL)</span> <span
+                    class="price">$5,400/MT</span> <span class="change negative">- 1.5%</span></div>
+            <div class="ticker-item"><span class="label">CINNAMON (SRI LANKA)</span> <span
+                    class="price">$7,800/MT</span> <span class="change positive">+ 0.5%</span></div>
+
+            <!-- Set 2 -->
+            <div class="ticker-item"><span class="label">CLOVES (ZANZIBAR)</span> <span class="price">$9,100/MT</span>
+                <span class="change negative">- 0.8%</span>
+            </div>
+            <div class="ticker-item"><span class="label">TURMERIC (VIETNAM)</span> <span class="price">$2,650/MT</span>
+                <span class="change positive">+ 1.2%</span>
+            </div>
+            <div class="ticker-item"><span class="label">BLACK PEPPER (BRAZIL)</span> <span
+                    class="price">$5,400/MT</span> <span class="change negative">- 1.5%</span></div>
+            <div class="ticker-item"><span class="label">CINNAMON (SRI LANKA)</span> <span
+                    class="price">$7,800/MT</span> <span class="change positive">+ 0.5%</span></div>
+
+            <!-- Set 3 -->
+            <div class="ticker-item"><span class="label">CLOVES (ZANZIBAR)</span> <span class="price">$9,100/MT</span>
+                <span class="change negative">- 0.8%</span>
+            </div>
+            <div class="ticker-item"><span class="label">TURMERIC (VIETNAM)</span> <span class="price">$2,650/MT</span>
+                <span class="change positive">+ 1.2%</span>
+            </div>
+            <div class="ticker-item"><span class="label">BLACK PEPPER (BRAZIL)</span> <span
+                    class="price">$5,400/MT</span> <span class="change negative">- 1.5%</span></div>
+            <div class="ticker-item"><span class="label">CINNAMON (SRI LANKA)</span> <span
+                    class="price">$7,800/MT</span> <span class="change positive">+ 0.5%</span></div>
+
+            <!-- Set 4 -->
+            <div class="ticker-item"><span class="label">CLOVES (ZANZIBAR)</span> <span class="price">$9,100/MT</span>
+                <span class="change negative">- 0.8%</span>
+            </div>
+            <div class="ticker-item"><span class="label">TURMERIC (VIETNAM)</span> <span class="price">$2,650/MT</span>
+                <span class="change positive">+ 1.2%</span>
+            </div>
+            <div class="ticker-item"><span class="label">BLACK PEPPER (BRAZIL)</span> <span
+                    class="price">$5,400/MT</span> <span class="change negative">- 1.5%</span></div>
+            <div class="ticker-item"><span class="label">CINNAMON (SRI LANKA)</span> <span
+                    class="price">$7,800/MT</span> <span class="change positive">+ 0.5%</span></div>
+        </div>
+    </div>
+
+    <main class="container main-layout">
+
+        <section class="results-section">
+
+
+            <div class="product-grid">
+                <!-- Product Card 1 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="assets/images/black_pepper_spice.png" alt="Black Pepper">
+                    </div>
+                    <div class="product-info">
+                        <div class="brand-row">
+                            <span class="brand">BRAND: INDUS VALLEY</span>
+                            <span class="origin">ORIGIN <br> <strong>Cambodia <img
+                                        src="https://upload.wikimedia.org/wikipedia/commons/8/83/Flag_of_Cambodia.svg"
+                                        width="16" alt=""></strong></span>
+                        </div>
+                        <h2 class="product-title">Kampot Black Pepper</h2>
+                        <p class="product-description">Hand-picked Kampot black pepper from Cambodia, known for its
+                            intense aroma and floral notes. Perfect for gourmet seasoning.</p>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="assets/images/turmeric_spice.png" alt="Turmeric">
+                    </div>
+                    <div class="product-info">
+                        <div class="brand-row">
+                            <span class="brand">BRAND: SILK ROAD</span>
+                            <span class="origin">ORIGIN <br> <strong>Vietnam <img
+                                        src="https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Vietnam.svg"
+                                        width="16" alt=""></strong></span>
+                        </div>
+                        <h2 class="product-title">Premium Turmeric (5% Curcumin)</h2>
+                        <p class="product-description">Premium Vietnamese turmeric with a high 5% curcumin content.
+                            Rich, earthy flavor and deep golden color for culinary and health use.</p>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="assets/images/cardamom_spice.png" alt="Cardamom">
+                        <!-- Grade badge removed -->
+                    </div>
+                    <div class="product-info">
+                        <div class="brand-row">
+                            <span class="brand">BRAND: MAYAN GOLD</span>
+                            <span class="origin">ORIGIN <br> <strong>Guatemala <img
+                                        src="https://upload.wikimedia.org/wikipedia/commons/e/ec/Flag_of_Guatemala.svg"
+                                        width="16" alt=""></strong></span>
+                        </div>
+                        <h2 class="product-title">Premium Green Cardamom</h2>
+                        <p class="product-description">Extra-large, bold green cardamom pods from Guatemala.
+                            Exceptionally fragrant and sweet, ideal for baking and beverages.</p>
+                    </div>
+                </div>
+
+                <!-- Product Card 4 (Reusing Cardamom since quota hit, or using color) -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="assets/images/hero_spices_background.png" style="object-position: center bottom"
+                            alt="Cumin">
+                    </div>
+                    <div class="product-info">
+                        <div class="brand-row">
+                            <span class="brand">BRAND: DESERT HARVEST</span>
+                            <span class="origin">ORIGIN <br> <strong>India <img
+                                        src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg"
+                                        width="16" alt=""></strong></span>
+                        </div>
+                        <h2 class="product-title">Sun-Dried Cumin Seeds</h2>
+                        <p class="product-description">Authentic Indian cumin seeds, sun-dried to preserve their
+                            essential oils and warm, nutty flavor. A staple for global cuisines.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer" id="contact">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <div class="logo">
+                    <img src="assets/images/logo.png" alt="Legacy of Spices" class="logo-img"
+                        style="mix-blend-mode: screen;">
+                    <h2>Legacy of Spices</h2>
+                </div>
+                <p>The global standard for transparent, efficient, and ethical spice trading. From farm to facility, we
+                    handle the logistics and compliance.</p>
+            </div>
+
+            <div class="footer-contact">
+                <h4>CONTACT US</h4>
+                <div class="contact-item">
+                    <img src="https://api.iconify.design/lucide:map-pin.svg?color=%23ff7e21" alt="">
+                    <span>123 Spice Route Ave, Flavor Tower, Dubai, UAE</span>
+                </div>
+                <div class="contact-item">
+                    <img src="https://api.iconify.design/lucide:phone.svg?color=%23ff7e21" alt="">
+                    <span>+971 4 555 0123</span>
+                </div>
+                <div class="contact-item">
+                    <img src="https://api.iconify.design/lucide:mail.svg?color=%23ff7e21" alt="">
+                    <span>legacyofspices@gmail.com</span>
+                </div>
+            </div>
+
+            <div class="footer-social">
+                <h4>CONNECT</h4>
+                <div class="social-icons">
+                    <a href="#"><img src="https://api.iconify.design/lucide:linkedin.svg?color=white"
+                            alt="LinkedIn"></a>
+                    <a href="#"><img src="https://api.iconify.design/lucide:instagram.svg?color=white"
+                            alt="Instagram"></a>
+                    <a href="#"><img src="https://api.iconify.design/lucide:twitter.svg?color=white" alt="Twitter"></a>
+                    <a href="#"><img src="https://api.iconify.design/lucide:facebook.svg?color=white"
+                            alt="Facebook"></a>
+                </div>
+                <div class="footer-partners-mini">
+                    <h4>LOGISTICS BY</h4>
+                    <div class="partners-simple">
+                        <span>DHL</span>
+                        <span>FEDEX</span>
+                        <span>MAERSK</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <div class="certifications-mini">
+                <span>ISO 9001:2015</span>
+                <span>GLOBAL G.A.P.</span>
+                <span>FAIR TRADE CERTIFIED</span>
+            </div>
+            <p>&copy; 2026 Legacy of Spices Global. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        async function checkAuthAndRedirect(intent) {
+            try {
+                const projectRoot = window.getProjectRoot ? window.getProjectRoot() : '';
+                const response = await fetch(projectRoot + '/backend/api/auth/check-session.php');
+                const result = await response.json();
+
+                if (result.logged_in) {
+                    const role = result.role;
+                    if (role === 'admin') {
+                        window.location.href = 'admin/admin-dashboard.html';
+                    } else if (role === 'farmer') {
+                        window.location.href = 'farmer/farmer-dashboard.html';
+                    } else if (role === 'customer') {
+                        if (intent === 'shop') {
+                            window.location.href = 'customer/catalog.html';
+                        } else {
+                            window.location.href = 'customer/customer-dashboard.html';
+                        }
+                    } else {
+                        window.location.href = projectRoot + '/frontend/auth/login.html';
+                    }
+                } else {
+                    window.location.href = projectRoot + '/frontend/auth/login.html';
+                }
+            } catch (error) {
+                console.error('Session check failed:', error);
+                const projectRoot = window.getProjectRoot ? window.getProjectRoot() : '';
+                window.location.href = projectRoot + '/frontend/auth/login.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

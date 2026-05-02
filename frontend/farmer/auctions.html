@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard | Legacy of Spices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* ──── Auctions Specific Styles ──── */
+        .filter-pill.active {
+            background: white;
+            border-color: #FF7E21;
+            color: #FF7E21;
+            box-shadow: 0 4px 12px rgba(255, 126, 33, 0.15);
+        }
+
+        .auction-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .auction-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-active { background: #f0fdf4; color: #10b981; }
+        .status-scheduled { background: #eff6ff; color: #3b82f6; }
+        .status-completed { background: #f5f5f4; color: #78716c; }
+        .status-cancelled { background: #fef2f2; color: #ef4444; }
+    </style>
+</head>
+
+<body style="background: #fafaf9; color: #1c1917; font-family: 'Outfit', sans-serif;">
+                <aside style="width: 240px; background: white; border-right: 1px solid #e7e5e4; position: fixed; height: 100vh; padding: 24px; z-index: 50; overflow-y: auto; display: flex; flex-direction: column;">
+        <div class="logo" style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
+            <img src="../assets/images/logo.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 22px; color: #1c1917; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">Legacy</h3>
+                <span style="font-size: 11px; color: #ff7e21; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; margin-top: 2px;">Of Spices</span>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+            <a href="farmer-dashboard.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:layout-dashboard.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Dashboard</span>
+            </a>
+            <a href="inventory.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:package.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Inventory</span>
+            </a>
+            <a href="orders.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shopping-cart.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Orders</span>
+            </a>
+            <a href="returns.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:rotate-ccw.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Returns & Refunds</span>
+            </a>
+            <a href="auctions.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: white; background: #FF7E21; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(255, 126, 33, 0.2);">
+                <img src="https://api.iconify.design/lucide:gavel.svg?color=white" width="20" alt="">
+                <span style="white-space: nowrap;">Auctions</span>
+            </a>
+            <a href="analysis.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:bar-chart-3.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Analysis</span>
+            </a>
+            <a href="certificates.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shield-check.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Certificates</span>
+            </a>
+
+            <a href="profile.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:user.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Profile</span>
+            </a>
+        </nav>
+
+        <div style="margin-top: auto; padding-top: 24px;">
+            <button onclick="logout()" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; text-decoration: none; color: #ef4444; background: #fef2f2; border: 1px solid #fee2e2; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'">
+                <img src="https://api.iconify.design/lucide:log-out.svg?color=%23ef4444" width="18" style="transform: rotate(180deg);" alt="">
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <main style="margin-left: 240px; padding: 32px 40px; min-height: 100vh;">
+        <header style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+            <div>
+                <h1 style="font-size: 32px; font-weight: 700; color: #1c1917; letter-spacing: -0.02em;">Auction House
+                </h1>
+                <p style="font-size: 15px; color: #1c1917; margin-top: 4px;">Launch and manage your premium spice
+                    auctions.</p>
+            </div>
+
+            <button onclick="openAuctionModal()"
+                class="bg-primary hover:bg-primary-hover text-white px-8 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 transition-all shadow-xl shadow-primary/20 transform hover:-translate-y-0.5 active:scale-95">
+                <img src="https://api.iconify.design/lucide:plus-circle.svg?color=white" width="20" alt="">
+                LAUNCH NEW AUCTION
+            </button>
+        </header>
+
+        <!-- Stats Row -->
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 40px;">
+            <div
+                style="background: white; border: 1px solid #e7e5e4; padding: 24px; border-radius: 24px; display: flex; align-items: center; gap: 16px;">
+                <div
+                    style="width: 48px; height: 48px; background: #fff7ed; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <img src="https://api.iconify.design/lucide:activity.svg?color=%23FF7E21" width="24" alt="">
+                </div>
+                <div>
+                    <p style="font-size: 12px; font-weight: 700; color: #a8a29e; text-transform: uppercase;">Active</p>
+                    <p id="active-count" style="font-size: 20px; font-weight: 700; color: #1c1917;">0</p>
+                </div>
+            </div>
+            <div
+                style="background: white; border: 1px solid #e7e5e4; padding: 24px; border-radius: 24px; display: flex; align-items: center; gap: 16px;">
+                <div
+                    style="width: 48px; height: 48px; background: #fafaf9; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <img src="https://api.iconify.design/lucide:calendar-clock.svg?color=%231c1917" width="24" alt="">
+                </div>
+                <div>
+                    <p style="font-size: 12px; font-weight: 700; color: #a8a29e; text-transform: uppercase;">Scheduled
+                    </p>
+                    <p id="scheduled-count" style="font-size: 20px; font-weight: 700; color: #1c1917;">0</p>
+                </div>
+            </div>
+            <div
+                style="background: white; border: 1px solid #e7e5e4; padding: 24px; border-radius: 24px; display: flex; align-items: center; gap: 16px;">
+                <div
+                    style="width: 48px; height: 48px; background: #f0fdf4; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <img src="https://api.iconify.design/lucide:check-circle.svg?color=%2310b981" width="24" alt="">
+                </div>
+                <div>
+                    <p style="font-size: 12px; font-weight: 700; color: #a8a29e; text-transform: uppercase;">Completed
+                    </p>
+                    <p id="completed-count" style="font-size: 20px; font-weight: 700; color: #1c1917;">0</p>
+                </div>
+            </div>
+            <div
+                style="background: white; border: 1px solid #e7e5e4; padding: 24px; border-radius: 24px; display: flex; align-items: center; gap: 16px;">
+                <div
+                    style="width: 48px; height: 48px; background: #fef2f2; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <img src="https://api.iconify.design/lucide:x-circle.svg?color=%23ef4444" width="24" alt="">
+                </div>
+                <div>
+                    <p style="font-size: 12px; font-weight: 700; color: #a8a29e; text-transform: uppercase;">Cancelled
+                    </p>
+                    <p id="cancelled-count" style="font-size: 20px; font-weight: 700; color: #1c1917;">0</p>
+                </div>
+            </div>
+            <div
+                style="background: white; border: 1px solid #e7e5e4; padding: 24px; border-radius: 24px; display: flex; align-items: center; gap: 16px;">
+                <div
+                    style="width: 48px; height: 48px; background: #eff6ff; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <img src="https://api.iconify.design/lucide:users.svg?color=%233b82f6" width="24" alt="">
+                </div>
+                <div>
+                    <p style="font-size: 12px; font-weight: 700; color: #a8a29e; text-transform: uppercase;">Total
+                    </p>
+                    <p id="total-count" style="font-size: 20px; font-weight: 700; color: #1c1917;">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auctions List Title & Filters -->
+        <div style="margin-bottom: 32px;">
+            <h2 style="font-size: 24px; font-weight: 700; color: #1c1917; margin-bottom: 20px;">Live & Recent Auctions
+            </h2>
+            <div id="filter-container"
+                style="display: flex; gap: 12px; flex-wrap: wrap; background: #fafaf9; padding: 10px; border-radius: 28px; border: 1px solid #f5f5f4; width: fit-content;">
+                <span data-filter="all"
+                    class="filter-pill active bg-white border border-stone-200 px-8 py-3.5 rounded-[20px] text-sm font-bold text-stone-600 cursor-pointer transition-all shadow-sm">All</span>
+                <span data-filter="active"
+                    class="filter-pill bg-transparent border border-transparent px-8 py-3.5 rounded-[20px] text-sm font-bold text-stone-400 cursor-pointer transition-all hover:text-stone-600">Active</span>
+                <span data-filter="scheduled"
+                    class="filter-pill bg-transparent border border-transparent px-8 py-3.5 rounded-[20px] text-sm font-bold text-stone-400 cursor-pointer transition-all hover:text-stone-600">Scheduled</span>
+                <span data-filter="completed"
+                    class="filter-pill bg-transparent border border-transparent px-8 py-3.5 rounded-[20px] text-sm font-bold text-stone-400 cursor-pointer transition-all hover:text-stone-600">Completed</span>
+                <span data-filter="to_ship"
+                    class="filter-pill bg-transparent border border-transparent px-8 py-3.5 rounded-[20px] text-sm font-bold text-stone-400 cursor-pointer transition-all hover:text-stone-600">To
+                    Ship</span>
+                <span data-filter="shipped"
+                    class="filter-pill bg-transparent border border-transparent px-8 py-3.5 rounded-[20px] text-sm font-bold text-stone-400 cursor-pointer transition-all hover:text-stone-600">Shipped</span>
+                <span data-filter="delivered"
+                    class="filter-pill bg-transparent border border-transparent px-8 py-3.5 rounded-[20px] text-sm font-bold text-stone-400 cursor-pointer transition-all hover:text-stone-600">Delivered</span>
+                <span data-filter="cancelled"
+                    class="filter-pill bg-transparent border border-transparent px-8 py-3.5 rounded-[20px] text-sm font-bold text-stone-400 cursor-pointer transition-all hover:text-stone-600">Cancelled</span>
+            </div>
+        </div>
+
+        <!-- Auctions List Grid -->
+        <div id="auctions-list"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px;">
+            <div class="col-span-full py-20 text-center bg-white border border-dashed border-stone-200 rounded-[32px]">
+                <img src="https://api.iconify.design/lucide:gavel.svg?color=%23a8a29e" width="48" class="mx-auto mb-4"
+                    alt="">
+                <p style="color: #a8a29e; font-size: 15px;">Setting up your auction floor...</p>
+            </div>
+        </div>
+        <!-- Delivery Agent Selection Modal -->
+        <div id="agent-modal"
+            class="fixed inset-0 z-[200] hidden flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <div class="bg-white rounded-[32px] p-8 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-stone-900">Select Delivery Agent</h2>
+                        <p class="text-stone-400 text-xs font-bold uppercase tracking-widest mt-1">Assign agent for
+                            this auction</p>
+                    </div>
+                    <button onclick="closeAgentModal()"
+                        class="p-2 hover:bg-stone-100 rounded-full transition-colors text-stone-400">
+                        <img src="https://api.iconify.design/lucide:x.svg" width="20">
+                    </button>
+                </div>
+
+                <div class="relative mb-6">
+                    <input type="text" id="agent-search" oninput="searchAgents(this.value)"
+                        placeholder="Search by name or region..."
+                        class="w-full pl-12 pr-6 py-4 rounded-2xl bg-stone-50 border-2 border-transparent focus:border-primary/20 focus:bg-white outline-none transition-all font-medium text-stone-900 placeholder:text-stone-300">
+                    <div class="absolute left-4 top-1/2 -translate-y-1/2">
+                        <img src="https://api.iconify.design/lucide:search.svg?color=%23FF7E21" width="20">
+                    </div>
+                </div>
+
+                <div id="agent-list" class="max-h-[300px] overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+                    <div class="text-center py-8 text-stone-400 font-medium">Start typing to search agents...</div>
+                </div>
+
+                <div class="flex gap-4 mt-8 pt-6 border-t border-stone-100">
+                    <button onclick="closeAgentModal()"
+                        class="flex-1 py-4 rounded-2xl border-2 border-stone-100 text-stone-500 font-bold text-sm hover:bg-stone-50 transition-all uppercase tracking-wider">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Auction Modal -->
+    <div id="createAuctionModal"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
+        <div id="auctionModalContent"
+            class="bg-white p-10 rounded-[40px] w-full max-w-xl relative shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <button
+                onclick="document.getElementById('createAuctionModal').classList.add('hidden'); document.body.style.overflow = 'auto';"
+                class="absolute top-8 right-8 text-gray-400 hover:text-gray-600 transition-colors">
+                <img src="https://api.iconify.design/lucide:x.svg" width="28" alt="">
+            </button>
+
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 tracking-tight">Launch Auction</h2>
+                <p class="text-gray-500 mt-2 text-sm">Provide details for your premium spice harvest.</p>
+            </div>
+
+            <form id="createAuctionForm" onsubmit="createAuction(event)" class="space-y-6">
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="col-span-full">
+                        <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Product
+                            Name</label>
+                        <input type="text" name="product_name" required placeholder="e.g. Premium Saffron"
+                            class="w-full px-5 py-4 bg-stone-50 border border-stone-100 rounded-2xl focus:outline-none focus:border-primary focus:bg-white transition-all text-sm font-semibold">
+                    </div>
+                </div>
+
+                <!-- Description textarea removed -->
+
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Product
+                        Image</label>
+                    <div id="image-dropzone" onclick="document.getElementById('product-image').click()"
+                        class="relative border-2 border-dashed border-stone-200 rounded-2xl p-6 min-h-[256px] flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary/50 hover:bg-orange-50/10 transition-all group overflow-hidden">
+                        <input type="file" id="product-image" name="image" accept="image/*" class="hidden"
+                            onchange="previewImage(this)">
+                        <div id="preview-container"
+                            class="hidden absolute inset-0 bg-white rounded-2xl overflow-hidden">
+                            <img id="image-preview" src="#" alt="Preview" class="w-full h-full object-cover">
+                        </div>
+                        <div id="upload-placeholder" class="text-center">
+                            <img src="https://api.iconify.design/lucide:image.svg"
+                                class="w-8 h-8 mx-auto mb-2 text-stone-400 group-hover:text-primary transition-colors"
+                                alt="">
+                            <p class="text-xs font-semibold text-stone-600">Click to upload image</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label
+                            class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Quantity</label>
+                        <div class="relative">
+                            <input type="number" step="0.01" name="quantity" required placeholder="50.00" min="0.01"
+                                onkeydown="return event.keyCode !== 69"
+                                class="w-full px-5 py-4 bg-stone-50 border border-stone-100 rounded-2xl focus:outline-none focus:border-primary focus:bg-white transition-all text-sm font-semibold">
+                            <select name="unit" id="quantity-unit"
+                                class="absolute right-2 top-2 bottom-2 bg-white border border-stone-100 rounded-xl px-2 text-xs font-bold text-stone-500">
+                                <option value="kg">kg</option>
+                                <option value="g">g</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Starting
+                            Price (<span class="currency-code">USD</span>)</label>
+                        <div class="relative">
+                            <span
+                                class="absolute left-6 top-1/2 -translate-y-1/2 text-2xl font-bold text-stone-300 currency-symbol">$</span>
+                            <input type="number" step="0.01" name="starting_price" required placeholder="250.00" min="0"
+                                onkeydown="return event.keyCode !== 69"
+                                class="w-full pl-12 pr-6 py-4 bg-stone-50 border border-stone-100 rounded-2xl focus:outline-none focus:border-primary focus:bg-white transition-all text-sm font-semibold font-mono">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Start
+                            Timing</label>
+                        <input type="datetime-local" name="start_time" id="start_time_input" required
+                            onkeydown="return false"
+                            oninput="if(this.value && this.value < this.min.slice(0,16)) { this.value = this.min; if(typeof showToast === 'function') showToast('Time cannot be in the past', 'error'); } document.getElementById('end_time_input').min = this.value;"
+                            class="w-full px-5 py-4 bg-stone-50 border border-stone-100 rounded-2xl focus:outline-none focus:border-primary focus:bg-white transition-all text-sm font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">End
+                            Timing</label>
+                        <input type="datetime-local" name="end_time" id="end_time_input" required
+                            onkeydown="return false"
+                            oninput="if(this.value && this.value < this.min.slice(0,16)) { this.value = this.min; if(typeof showToast === 'function') showToast('End time must be after start time', 'error'); }"
+                            class="w-full px-5 py-4 bg-stone-50 border border-stone-100 rounded-2xl focus:outline-none focus:border-primary focus:bg-white transition-all text-sm font-semibold">
+                    </div>
+                </div>
+
+                <div class="col-span-full pt-4">
+                    <button type="submit"
+                        class="w-full bg-primary hover:bg-primary-hover text-white py-5 rounded-[24px] font-bold text-sm tracking-widest shadow-2xl shadow-primary/30 transition-all transform hover:-translate-y-1 active:scale-95">
+                        OPEN AUCTION TO GLOBAL MARKET
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auction Details Modal -->
+    <div id="detailsModal"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] hidden flex items-center justify-center p-6">
+        <div
+            class="bg-white p-0 rounded-[40px] w-full max-w-2xl relative shadow-2xl animate-in zoom-in-95 duration-200 overflow-hidden">
+
+
+            <div class="h-64 bg-stone-100 relative">
+                <img id="detailImage" src="" class="w-full h-full object-cover">
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8">
+                    <h2 id="detailTitle" class="text-3xl font-bold text-white mb-1"></h2>
+                    <p id="detailSubtitle" class="text-white/70 text-sm font-semibold uppercase tracking-widest"></p>
+                </div>
+            </div>
+
+            <div class="p-8 space-y-8">
+                <!-- Description section removed -->
+
+                <div class="grid grid-cols-2 gap-6" id="detailWinner">
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="bg-stone-50 p-6 rounded-3xl border border-stone-100">
+                        <p class="text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-2">Economics</p>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-stone-500">Floor Price</span>
+                                <span id="detailFloorPrice" class="font-bold text-stone-900 text-lg"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-stone-500">Current High Bid</span>
+                                <span id="detailCurrentBid" class="font-bold text-primary text-2xl"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-stone-50 p-6 rounded-3xl border border-stone-100 flex flex-col justify-center">
+                        <p class="text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-3">Timeline</p>
+                        <div class="flex flex-col gap-3" id="detailTimeline">
+                            <div class="flex items-center gap-2">
+                                <img src="https://api.iconify.design/lucide:clock.svg?color=%23FF7E21" width="20">
+                                <span class="text-sm font-bold text-stone-900 md:text-base"></span>
+                            </div>
+                            <div id="detailCountdown"
+                                class="text-sm bg-primary/10 text-primary px-4 py-2 rounded-xl font-bold w-fit uppercase tracking-wider">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <button id="shipItemBtn"
+                        class="hidden flex-1 px-8 py-4 rounded-2xl bg-primary text-white font-bold text-sm hover:bg-primary-hover transition-all flex items-center justify-center gap-2">
+                        <img src="https://api.iconify.design/lucide:truck.svg?color=white" width="18">
+                        SHIP ITEM
+                    </button>
+                    <button onclick="closeDetailsModal()"
+                        class="flex-1 px-8 py-4 rounded-2xl border border-stone-200 text-stone-900 font-bold text-sm hover:bg-stone-100 transition-all">
+                        CLOSE
+                    </button>
+                    <button id="deleteAuctionBtn"
+                        class="flex-1 px-8 py-4 rounded-2xl bg-red-50 text-red-600 font-bold text-sm hover:bg-red-100 transition-all flex items-center justify-center gap-2">
+                        <img src="https://api.iconify.design/lucide:trash-2.svg?color=%23dc2626" width="18">
+                        DELETE AUCTION
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let allAuctions = [];
+            let detailTimerInterval;
+
+            let isDetailRefreshing = false;
+            function startCountdown(targetTime, isScheduled = false) {
+                if (detailTimerInterval) clearInterval(detailTimerInterval);
+
+                const countdownEl = document.getElementById('detailCountdown');
+
+                const update = () => {
+                    const now = new Date().getTime();
+                    const distance = new Date(targetTime).getTime() - now;
+
+                    if (distance < 0) {
+                        countdownEl.innerText = isScheduled ? "AUCTION STARTING..." : "AUCTION ENDED";
+                        countdownEl.classList.replace('bg-primary/10', 'bg-red-50');
+                        countdownEl.classList.replace('text-primary', 'text-red-600');
+                        clearInterval(detailTimerInterval);
+
+                        if (!isDetailRefreshing) {
+                            isDetailRefreshing = true;
+                            // Only refresh if the auction in details is the one that just ended or started
+                            const currentId = document.getElementById('detailsModal').dataset.id;
+                            loadAuctions().then(() => {
+                                // Re-open or refresh current details if needed
+                                const refreshedAuction = allAuctions.find(a => a.id == currentId);
+                                if (refreshedAuction) showAuctionDetails(refreshedAuction.id);
+                            }).finally(() => {
+                                setTimeout(() => { isDetailRefreshing = false; }, 3000);
+                            });
+                        }
+                        return;
+                    }
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    let timeStr = "";
+                    if (days > 0) timeStr += `${days}d `;
+                    timeStr += `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    countdownEl.innerText = timeStr;
+
+                    if (isScheduled) {
+                        countdownEl.classList.replace('bg-primary/10', 'bg-stone-100');
+                        countdownEl.classList.replace('text-primary', 'text-stone-500');
+                    } else {
+                        countdownEl.classList.replace('bg-stone-100', 'bg-primary/10');
+                        countdownEl.classList.replace('text-stone-500', 'text-primary');
+                    }
+                };
+
+                update();
+                detailTimerInterval = setInterval(update, 1000);
+            }
+
+            function showAuctionDetails(id) {
+                const auction = allAuctions.find(a => a.id == id);
+                if (!auction) return;
+
+                document.getElementById('detailsModal').dataset.id = id;
+                document.getElementById('detailTitle').innerText = auction.product_name;
+                document.getElementById('detailSubtitle').innerText = `${auction.quantity}${auction.unit} â€¢ #AUC-${auction.id.toString().padStart(5, '0')}`;
+                // document.getElementById('detailDesc').innerText = auction.description || 'No detailed description available for this harvest.'; // Removed
+                document.getElementById('detailFloorPrice').innerText = CurrencyManager.formatFrom(auction.starting_price, auction.base_currency);
+                document.getElementById('detailCurrentBid').innerText = CurrencyManager.formatFrom(auction.current_bid, auction.base_currency);
+
+                const isScheduled = auction.status === 'scheduled';
+                const label = isScheduled ? 'Starting on' : 'Closing on';
+                const targetTime = isScheduled ? auction.start_time_iso : auction.end_time_iso;
+
+                document.getElementById('detailTimeline').querySelector('span').innerText = `${label} ${new Date(targetTime).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
+
+                // Start Countdown
+                startCountdown(targetTime, isScheduled);
+
+                // Winner Info (Robust check for completed/shipped)
+                const winnerInfo = document.getElementById('detailWinner');
+                const isEnded = auction.status === 'completed' || auction.status === 'shipped' || auction.status === 'delivered';
+                if (isEnded && auction.winner_name) {
+                    let fulfillmentHtml = '';
+                    if (auction.payment_status === 'paid') {
+                        fulfillmentHtml = `
+                        <div class="mt-6 flex flex-wrap gap-2">
+                            <span class="bg-[#22C55E] text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">Completed</span>
+                            <span class="bg-[#3B82F6] text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">Paid</span>
+                            ${auction.shipping_status === 'shipped' ?
+                                `<span class="bg-[#1C1917] text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">SHIPPED ${auction.tracking_number && auction.tracking_number !== 'N/A' ? ': ' + auction.tracking_number : ''}</span>` :
+                                (auction.shipping_status === 'delivered' ?
+                                    '<span class="bg-green-600 text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">Delivered</span>' :
+                                    (auction.shipping_status === 'shipped_pending' ?
+                                        '<span class="bg-orange-500 text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">Agent Approval Pending</span>' :
+                                        '<span class="bg-stone-200 text-stone-500 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">Awaiting Shipment</span>'))}
+                        </div>
+                    `;
+                    } else {
+                        fulfillmentHtml = `
+                        <div class="mt-6 flex flex-wrap gap-2">
+                            <span class="bg-[#22C55E] text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm">Completed</span>
+                            <span class="bg-orange-500 text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm animate-pulse">Awaiting Payment</span>
+                        </div>
+                    `;
+                    }
+
+                    winnerInfo.innerHTML = `
+                    <div class="col-span-full bg-green-50 p-6 rounded-3xl border border-green-100">
+                         <div class="flex items-center justify-between">
+                             <div>
+                                <p class="text-[11px] font-bold text-green-600 uppercase tracking-widest mb-1">Winning Bidder</p>
+                                <p class="font-bold text-stone-900">${auction.winner_name}</p>
+                             </div>
+                             <div class="text-right">
+                                <p class="text-[11px] font-bold text-green-600 uppercase tracking-widest mb-1">Final Sale</p>
+                                <p class="font-bold text-stone-900">${CurrencyManager.formatFrom(auction.current_bid, auction.base_currency)}</p>
+                             </div>
+                         </div>
+                         ${fulfillmentHtml}
+                    </div>
+                `;
+                    winnerInfo.classList.remove('hidden');
+                } else {
+                    winnerInfo.classList.add('hidden');
+                }
+
+                const imgSrc = auction.image_url ? '../../' + auction.image_url : 'https://images.unsplash.com/photo-1596040033229-a9821ebd05ed?auto=format&fit=crop&w=800&q=80';
+                document.getElementById('detailImage').src = imgSrc;
+
+                const deleteBtn = document.getElementById('deleteAuctionBtn');
+                const shipBtn = document.getElementById('shipItemBtn');
+
+                if (auction.status !== 'active') {
+                    deleteBtn.classList.add('hidden');
+                    // Only show ship button if paid and not yet shipped
+                    if (isEnded && auction.payment_status === 'paid' && auction.shipping_status === 'pending') {
+                        shipBtn.classList.remove('hidden');
+                        shipBtn.onclick = () => openAgentModal(auction.id);
+                    } else {
+                        shipBtn.classList.add('hidden');
+                    }
+                } else {
+                    deleteBtn.classList.remove('hidden');
+                    deleteBtn.onclick = () => deleteAuction(auction.id);
+                    shipBtn.classList.add('hidden');
+                }
+
+                document.getElementById('detailsModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+
+            let currentAuctionId = null;
+
+            function openAgentModal(auctionId) {
+                currentAuctionId = auctionId;
+                document.getElementById('agent-modal').classList.remove('hidden');
+                document.getElementById('agent-search').value = '';
+                document.getElementById('agent-list').innerHTML = '<div class="text-center py-8 text-stone-400 font-medium">Start typing to search agents...</div>';
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeAgentModal() {
+                document.getElementById('agent-modal').classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                currentAuctionId = null;
+            }
+
+            async function searchAgents(query) {
+                const list = document.getElementById('agent-list');
+
+                if (!query.trim()) {
+                    list.innerHTML = '<div class="text-center py-8 text-stone-400 font-medium">Start typing to search agents...</div>';
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`../../backend/api/delivery/search-agents.php?q=${encodeURIComponent(query)}`);
+                    const result = await response.json();
+
+                    if (result.success) {
+                        if (result.agents.length > 0) {
+                            list.innerHTML = result.agents.map(agent => `
+                                <button onclick="assignAgent('${agent.id}', '${agent.full_name}')" 
+                                    class="w-full text-left p-4 rounded-2xl bg-stone-50 border border-stone-100 hover:border-primary/50 hover:bg-white transition-all group">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-full bg-orange-100 text-primary flex items-center justify-center font-bold">
+                                            ${agent.full_name.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div class="flex-grow min-w-0">
+                                            <div class="font-bold text-stone-900 group-hover:text-primary transition-colors truncate">${agent.full_name}</div>
+                                            <div class="text-[11px] text-stone-400 font-medium truncate">
+                                                ${(() => {
+                                    const addr = agent.address || '';
+                                    const country = agent.country || '';
+                                    if (!country || addr.toLowerCase().includes(country.toLowerCase())) return addr;
+                                    return addr ? `${addr}, ${country}` : country;
+                                })()}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
+                            `).join('');
+                        } else {
+                            list.innerHTML = `<div class="text-center py-8 text-stone-400 font-medium">No agents found.</div>`;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error searching agents:', error);
+                    list.innerHTML = `<div class="text-center py-8 text-rose-500 font-medium text-xs">Search failed. Try again.</div>`;
+                }
+            }
+
+            async function assignAgent(agentId, agentName) {
+                if (!currentAuctionId) return;
+                const auctionId = currentAuctionId;
+                if (!await showConfirm(`Assign <b>${agentName}</b> to this auction and mark as SHIPPED?`)) return;
+
+                try {
+                    const response = await fetch(`../../backend/api/delivery/assign-agent-farmer.php`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            id: auctionId,
+                            agent_id: agentId,
+                            type: 'auction'
+                        })
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        showToast(`Auction item shipped with ${agentName}.`, 'success');
+                        closeAgentModal();
+                        await loadAuctions();
+                        showAuctionDetails(auctionId);
+                    } else {
+                        showToast(result.message || 'Assignment failed', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error assigning agent:', error);
+                    showToast('Connection error', 'error');
+                }
+            }
+
+            function closeDetailsModal() {
+                if (detailTimerInterval) clearInterval(detailTimerInterval);
+                document.getElementById('detailsModal').classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+
+            async function deleteAuction(id) {
+                if (!await showConfirm('Are you sure you want to permanently delete this auction? This will also remove any placed bids.')) return;
+
+                try {
+                    const response = await fetch('../../backend/api/auctions/delete-auction.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ auction_id: id })
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        document.getElementById('detailsModal').classList.add('hidden');
+                        document.body.style.overflow = 'auto';
+                        loadAuctions();
+                    } else {
+                        showToast('Error: ' + result.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Delete error:', error);
+                }
+            }
+
+            function openShippingModal(id) {
+                const auction = allAuctions.find(a => a.id == id);
+                if (!auction) return;
+
+                document.getElementById('ship-auction-id').value = id;
+                document.getElementById('ship-modal-message').innerText = `Confirm shipping for ${auction.winner_name}?`;
+                document.getElementById('shippingModal').classList.remove('hidden');
+                document.getElementById('detailsModal').classList.add('hidden');
+            }
+
+
+
+            function openAuctionModal() {
+                const modal = document.getElementById('createAuctionModal');
+                const content = document.getElementById('auctionModalContent');
+
+                // Refresh min date for auction timings to current "now"
+                const now = new Date();
+                const tzOffset = now.getTimezoneOffset() * 60000;
+                const localISODate = new Date(now - tzOffset).toISOString().slice(0, 16);
+
+                const startInput = document.getElementById('start_time_input');
+                const endInput = document.getElementById('end_time_input');
+
+                if (startInput) startInput.min = localISODate;
+                if (endInput) {
+                    endInput.min = localISODate;
+                    // Reset end_time min if start_time already has a value (unlikely on open but safe)
+                    if (startInput && startInput.value) {
+                        endInput.min = startInput.value;
+                    }
+                }
+
+                modal.classList.remove('hidden');
+                content.scrollTop = 0;
+                document.body.style.overflow = 'hidden';
+            }
+
+            async function logout() {
+                try {
+                    await fetch('../../backend/api/auth/logout.php');
+                    window.location.href = '../auth/login.html';
+                    document.body.style.overflow = 'auto';
+                } catch (error) { console.error('Logout error:', error); }
+            }
+
+            async function createAuction(e) {
+                e.preventDefault();
+                const btn = e.target.querySelector('button[type="submit"]');
+                const originalText = btn.innerText;
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+
+                // Image Validation
+                const imageFile = formData.get('image');
+                if (!imageFile || imageFile.size === 0) {
+                    showToast('Product image is required', 'error');
+                    return;
+                }
+
+                if (parseFloat(data.quantity) <= 0) {
+                    showToast('Quantity must be greater than 0', 'error');
+                    return;
+                }
+
+                if (parseFloat(data.starting_price) < 0) {
+                    showToast('Starting price must be 0 or higher', 'error');
+                    return;
+                }
+
+                // Date Validation Refined (Minute-level precision)
+                const now = new Date();
+                const nowStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+
+                if (data.start_time < nowStr) {
+                    showToast('Start time cannot be in the past', 'error');
+                    return;
+                }
+
+                if (data.end_time <= data.start_time) {
+                    showToast('End time must be after start time', 'error');
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.innerText = "OPENING AUCTION...";
+
+                try {
+                    const response = await fetch('../../backend/api/auctions/create-auction.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        document.getElementById('createAuctionModal').classList.add('hidden');
+                        document.body.style.overflow = 'auto';
+                        loadAuctions();
+                        e.target.reset();
+                        document.getElementById('preview-container').classList.add('hidden');
+                        document.getElementById('upload-placeholder').classList.remove('hidden');
+                    } else {
+                        showToast('Error: ' + result.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error creating auction:', error);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                }
+            }
+
+            function previewImage(input) {
+                const preview = document.getElementById('image-preview');
+                const container = document.getElementById('preview-container');
+                const placeholder = document.getElementById('upload-placeholder');
+
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        container.classList.remove('hidden');
+                        placeholder.classList.add('hidden');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            // Unit Conversion Logic for Auction Form
+            (function () {
+                let lastUnit = 'kg';
+                const unitSelect = document.getElementById('quantity-unit');
+                const quantityInput = document.getElementsByName('quantity')[0];
+
+                if (unitSelect && quantityInput) {
+                    unitSelect.addEventListener('change', function () {
+                        const newUnit = this.value;
+                        const val = parseFloat(quantityInput.value);
+
+                        if (!isNaN(val)) {
+                            if (lastUnit === 'kg' && newUnit === 'g') {
+                                quantityInput.value = (val * 1000).toFixed(2);
+                            } else if (lastUnit === 'g' && newUnit === 'kg') {
+                                quantityInput.value = (val / 1000).toFixed(3);
+                            }
+                        }
+                        lastUnit = newUnit;
+                    });
+
+                    // Also sync lastUnit on modal open if needed, but 'kg' is default
+                }
+            })();
+
+            let currentFilter = 'all';
+
+            function setFilter(filter) {
+                currentFilter = filter;
+                document.querySelectorAll('.filter-pill').forEach(pill => {
+                    if (pill.dataset.filter === filter) {
+                        pill.classList.add('active', 'bg-white', 'border-stone-200', 'text-stone-600', 'shadow-sm');
+                        pill.classList.remove('bg-transparent', 'border-transparent', 'text-stone-400');
+                    } else {
+                        pill.classList.remove('active', 'bg-white', 'border-stone-200', 'text-stone-600', 'shadow-sm');
+                        pill.classList.add('bg-transparent', 'border-transparent', 'text-stone-400');
+                    }
+                });
+                renderAuctions();
+            }
+
+            function renderAuctions() {
+                const list = document.getElementById('auctions-list');
+                const filtered = allAuctions.filter(auction => {
+                    if (currentFilter === 'all') return true;
+                    if (currentFilter === 'active') return auction.status === 'active';
+                    if (currentFilter === 'scheduled') return auction.status === 'scheduled';
+                    if (currentFilter === 'completed') return auction.status === 'completed' || auction.status === 'shipped';
+                    if (currentFilter === 'to_ship') {
+                        return auction.status === 'completed' &&
+                            auction.payment_status === 'paid' &&
+                            auction.shipping_status === 'pending';
+                    }
+                    if (currentFilter === 'shipped') return auction.shipping_status === 'shipped';
+                    if (currentFilter === 'delivered') return auction.shipping_status === 'delivered';
+                    if (currentFilter === 'cancelled') return auction.status === 'cancelled';
+                    return true;
+                });
+
+                if (filtered.length === 0) {
+                    list.innerHTML = `
+                        <div class="col-span-full py-20 text-center bg-white border border-dashed border-stone-200 rounded-[32px]">
+                            <img src="https://api.iconify.design/lucide:gavel.svg?color=%23a8a29e" width="48" class="mx-auto mb-4" alt="">
+                            <h4 class="font-bold text-stone-800 text-lg mb-2">No auctions found</h4>
+                            <p style="color: #a8a29e; font-size: 14px;">No items match your current filter.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = '';
+                filtered.forEach(auction => {
+                    let statusColor = '#1c1917';
+                    let badgeBg = '#f5f5f4';
+
+                    if (auction.status === 'active') {
+                        statusColor = '#10b981';
+                        badgeBg = '#f0fdf4';
+                    } else if (auction.status === 'scheduled') {
+                        statusColor = '#78716c';
+                        badgeBg = '#f5f5f4';
+                    } else if (auction.status === 'completed') {
+                        statusColor = '#6366f1';
+                        badgeBg = '#eef2ff';
+                    } else if (auction.status === 'shipped') {
+                        statusColor = '#3b82f6';
+                        badgeBg = '#eff6ff';
+                    } else if (auction.status === 'cancelled') {
+                        statusColor = '#ef4444';
+                        badgeBg = '#fef2f2';
+                    }
+                    const isCompleted = auction.status === 'completed' || auction.status === 'shipped' || auction.status === 'delivered';
+                    const badgeHtml = isCompleted ?
+                        '<span class="bg-[#22C55E] text-white px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-sm">COMPLETED</span>' :
+                        `<span style="background: ${badgeBg}; color: ${statusColor};" class="px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-sm">${auction.status}</span>`;
+
+                    const winnerBadge = (isCompleted || auction.status === 'cancelled') && auction.winner_name ?
+                        `<div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-lg">SOLD TO: ${auction.winner_name}</div>` : '';
+
+                    list.innerHTML += `
+                    <div class="bg-white border border-stone-200 rounded-[32px] overflow-hidden hover:shadow-2xl transition-all group">
+                        <div class="relative h-48 overflow-hidden bg-stone-100">
+                            <img src="${auction.image_url ? '../../' + auction.image_url : 'https://images.unsplash.com/photo-1596040033229-a9821ebd05ed?auto=format&fit=crop&w=800&q=80'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-90">
+                            <div class="absolute top-4 right-4 bg-white/95 backdrop-blur px-3 py-1.5 rounded-full text-[10px] font-bold text-stone-900 border border-stone-100 shadow-sm">
+                                ID: #AUC-${auction.id.toString().padStart(5, '0')}
+                            </div>
+                            ${winnerBadge}
+                            <div class="absolute bottom-4 left-4 flex gap-1.5 flex-wrap">
+                                ${badgeHtml}
+                                
+                                ${auction.payment_status === 'paid' ?
+                            '<span class="bg-[#3B82F6] text-white px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-sm">PAID</span>' : ''}
+                                
+                                ${auction.shipping_status === 'shipped' ?
+                            '<span class="bg-[#1C1917] text-white px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-sm">SHIPPED</span>' :
+                            (auction.shipping_status === 'delivered' ?
+                                '<span class="bg-green-600 text-white px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-sm">DELIVERED</span>' :
+                                (auction.shipping_status === 'shipped_pending' ?
+                                    '<span class="bg-orange-500 text-white px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-sm">AGENT PENDING</span>' :
+                                    (auction.payment_status === 'paid' ? '<span class="bg-stone-200 text-stone-500 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider shadow-sm">AWAITING SHIPMENT</span>' : '')))}
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="font-bold text-xl text-stone-900 mb-2 truncate">${auction.product_name}</h3>
+                            <p class="text-stone-400 text-xs font-bold uppercase tracking-widest mb-6">${auction.quantity}${auction.unit} AVAILABLE</p>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="bg-stone-50 p-4 rounded-2xl border border-stone-100">
+                                    <p class="text-[10px] font-bold text-stone-400 uppercase mb-1">Floor Price</p>
+                                    <p class="text-lg font-bold text-stone-800">${CurrencyManager.formatFrom(auction.starting_price, auction.base_currency)}</p>
+                                </div>
+                                <div class="${isCompleted ? 'bg-green-50' : 'bg-primary/5'} p-4 rounded-2xl border ${isCompleted ? 'border-green-100' : 'border-primary/10'}">
+                                    <p class="text-[10px] font-bold ${isCompleted ? 'text-green-600' : 'text-primary/60'} uppercase mb-1">${isCompleted ? 'Final Sale' : 'Current Bid'}</p>
+                                    <p class="text-lg font-bold ${isCompleted ? 'text-green-600' : 'text-primary'}">${CurrencyManager.formatFrom(auction.current_bid, auction.base_currency)}</p>
+                                </div>
+                            </div>
+
+                            <div class="pt-6 border-t border-stone-100 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <img src="https://api.iconify.design/lucide:clock.svg?color=%23a8a29e" width="14" alt="">
+                                    <span class="text-[11px] font-bold text-stone-400">
+                                        ${auction.status === 'scheduled' ? 'Start: ' : 'End: '}
+                                        ${new Date(auction.status === 'scheduled' ? auction.start_time_iso : auction.end_time_iso).toLocaleDateString('en-GB')}
+                                    </span>
+                                </div>
+                                <button onclick="showAuctionDetails('${auction.id}')" class="text-[11px] font-bold text-stone-900 uppercase tracking-widest hover:text-primary transition-colors">Details</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                });
+            }
+
+            async function loadAuctions() {
+                try {
+                    const response = await fetch('../../backend/api/auctions/get-farmer-auctions.php');
+                    const result = await response.json();
+
+                    if (result.success) {
+                        allAuctions = result.auctions || [];
+                        renderAuctions();
+
+                        document.getElementById('active-count').innerText = result.active_count || 0;
+                        document.getElementById('scheduled-count').innerText = result.scheduled_count || 0;
+                        document.getElementById('completed-count').innerText = result.completed_count || 0;
+                        document.getElementById('cancelled-count').innerText = result.cancelled_count || 0;
+                        document.getElementById('total-count').innerText = result.total_count || 0;
+                    }
+                } catch (error) {
+                    console.error('Error loading auctions:', error);
+                }
+            }
+
+            // Bind filter buttons
+            document.getElementById('filter-container').addEventListener('click', (e) => {
+                const pill = e.target.closest('.filter-pill');
+                if (pill) {
+                    setFilter(pill.dataset.filter);
+                }
+            });
+
+            let pollInterval;
+            window.onload = async () => {
+                await CurrencyManager.init();
+
+                // Set min date for auction timings
+                const now = new Date();
+                const tzOffset = now.getTimezoneOffset() * 60000;
+                const localISODate = new Date(now - tzOffset).toISOString().slice(0, 16);
+
+                const startInput = document.getElementsByName('start_time')[0];
+                const endInput = document.getElementsByName('end_time')[0];
+
+                if (startInput) startInput.min = localISODate;
+                if (endInput) endInput.min = localISODate;
+
+                loadAuctions();
+                pollInterval = setInterval(loadAuctions, 5000); // Poll every 5 seconds
+            };
+        </script>
+        <script src="../assets/js/main.js?v=2.5"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/custom-ui.js?v=1.8"></script>
+</body>
+
+</html>

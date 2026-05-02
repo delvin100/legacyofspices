@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard | Legacy of Spices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body style="background: #fafaf9; color: #1c1917; font-family: 'Outfit', sans-serif;">
+                <aside style="width: 240px; background: white; border-right: 1px solid #e7e5e4; position: fixed; height: 100vh; padding: 24px; z-index: 50; overflow-y: auto; display: flex; flex-direction: column;">
+        <div class="logo" style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
+            <img src="../assets/images/logo.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 22px; color: #1c1917; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">Legacy</h3>
+                <span style="font-size: 11px; color: #ff7e21; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; margin-top: 2px;">Of Spices</span>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+            <a href="farmer-dashboard.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:layout-dashboard.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Dashboard</span>
+            </a>
+            <a href="inventory.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:package.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Inventory</span>
+            </a>
+            <a href="orders.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: white; background: #FF7E21; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(255, 126, 33, 0.2);">
+                <img src="https://api.iconify.design/lucide:shopping-cart.svg?color=white" width="20" alt="">
+                <span style="white-space: nowrap;">Orders</span>
+            </a>
+            <a href="returns.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:rotate-ccw.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Returns & Refunds</span>
+            </a>
+            <a href="auctions.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:gavel.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Auctions</span>
+            </a>
+            <a href="analysis.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:bar-chart-3.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Analysis</span>
+            </a>
+            <a href="certificates.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shield-check.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Certificates</span>
+            </a>
+
+            <a href="profile.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:user.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Profile</span>
+            </a>
+        </nav>
+
+        <div style="margin-top: auto; padding-top: 24px;">
+            <button onclick="logout()" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; text-decoration: none; color: #ef4444; background: #fef2f2; border: 1px solid #fee2e2; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'">
+                <img src="https://api.iconify.design/lucide:log-out.svg?color=%23ef4444" width="18" style="transform: rotate(180deg);" alt="">
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <main style="margin-left: 240px; padding: 32px 40px; min-height: 100vh;">
+        <header style="margin-bottom: 56px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 style="font-size: 32px; font-weight: 700; color: #1c1917; letter-spacing: -0.02em;">Order
+                    Fulfillment
+                </h1>
+                <p style="font-size: 15px; color: #1c1917; margin-top: 4px;">Monitor incoming requests and manage
+                    delivery states.</p>
+            </div>
+        </header>
+
+        <div class="flex gap-4 overflow-x-auto pb-6 mb-6 no-scrollbar" id="filter-container">
+            <button onclick="filterOrders('all')"
+                class="filter-btn active px-6 py-2 rounded-full text-sm font-bold bg-stone-900 text-white transition-all whitespace-nowrap">All</button>
+            <button onclick="filterOrders('ordered')"
+                class="filter-btn px-6 py-2 rounded-full text-sm font-bold bg-white text-stone-500 hover:bg-stone-100 transition-all whitespace-nowrap">New
+                Orders</button>
+            <button onclick="filterOrders('shipped')"
+                class="filter-btn px-6 py-2 rounded-full text-sm font-bold bg-white text-stone-500 hover:bg-stone-100 transition-all whitespace-nowrap">Shipped</button>
+            <button onclick="filterOrders('delivered')"
+                class="filter-btn px-6 py-2 rounded-full text-sm font-bold bg-white text-stone-500 hover:bg-stone-100 transition-all whitespace-nowrap">Delivered</button>
+            <button onclick="filterOrders('cancelled')"
+                class="filter-btn px-6 py-2 rounded-full text-sm font-bold bg-white text-stone-500 hover:bg-stone-100 transition-all whitespace-nowrap">Cancelled</button>
+            <button onclick="filterOrders('refunded')"
+                class="filter-btn px-6 py-2 rounded-full text-sm font-bold bg-white text-stone-500 hover:bg-stone-100 transition-all whitespace-nowrap">Refunded</button>
+        </div>
+
+        <div id="orders-list" class="space-y-6">
+            <!-- Loading State -->
+            <div class="py-40 text-center">
+                <img src="https://api.iconify.design/lucide:loader-2.svg"
+                    class="w-10 h-10 animate-spin mx-auto text-primary mb-4">
+                <p class="text-stone-400 font-bold uppercase tracking-widest text-[10px]">Syncing order ledger...
+                </p>
+            </div>
+        </div>
+
+        <!-- Delivery Agent Selection Modal -->
+        <div id="agent-modal"
+            class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <div class="bg-white rounded-[32px] p-8 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-stone-900">Ship Order</h3>
+                    <button onclick="closeAgentModal()"
+                        class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors">
+                        <img src="https://api.iconify.design/lucide:x.svg?color=%231c1917" width="20">
+                    </button>
+                </div>
+
+                <p class="text-stone-500 text-sm mb-6 font-medium">Select a delivery agent to fulfill this order. Search
+                    by name or location.</p>
+
+                <div class="relative mb-6">
+                    <input type="text" id="agent-search" oninput="searchAgents(this.value)"
+                        placeholder="Search agents by name or place..."
+                        class="w-full pl-12 pr-4 py-4 bg-stone-50 border border-stone-100 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all">
+                    <div class="absolute left-4 top-1/2 -translate-y-1/2">
+                        <img src="https://api.iconify.design/lucide:search.svg?color=%23FF7E21" width="20">
+                    </div>
+                </div>
+
+                <div id="agent-list" class="max-h-[300px] overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+                    <div class="text-center py-8 text-stone-400 font-medium">Start typing to search agents...</div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-stone-100 flex gap-3">
+                    <button onclick="closeAgentModal()"
+                        class="flex-1 py-4 rounded-2xl border-2 border-stone-100 text-stone-500 font-bold text-sm hover:bg-stone-50 transition-all uppercase tracking-wider">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f5f5f4;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e7e5e4;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #d6d3d1;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .action-btn {
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            transition: all 0.3s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        let allOrders = [];
+        let currentFilter = 'all';
+
+        async function loadOrders() {
+            const container = document.getElementById('orders-list');
+            try {
+                const projectRoot = window.getProjectRoot();
+
+                // Try absolute path from project root first
+                let response = await fetch(projectRoot + '/backend/api/orders/get-farmer-orders.php');
+
+                // If it fails (e.g. 404 or projectRoot detection issue), try relative
+                if (!response.ok && response.status === 404) {
+                    console.warn('Absolute path failed, trying relative path...');
+                    response = await fetch('../../backend/api/orders/get-farmer-orders.php');
+                }
+
+                const result = await response.json();
+                console.log('Farmer Orders API Response:', result);
+
+                if (result.success) {
+                    allOrders = result.data || [];
+                    console.log('Farmer Orders Loaded:', allOrders);
+                    filterOrders(currentFilter);
+                } else {
+                    console.error('API Error:', result.message);
+                    renderError(result.message || 'Unable to load orders');
+                }
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                renderError('Connection failed. Please check your network or session.');
+            }
+        }
+
+        function renderError(msg) {
+            const container = document.getElementById('orders-list');
+            container.innerHTML = `
+                <div class="py-20 text-center bg-rose-50 rounded-[40px] border border-rose-100 mx-auto max-w-2xl px-8">
+                    <img src="https://api.iconify.design/lucide:alert-circle.svg?color=%23e11d48" class="w-12 h-12 mx-auto mb-4">
+                    <h3 class="text-xl font-bold text-rose-900 mb-2">Sync Interrupted</h3>
+                    <p class="text-rose-600 font-medium mb-6">${msg}</p>
+                    <button onclick="loadOrders()" class="bg-rose-600 text-white px-8 py-3 rounded-2xl font-bold text-sm hover:bg-rose-700 transition-all">TRY AGAIN</button>
+                    <p class="mt-4 text-[10px] uppercase tracking-widest text-rose-300 font-bold">Debug: ${window.location.pathname}</p>
+                </div>
+            `;
+        }
+
+        function filterOrders(status) {
+            currentFilter = status;
+
+            // Update UI buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                const btnText = btn.innerText.toLowerCase().trim().replace(/\s+/g, ' ');
+                const isActive = (status === 'all' && btnText === 'all') ||
+                    (status === 'ordered' && btnText === 'new orders') ||
+                    (status === btnText);
+
+                if (isActive) {
+                    btn.classList.remove('bg-white', 'text-stone-500', 'hover:bg-stone-100');
+                    btn.classList.add('bg-stone-900', 'text-white');
+                } else {
+                    btn.classList.add('bg-white', 'text-stone-500', 'hover:bg-stone-100');
+                    btn.classList.remove('bg-stone-900', 'text-white');
+                }
+            });
+
+            console.log('Filtering by status:', status);
+            const filtered = status === 'all'
+                ? allOrders
+                : allOrders.filter(o => {
+                    if (status === 'refunded') return o.return_status === 'refund_completed';
+                    
+                    const s = window.normalizeStatus(o.status || o.STATUS);
+                    const isRefunded = o.return_status === 'refund_completed';
+                    
+                    if (status === 'ordered') return (s === 'ordered' || s === 'confirmed') && !isRefunded;
+                    return s === status && !isRefunded;
+                });
+
+            console.log('Filtered Count:', filtered.length);
+            renderOrders(filtered);
+        }
+
+        function renderOrders(orders) {
+            const container = document.getElementById('orders-list');
+            if (orders && orders.length > 0) {
+                container.innerHTML = orders.map(order => {
+                    const date = new Date(order.order_date).toLocaleDateString('en-GB');
+                    const statusKey = window.normalizeStatus(order.status || order.STATUS);
+
+                    const statusMap = {
+                        'ordered': 'New Order',
+                        'shipped': 'Shipped',
+                        'shipped_pending': 'Shipping Pending',
+                        'delivered': 'Delivered',
+                        'cancelled': 'Cancelled'
+                    };
+                    const isRefunded = order.return_status === 'refund_completed';
+                    const displayStatus = isRefunded ? 'Refunded' : (statusMap[statusKey] || statusKey.toUpperCase());
+
+                    const statusColors = {
+                        'ordered': 'bg-amber-100 text-amber-700',
+                        'shipped': 'bg-blue-100 text-blue-700',
+                        'delivered': 'bg-emerald-100 text-emerald-700',
+                        'cancelled': 'bg-rose-100 text-rose-700',
+                        'refunded': 'bg-green-100 text-green-700'
+                    };
+                    const badgeClass = isRefunded ? statusColors['refunded'] : (statusColors[statusKey] || 'bg-amber-100 text-amber-700');
+
+                    const imgSrc = order.product_image ? (order.product_image.startsWith('http') ? order.product_image : '../../' + order.product_image) : 'https://images.unsplash.com/photo-1596040033229-a9821ebd05ed?auto=format&fit=crop&w=400&q=80';
+
+                    return `
+                        <div class="bg-white border border-stone-200 rounded-[40px] p-8 hover:shadow-xl transition-all duration-300 group">
+                            <div class="flex flex-col md:flex-row gap-8 items-center">
+                                <!-- Image -->
+                                <div class="w-full md:w-28 h-28 rounded-[24px] bg-stone-50 overflow-hidden flex-shrink-0 border border-stone-100 relative group-hover:shadow-lg transition-all">
+                                    <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-all z-10"></div>
+                                    <img src="${imgSrc}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                                </div>
+                                
+                                <!-- Middle Details -->
+                                <div class="flex-1 w-full self-center flex flex-col justify-center">
+                                    <div class="mb-3">
+                                        <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest inline-block ${badgeClass}">
+                                            ${displayStatus}
+                                        </span>
+                                    </div>
+                                    
+                                    <h3 class="font-bold text-2xl text-stone-900 leading-none mb-2 tracking-tight">${order.product_name || 'Generic Product'}</h3>
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <div class="w-6 h-6 bg-stone-100 rounded-full flex items-center justify-center font-bold text-[10px] text-stone-500">
+                                            ${(order.customer_name || 'U').charAt(0)}
+                                        </div>
+                                        <p class="text-[11px] font-bold text-stone-400 uppercase tracking-widest">Buyer: <span class="text-stone-900">${order.customer_name || 'Unknown Client'}</span></p>
+                                    </div>
+                                    
+                                    <p class="text-[10px] font-bold text-stone-300 uppercase tracking-widest flex items-center gap-2">
+                                        RECEIVED ON <span class="text-stone-400">${date.toUpperCase()}</span>
+                                        <span class="mx-2 text-stone-200">|</span>
+                                        ID: <span class="text-stone-400">ORD-${order.id.toString().padStart(5, '0')}</span>
+                                    </p>
+                                </div>
+
+                                <!-- Right Side: Price & Actions -->
+                                <div class="flex items-center gap-10 self-center h-full pl-8 border-l border-stone-100/50 md:border-l-0">
+                                    <div class="text-right flex flex-col justify-center h-full">
+                                        <p class="font-bold text-3xl text-stone-900 leading-none mb-1">${(window.CurrencyManager.formatHistorical ? window.CurrencyManager.formatHistorical(order.total_price, order.exchange_rate, order.currency_code) : (window.formatPrice ? window.formatPrice(order.total_price) : '$' + order.total_price))}</p>
+                                        <p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest text-right">${order.quantity} ${order.unit || 'kg'}</p>
+                                        <p class="text-[9px] font-bold uppercase tracking-widest mt-1 ${order.payment_status === 'paid' ? 'text-green-500' : 'text-stone-400'}">
+                                            ${order.payment_status === 'paid' ? 'Payment Verified' : 'Awaiting Payment'}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-3">
+                                        ${getActionButtons(order)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                container.innerHTML = `
+                    <div class="py-40 text-center">
+                        <div class="w-24 h-24 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <img src="https://api.iconify.design/lucide:shopping-bag.svg?color=%23d6d3d1" class="w-10 h-10 opacity-50">
+                        </div>
+                        <h3 class="text-xl font-bold text-stone-900 mb-2">No ${currentFilter === 'all' ? 'Orders Found' : currentFilter + ' orders'}</h3>
+                        <p class="text-stone-400 font-medium">Your marketplace activity will appear here.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function getActionButtons(order) {
+            const statusKey = window.normalizeStatus ? window.normalizeStatus(order.status || order.STATUS) : (order.status || 'ordered').toLowerCase();
+            const isPaid = order.payment_status === 'paid';
+
+            if (order.return_status === 'refund_completed') {
+                return '<span class="text-[10px] font-bold text-green-700 uppercase tracking-widest px-6 py-3 bg-green-50 rounded-xl border border-green-100">Refunded</span>';
+            }
+
+            if (statusKey === 'ordered') {
+                if (isPaid) {
+                    return `<button onclick="openAgentModal('${order.id}')" class="bg-primary hover:bg-stone-900 text-white action-btn uppercase shadow-lg shadow-orange-100 hover:shadow-none">SHIP NOW</button>`;
+                } else {
+                    return '<span class="text-[10px] font-bold text-amber-600 uppercase tracking-widest px-6 py-3 bg-amber-50 rounded-xl border border-amber-100">Awaiting Payment</span>';
+                }
+            } else if (statusKey === 'shipped') {
+                return '<span class="text-[10px] font-bold text-yellow-700 uppercase tracking-widest px-6 py-3 bg-yellow-50 rounded-xl border border-yellow-100">Delivery Pending</span>';
+            } else if (statusKey === 'shipped_pending') {
+                return '<span class="text-[10px] font-bold text-orange-600 uppercase tracking-widest px-6 py-3 bg-orange-50 rounded-xl border border-orange-100">Agent Approval Pending</span>';
+            } else if (statusKey === 'delivered') {
+                return '<span class="text-[10px] font-bold text-green-600 uppercase tracking-widest px-6 py-3 bg-green-50 rounded-xl border border-green-100">Delivered</span>';
+            } else if (statusKey === 'cancelled') {
+                return '<span class="text-[10px] font-bold text-red-600 uppercase tracking-widest px-6 py-3 bg-red-50 rounded-xl border border-red-100">Cancelled</span>';
+            }
+            return '';
+        }
+
+        async function updateStatus(orderId, status) {
+            if (!await window.showConfirm(`Are you sure you want to mark this order as ${status.toUpperCase()}?`)) return;
+
+            try {
+                const projectRoot = window.getProjectRoot ? window.getProjectRoot() : '';
+                const response = await fetch(projectRoot + '/backend/api/orders/update-order-status.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        order_id: orderId,
+                        status: status
+                    })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    loadOrders();
+                    showToast(`Order status updated to ${status.toUpperCase()}.`, 'success');
+                } else {
+                    showToast(result.message || 'Update failed', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Connection error', 'error');
+            }
+        }
+
+        let currentOrderId = null;
+
+        function openAgentModal(orderId) {
+            currentOrderId = orderId;
+            document.getElementById('agent-modal').classList.remove('hidden');
+            document.getElementById('agent-search').value = '';
+            document.getElementById('agent-list').innerHTML = '<div class="text-center py-8 text-stone-400 font-medium">Start typing to search agents...</div>';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAgentModal() {
+            document.getElementById('agent-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            currentOrderId = null;
+        }
+
+        async function searchAgents(query) {
+            const list = document.getElementById('agent-list');
+
+            if (!query.trim()) {
+                list.innerHTML = '<div class="text-center py-8 text-stone-400 font-medium">Start typing to search agents...</div>';
+                return;
+            }
+
+            try {
+                const projectRoot = window.getProjectRoot ? window.getProjectRoot() : '';
+                const response = await fetch(`${projectRoot}/backend/api/delivery/search-agents.php?q=${encodeURIComponent(query)}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    if (result.agents.length > 0) {
+                        list.innerHTML = result.agents.map(agent => `
+                            <button onclick="assignAgent('${agent.id}', '${agent.full_name}')" 
+                                class="w-full text-left p-4 rounded-2xl bg-stone-50 border border-stone-100 hover:border-primary/50 hover:bg-white transition-all group">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-orange-100 text-primary flex items-center justify-center font-bold">
+                                        ${agent.full_name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div class="flex-grow min-w-0">
+                                        <div class="font-bold text-stone-900 group-hover:text-primary transition-colors truncate">${agent.full_name}</div>
+                                        <div class="text-[11px] text-stone-400 font-medium truncate">
+                                            ${(() => {
+                                const addr = agent.address || '';
+                                const country = agent.country || '';
+                                if (!country || addr.toLowerCase().includes(country.toLowerCase())) return addr;
+                                return addr ? `${addr}, ${country}` : country;
+                            })()}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </button>
+                        `).join('');
+                    } else {
+                        list.innerHTML = `<div class="text-center py-8 text-stone-400 font-medium">No agents found.</div>`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error searching agents:', error);
+                list.innerHTML = `<div class="text-center py-8 text-rose-500 font-medium text-xs">Search failed. Try again.</div>`;
+            }
+        }
+
+        async function assignAgent(agentId, agentName) {
+            if (!currentOrderId) return;
+            if (!await window.showConfirm(`Assign <b>${agentName}</b> to this order and mark as SHIPPED?`)) return;
+
+            try {
+                const projectRoot = window.getProjectRoot ? window.getProjectRoot() : '';
+                const response = await fetch(`${projectRoot}/backend/api/delivery/assign-agent-farmer.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        order_id: currentOrderId,
+                        agent_id: agentId
+                    })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showToast(`Order shipped with ${agentName}.`, 'success');
+                    closeAgentModal();
+                    loadOrders();
+                } else {
+                    showToast(result.message || 'Assignment failed', 'error');
+                }
+            } catch (error) {
+                console.error('Error assigning agent:', error);
+                showToast('Connection error', 'error');
+            }
+        }
+
+        window.onload = async () => {
+            // Safe initialization
+            if (window.CurrencyManager) {
+                await CurrencyManager.init().catch(e => console.error('Currency init failed', e));
+            }
+            loadOrders();
+        };
+
+        async function logout() {
+            try {
+                await fetch(window.getProjectRoot ? window.getProjectRoot() + '/backend/api/auth/logout.php' : '../../backend/api/auth/logout.php');
+                window.location.href = '../auth/login.html';
+            } catch (error) { console.error('Logout error:', error); }
+        }
+    </script>
+    <script src="../assets/js/custom-ui.js?v=1.8"></script>
+</body>
+
+</html>

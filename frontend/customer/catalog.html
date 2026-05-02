@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Spice Trading Made Simple | Catalog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../assets/js/custom-ui.js?v=1.6"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body style="background: #fafaf9; color: #1c1917; font-family: 'Outfit', sans-serif;">
+        <aside style="width: 240px; background: white; border-right: 1px solid #e7e5e4; position: fixed; height: 100vh; padding: 24px; z-index: 50; overflow-y: auto; display: flex; flex-direction: column;">
+        <div class="logo" style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
+            <img src="../assets/images/logo.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 22px; color: #1c1917; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">Legacy</h3>
+                <span style="font-size: 11px; color: #ff7e21; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; margin-top: 2px;">Of Spices</span>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+            <a href="customer-dashboard.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:layout-dashboard.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Dashboard</span>
+            </a>
+            <a href="catalog.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: white; background: #FF7E21; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(255, 126, 33, 0.2);">
+                <img src="https://api.iconify.design/lucide:book-open.svg?color=white" width="20" alt="">
+                <span style="white-space: nowrap;">Catalog</span>
+            </a>
+            <a href="orders.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shopping-bag.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Orders</span>
+            </a>
+            <a href="cart.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shopping-cart.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Cart</span>
+            </a>
+            <a href="auctions.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:gavel.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Auctions</span>
+            </a>
+
+            <a href="market-analytics.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:trending-up.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Analytics</span>
+            </a>
+            <a href="returns.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:rotate-ccw.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Returns & Refunds</span>
+            </a>
+
+            <a href="profile.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:user.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Profile</span>
+            </a>
+        </nav>
+
+        <div style="margin-top: auto; padding-top: 24px;">
+            <button onclick="logout()" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; text-decoration: none; color: #ef4444; background: #fef2f2; border: 1px solid #fee2e2; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'">
+                <img src="https://api.iconify.design/lucide:log-out.svg?color=%23ef4444" width="18" style="transform: rotate(180deg);" alt="">
+                Sign Out
+            </button>
+        </div>
+        <script>
+            async function logout() {
+                try {
+                    await fetch('../../backend/api/auth/logout.php');
+                    window.location.href = '../auth/login.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            }
+        </script>
+    </aside>
+
+    <main style="margin-left: 240px; padding: 32px 40px;">
+        <header style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div class="max-w-xl">
+                <span
+                    class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[12px] font-bold uppercase tracking-widest mb-4">Direct
+                    from Source</span>
+                <h1 style="font-size: 48px; font-weight: 700; color: #1c1917; letter-spacing: -0.04em; line-height: 1;">
+                    Global Spice Catalog</h1>
+                <p style="font-size: 18px; color: #1c1917; margin-top: 16px; font-weight: 500; line-height: 1.6;">Browse
+                    rare harvests and premium essential spices curated from smallholder farms across the spice belt.</p>
+            </div>
+
+            <div class="flex gap-4">
+                <div class="relative w-72">
+                    <input type="text" id="product-search" oninput="filterProducts()" placeholder="Search for spices..."
+                        class="w-full bg-stone-100 border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20 transition-all">
+                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">
+                        <img src="https://api.iconify.design/lucide:search.svg?color=%23a8a29e" width="18">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Filters Removed - Replaced with Simple Header -->
+
+        <!-- Filters Removed - Replaced with Simple Header -->
+        <div class="mb-12">
+            <h2 class="text-xl font-bold text-stone-800 tracking-tight">All Available Harvests</h2>
+            <div class="h-1 w-20 bg-primary rounded-full mt-2"></div>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="catalog-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px;">
+            <!-- Loading State -->
+            <div class="col-span-full py-40 text-center">
+                <img src="https://api.iconify.design/lucide:loader-2.svg"
+                    class="w-12 h-12 animate-spin mx-auto text-primary mb-6">
+                <p class="text-stone-400 font-bold uppercase tracking-widest text-xs">Unpacking the day's harvest...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Product Details Modal -->
+    <div id="productModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-md z-[100] hidden flex items-center justify-center p-6">
+        <div
+            class="bg-white p-0 rounded-3xl w-full max-w-4xl relative shadow-2xl animate-in zoom-in-95 duration-300 overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
+            <button onclick="closeProductModal()"
+                class="absolute top-6 right-6 z-10 w-12 h-12 bg-stone-100 hover:bg-stone-200 rounded-full flex items-center justify-center transition-all">
+                <img src="https://api.iconify.design/lucide:x.svg?color=%231c1917" width="24" alt="">
+            </button>
+
+            <div class="md:w-1/2 h-80 md:h-auto relative bg-stone-100">
+                <img id="modal-image" src="" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            </div>
+
+            <div class="md:w-1/2 p-12 space-y-8 overflow-y-auto no-scrollbar">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <!-- Grade badge removed -->
+                    </div>
+                    <div class="flex items-center justify-start gap-4 mb-4">
+                        <h2 id="modal-title" class="text-4xl font-bold text-stone-900 tracking-tight leading-none">
+                        </h2>
+                        <button onclick="scrollToReviews()" class="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-full text-[11px] font-bold uppercase tracking-widest transition-all">
+                            <img src="https://api.iconify.design/lucide:star.svg?color=%2378716c" width="14">
+                            Reviews
+                        </button>
+                    </div>
+                    <div id="modal-farmer-container" class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center overflow-hidden">
+                            <img id="modal-farmer-img" src="https://api.iconify.design/lucide:user.svg?color=%23a8a29e"
+                                width="16">
+                        </div>
+                        <p id="modal-farmer" class="text-sm font-bold text-stone-400 uppercase tracking-widest"></p>
+                    </div>
+                </div>
+
+                <div class="bg-stone-50 p-6 rounded-3xl border border-stone-100">
+                    <div class="flex flex-col gap-8 items-start">
+                        <div>
+                            <p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">Direct Price
+                            </p>
+                            <div class="flex items-baseline gap-1">
+                                <p class="text-4xl font-bold text-stone-900 leading-none"><span
+                                        class="currency-symbol text-2xl mr-1">₹</span><span id="modal-price">0.00</span>
+                                </p>
+                                <span class="text-lg text-stone-400 font-medium">/<span id="price-unit">kg</span></span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1">In Stock</p>
+                            <p id="modal-stock" class="text-xl font-bold text-stone-900 leading-none"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description section removed -->
+
+                <div class="space-y-4 pt-4">
+                    <div class="grid grid-cols-[1.4fr_1fr] gap-4 items-end pt-4">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest">Order
+                                Quantity</label>
+                            <div
+                                class="flex items-center bg-white border border-stone-300 rounded-xl h-12 shadow-sm overflow-hidden">
+                                <button onclick="updateQty(-1)"
+                                    class="w-8 h-full flex items-center justify-center hover:bg-stone-100 transition-all text-stone-500 hover:text-primary active:scale-90 flex-shrink-0">
+                                    <img src="https://api.iconify.design/lucide:minus.svg" width="14">
+                                </button>
+
+                                <input id="order-qty" type="number" value="1" min="0.1" step="0.1"
+                                    class="flex-1 w-full bg-transparent text-stone-900 font-bold text-center text-lg outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+
+                                <button onclick="updateQty(1)"
+                                    class="w-8 h-full flex items-center justify-center hover:bg-stone-100 transition-all text-stone-500 hover:text-primary active:scale-90 flex-shrink-0">
+                                    <img src="https://api.iconify.design/lucide:plus.svg" width="14">
+                                </button>
+
+                                <!-- Unit Selector -->
+                                <div
+                                    class="relative w-16 flex-shrink-0 h-full flex items-center justify-center bg-stone-50 border-l border-stone-200">
+                                    <select id="order-unit" onchange="onUnitChange()"
+                                        class="w-full h-full bg-transparent border-none font-bold text-sm text-black outline-none focus:ring-0 cursor-pointer appearance-none text-center pl-2 pr-4 z-10 absolute inset-0">
+                                        <option value="kg">kg</option>
+                                        <option value="g">g</option>
+                                    </select>
+                                    <div class="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none z-0">
+                                        <img src="https://api.iconify.design/lucide:chevron-down.svg?color=%23000000"
+                                            width="12" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-right">
+                            <label
+                                class="block text-[10px] font-bold text-stone-400 uppercase tracking-widest">Estimated
+                                Total</label>
+                            <div
+                                class="h-12 flex items-center justify-end text-xl font-bold text-primary font-mono leading-none truncate whitespace-nowrap">
+                                <span class="currency-symbol mr-0.5">₹</span><span id="order-total"
+                                    class="truncate">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 pt-4">
+                        <button onclick="addToCart()"
+                            class="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-900 py-6 rounded-[24px] font-bold text-sm tracking-widest transition-all">
+                            ADD TO CART
+                        </button>
+                        <button onclick="placeOrder()"
+                            class="flex-[1.5] bg-stone-900 hover:bg-black text-white py-6 rounded-[24px] font-bold text-sm tracking-[0.2em] shadow-2xl transition-all transform hover:-translate-y-1 active:scale-95">
+                            BUY NOW
+                        </button>
+                    </div>
+                    <p class="text-[9px] text-stone-400 text-center font-bold uppercase tracking-widest">Protected by
+                        Caravan buyer guarantee</p>
+
+                    <!-- Reviews Section -->
+                    <div id="reviews-section" class="pt-6 border-t border-stone-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-bold text-stone-900 uppercase tracking-widest">Customer Feedback
+                            </h3>
+                            <div class="flex items-center gap-1.5" id="modal-rating-header">
+                                <!-- Rating badge injected here -->
+                            </div>
+                        </div>
+                        <div id="modal-reviews-list" class="space-y-4 max-h-96 overflow-y-auto no-scrollbar pr-2">
+                            <!-- Reviews injected here -->
+                            <p class="text-xs text-stone-400 italic">No reviews yet for this harvest.</p>
+                        </div>
+                        <div id="view-all-reviews-container" class="mt-4 hidden text-center">
+                            <button onclick="expandReviews()"
+                                class="text-xs font-bold text-primary hover:text-primary-hover uppercase tracking-widest transition-all">
+                                View All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allProducts = [];
+        let selectedProduct = null;
+
+        let fullStockValue = "₹ 0.00";
+
+        function formatCompactNumber(number) {
+            if (number >= 1000000000) return (number / 1000000000).toFixed(1).replace(/\.0$/, "") + "B";
+            if (number >= 1000000) return (number / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+            if (number >= 1000) return (number / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+            return Math.round(number).toString();
+        }
+
+        function formatSmartNumber(num, maxDecimals = 2) {
+            // Convert to string and remove trailing zeros after decimal point
+            // e.g. 100.00 -> 100, 100.50 -> 100.5, 100.55 -> 100.55
+            return Number(Math.round(num + "e" + maxDecimals) + "e-" + maxDecimals).toString();
+        }
+
+        async function loadCatalog() {
+            try {
+                const response = await fetch('../../backend/api/products/get-all-products.php');
+                const result = await response.json();
+
+                if (result.success && result.products.length > 0) {
+                    allProducts = result.products;
+                    renderProducts(allProducts);
+                } else {
+                    document.getElementById('catalog-grid').innerHTML = '<div class="col-span-full py-40 text-center"><p class="text-stone-400">The catalog is currently being refreshed. Check back soon!</p></div>';
+                }
+            } catch (error) { console.error(error); }
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('product-search').value.toLowerCase();
+            const filtered = allProducts.filter(p =>
+                p.product_name.toLowerCase().includes(query) ||
+                p.farmer_name.toLowerCase().includes(query)
+            );
+            renderProducts(filtered);
+        }
+
+        function renderProducts(products) {
+            const grid = document.getElementById('catalog-grid');
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-40 text-center">
+                        <div class="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <img src="https://api.iconify.design/lucide:search-slash.svg?color=%23a8a29e" width="32">
+                        </div>
+                        <h3 class="text-xl font-bold text-stone-900 mb-2">No matching spices found</h3>
+                        <p class="text-stone-400 text-sm">Try adjusting your search terms or keyword.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = '';
+            products.forEach(product => {
+                const imgSrc = product.image_url ? '../../' + product.image_url : 'https://images.unsplash.com/photo-1596040033229-a9821ebd05ed?auto=format&fit=crop&w=800&q=80';
+                const isOutOfStock = parseFloat(product.quantity) <= 0;
+                const stockLabel = isOutOfStock ? 'Out of Stock' : 'In Stock';
+                const stockBg = isOutOfStock ? 'bg-red-50' : 'bg-green-50';
+                const stockText = isOutOfStock ? 'text-red-500' : 'text-green-500';
+
+                grid.innerHTML += `
+                    <div class="bg-white border border-stone-200 rounded-[40px] overflow-hidden group hover:shadow-2xl transition-all duration-500 cursor-pointer ${isOutOfStock ? 'opacity-70 grayscale-[0.5]' : ''}" onclick="openProductModal(${product.id})">
+                        <div class="relative h-72 overflow-hidden">
+                             <img src="${imgSrc}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                             <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                             <div class="absolute bottom-6 right-6 flex flex-col items-end">
+                                  <p class="text-[9px] font-bold text-white/70 uppercase tracking-widest mb-1 leading-none">Starting from</p>
+                                  <p class="text-2xl font-bold text-white leading-none">${window.CurrencyManager.getSymbol()}${formatSmartNumber(product.price)}<small class="text-xs font-semibold ml-0.5">/${product.unit || 'kg'}</small></p>
+                             </div>
+                        </div>
+                        <div class="p-10">
+                            <div class="mb-6">
+                                <h3 class="font-bold text-2xl text-stone-900 truncate mb-2">${product.product_name}</h3>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded-full bg-stone-100 flex items-center justify-center">
+                                        <img src="https://api.iconify.design/lucide:store.svg?color=%23FF7E21" width="10">
+                                    </div>
+                                    <p class="text-[11px] font-bold text-stone-400 uppercase tracking-widest">${product.farmer_name}</p>
+                                    ${product.is_verified == 1 ? `
+                                    <div class="group/verified relative flex items-center">
+                                        <img src="https://api.iconify.design/lucide:verified.svg?color=%233b82f6" width="14">
+                                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-stone-900 text-white text-[10px] font-bold rounded opacity-0 group-hover/verified:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                                            VERIFIED
+                                        </div>
+                                    </div>` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between pt-6 border-t border-stone-50">
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-[11px] font-bold ${stockText} ${stockBg} px-3 py-1 rounded-full uppercase tracking-widest inline-block">${stockLabel}</span>
+                                </div>
+                                <button class="flex items-center gap-2 text-stone-300 group-hover:text-primary transition-colors cursor-pointer outline-none border-none bg-transparent p-0" onclick="event.stopPropagation(); openProductModal(${product.id})">
+                                     <span class="text-[11px] font-bold uppercase tracking-widest">Explore</span>
+                                     <img src="https://api.iconify.design/lucide:arrow-right.svg" width="16">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        let currentUnit = 'kg';
+
+        function openProductModal(id) {
+            try {
+                console.log('Opening product modal for ID:', id);
+                selectedProduct = allProducts.find(p => p.id == id);
+                if (!selectedProduct) {
+                    console.error('Product not found in current catalog list');
+                    return;
+                }
+
+                document.getElementById('modal-title').innerText = selectedProduct.product_name;
+                
+                const farmerContainer = document.getElementById('modal-farmer-container');
+                if (farmerContainer) {
+                    farmerContainer.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
+                            <img src="https://api.iconify.design/lucide:user.svg?color=%2378716c" width="16">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="text-[11px] font-bold text-stone-400 uppercase tracking-widest">Harvested by ${selectedProduct.farmer_name}</p>
+                            ${selectedProduct.is_verified == 1 ? `
+                            <div class="group/modal-verified relative flex items-center">
+                                <img src="https://api.iconify.design/lucide:verified.svg?color=%233b82f6" width="14">
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-stone-900 text-white text-[10px] font-bold rounded opacity-0 group-hover/modal-verified:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                                    VERIFIED
+                                </div>
+                            </div>` : ''}
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('modal-farmer').innerText = `Harvested by ${selectedProduct.farmer_name}`;
+                }
+
+                // Initialize Unit
+                currentUnit = selectedProduct.unit || 'kg';
+                document.getElementById('order-unit').value = currentUnit;
+                document.getElementById('price-unit').innerText = currentUnit;
+                onUnitChange(); // Reset steps and display
+
+                // Client-side Price Format
+                updatePriceDisplay();
+
+                const isOutOfStock = parseFloat(selectedProduct.quantity) <= 0;
+                const stockDisplay = document.getElementById('modal-stock');
+                stockDisplay.innerText = isOutOfStock ? 'OUT OF STOCK' : `${formatSmartNumber(parseFloat(selectedProduct.quantity))} ${selectedProduct.unit || 'kg'}`;
+                stockDisplay.classList.toggle('text-red-500', isOutOfStock);
+                stockDisplay.classList.toggle('text-stone-900', !isOutOfStock);
+
+                // Handle Out of Stock UX
+                const cartBtn = document.querySelector('button[onclick="addToCart()"]');
+                const buyBtn = document.querySelector('button[onclick="placeOrder()"]');
+                const qtyContainer = document.getElementById('order-qty').parentElement;
+
+                if (isOutOfStock) {
+                    cartBtn.disabled = true;
+                    buyBtn.disabled = true;
+                    cartBtn.innerText = 'OUT OF STOCK';
+                    buyBtn.innerText = 'OUT OF STOCK';
+                    cartBtn.classList.replace('bg-stone-100', 'bg-stone-50');
+                    cartBtn.classList.add('text-stone-400');
+                    buyBtn.classList.replace('bg-stone-900', 'bg-stone-400');
+                    buyBtn.classList.replace('hover:bg-black', 'hover:bg-stone-400');
+                    qtyContainer.style.opacity = '0.4';
+                    qtyContainer.style.pointerEvents = 'none';
+                } else {
+                    cartBtn.disabled = false;
+                    buyBtn.disabled = false;
+                    cartBtn.innerText = 'ADD TO CART';
+                    buyBtn.innerText = 'BUY NOW';
+                    cartBtn.classList.replace('bg-stone-50', 'bg-stone-100');
+                    cartBtn.classList.remove('text-stone-400');
+                    buyBtn.classList.replace('bg-stone-400', 'bg-stone-900');
+                    buyBtn.classList.replace('hover:bg-stone-400', 'hover:bg-black');
+                    qtyContainer.style.opacity = '1';
+                    qtyContainer.style.pointerEvents = 'all';
+                }
+
+                // Update modal currency symbol
+                if (window.CurrencyManager && window.CurrencyManager.settings) {
+                    const modalSymbol = document.querySelector('#productModal .currency-symbol');
+                    if (modalSymbol) modalSymbol.textContent = window.CurrencyManager.settings.symbol;
+                }
+
+                const imgSrc = selectedProduct.image_url ? '../../' + selectedProduct.image_url : 'https://images.unsplash.com/photo-1596040033229-a9821ebd05ed?auto=format&fit=crop&w=800&q=80';
+                document.getElementById('modal-image').src = imgSrc;
+
+                document.getElementById('order-qty').value = (currentUnit === 'g') ? 100 : 1;
+                updateOrderTotal();
+
+                // Load Reviews
+                loadProductReviews(id);
+
+                document.getElementById('productModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } catch (err) {
+                console.error('Error opening product modal:', err);
+                if (window.showToast) window.showToast('Could not open product details. Please try again.', 'error');
+            }
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function scrollToReviews() {
+            const section = document.getElementById('reviews-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function onUnitChange() {
+            currentUnit = document.getElementById('order-unit').value;
+            const input = document.getElementById('order-qty');
+
+            // Update display unit for price (visual only, actual price calculation happens in updateOrderTotal/updatePriceDisplay)
+            // Actually price is always per unit of the PRODUCT in backend, but here we want to show price per SELECTED unit?
+            // Let's show Base Price per Selected Unit
+            updatePriceDisplay();
+
+            if (currentUnit === 'g') {
+                input.step = 1;
+                input.min = 0;
+                if (input.value <= 0) input.value = 100;
+            } else {
+                input.step = 0.001;
+                input.min = 0;
+            }
+            updateOrderTotal();
+        }
+
+        function updatePriceDisplay() {
+            const rate = window.CurrencyManager.settings.rate || 1;
+            let basePrice = parseFloat(selectedProduct.price) * rate;
+            let displayPrice = basePrice;
+
+            // Convert Base Price to Selected Unit Price
+            // Rule:
+            // Product Unit = kg, Selected = g  => Price / 1000
+            // Product Unit = kg, Selected = kg => Price
+            // Product Unit = g,  Selected = kg => Price * 1000
+            // Product Unit = g,  Selected = g  => Price
+
+            const productUnit = selectedProduct.unit || 'kg';
+
+            if (productUnit === 'kg' && currentUnit === 'g') {
+                displayPrice = basePrice / 1000;
+            } else if (productUnit === 'g' && currentUnit === 'kg') {
+                displayPrice = basePrice * 1000;
+            }
+
+            // If price is very small (per gram), show more decimals?
+            let decimals = 2;
+            if (displayPrice < 0.1 && displayPrice > 0) decimals = 4;
+
+            displayPrice = window.CurrencyManager.snap(displayPrice);
+            document.getElementById('modal-price').innerText = formatSmartNumber(displayPrice, decimals);
+            document.getElementById('price-unit').innerText = currentUnit;
+        }
+
+        function updateQty(delta) {
+            const input = document.getElementById('order-qty');
+            let val = parseFloat(input.value);
+            let step = 1; // Always increment by 1 as per user request
+
+            // If delta is 1/-1, treat as step multiplier
+            val += delta * step;
+
+            // Rounding
+            val = Math.round(val * 1000) / 1000;
+
+            if (val < parseFloat(input.min)) val = parseFloat(input.min);
+
+            // Max check needs conversion!
+            // Stock is in Product Unit
+            const productUnit = selectedProduct.unit || 'kg';
+            let maxStock = parseFloat(selectedProduct.quantity);
+
+            // Convert Max Stock to Selected Unit
+            if (productUnit === 'kg' && currentUnit === 'g') maxStock *= 1000;
+            else if (productUnit === 'g' && currentUnit === 'kg') maxStock /= 1000;
+
+            if (val > maxStock) val = maxStock;
+
+            input.value = val;
+            updateOrderTotal();
+        }
+
+        function updateOrderTotal() {
+            const qty = parseFloat(document.getElementById('order-qty').value) || 0;
+            const rate = window.CurrencyManager.settings.rate || 1;
+
+            // Calculate total based on converted price
+            let basePrice = parseFloat(selectedProduct.price) * rate;
+            let unitPrice = basePrice;
+            const productUnit = selectedProduct.unit || 'kg';
+
+            if (productUnit === 'kg' && currentUnit === 'g') {
+                unitPrice = basePrice / 1000;
+            } else if (productUnit === 'g' && currentUnit === 'kg') {
+                unitPrice = basePrice * 1000;
+            }
+
+            const finalTotal = window.CurrencyManager.snap(qty * unitPrice);
+            document.getElementById('order-total').innerText = formatSmartNumber(finalTotal);
+        }
+
+        document.getElementById('order-qty').addEventListener('input', updateOrderTotal);
+
+        function getConvertedQtyForBackend() {
+            const qty = parseFloat(document.getElementById('order-qty').value);
+            const productUnit = selectedProduct.unit || 'kg';
+
+            // Convert Selected Unit Quantity to Product Base Unit Quantity
+            if (productUnit === 'kg' && currentUnit === 'g') return qty / 1000;
+            if (productUnit === 'g' && currentUnit === 'kg') return qty * 1000;
+            return qty;
+        }
+
+        async function addToCart() {
+            if (!selectedProduct) return;
+            const qtyBackend = getConvertedQtyForBackend();
+            const availableStock = parseFloat(selectedProduct.quantity);
+
+            if (qtyBackend > availableStock) {
+                showToast(`Sorry, only ${availableStock} ${selectedProduct.unit || 'kg'} available in stock.`, 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('../../backend/api/cart/add-to-cart.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        product_id: selectedProduct.id,
+                        quantity: qtyBackend
+                    })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Item added to your global spice cart!', 'success');
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (error) { console.error(error); }
+        }
+
+        let allModalReviews = [];
+
+        async function loadProductReviews(productId) {
+            const container = document.getElementById('modal-reviews-list');
+            const ratingHeader = document.getElementById('modal-rating-header');
+            const viewAllContainer = document.getElementById('view-all-reviews-container');
+
+            container.innerHTML = '<div class="py-10 text-center"><img src="https://api.iconify.design/lucide:loader-2.svg" class="w-6 h-6 animate-spin mx-auto text-stone-200"></div>';
+            viewAllContainer.classList.add('hidden');
+
+            try {
+                const response = await fetch(`../../backend/api/products/get-product-reviews.php?product_id=${productId}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    allModalReviews = result.reviews || [];
+
+                    // Update Rating Header
+                    const avg = parseFloat(selectedProduct.average_rating) || 0;
+                    ratingHeader.innerHTML = `
+                        <div class="flex items-center gap-1.5 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-100 shadow-sm">
+                            <img src="https://api.iconify.design/lucide:star.svg?color=%23FF7E21" class="w-3.5 h-3.5">
+                            <span class="text-[13px] font-black text-orange-600">${avg > 0 ? avg.toFixed(1) : 'New'}</span>
+                        </div>
+                        <span class="text-[11px] font-bold text-stone-400 ml-1">${selectedProduct.review_count} Reviews</span>
+                    `;
+
+                    if (allModalReviews.length > 0) {
+                        const reviewsToShow = allModalReviews.slice(0, 2);
+                        container.innerHTML = reviewsToShow.map(renderReviewHtml).join('');
+
+                        if (allModalReviews.length > 2) {
+                            viewAllContainer.classList.remove('hidden');
+                        }
+                    } else {
+                        container.innerHTML = '<p class="text-xs text-stone-400 italic py-4">This product has not been reviewed yet.</p>';
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = '<p class="text-xs text-red-400">Error loading reviews.</p>';
+            }
+        }
+
+        function renderReviewHtml(review) {
+            return `
+                <div class="bg-white p-6 rounded-[32px] border border-stone-100 shadow-sm transition-all hover:shadow-md hover:border-stone-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-bold text-stone-900">${review.customer_name}</span>
+                        <div class="flex gap-0.5">
+                            ${Array.from({ length: 5 }).map((_, i) => `
+                                <img src="https://api.iconify.design/lucide:star.svg?color=${i < review.rating ? '%23FF7E21' : '%23d6d3d1'}" class="w-3.5 h-3.5 ${i < review.rating ? 'fill-orange-500' : ''}">
+                            `).join('')}
+                        </div>
+                    </div>
+                    <p class="text-[13px] text-stone-600 font-medium leading-relaxed mb-4">${review.comment || 'Perfect harvest, great quality!'}</p>
+                    <span class="text-[10px] font-bold text-stone-300 uppercase tracking-widest block">${new Date(review.created_at).toLocaleDateString('en-GB')}</span>
+                </div>
+            `;
+        }
+
+        function expandReviews() {
+            const container = document.getElementById('modal-reviews-list');
+            const viewAllContainer = document.getElementById('view-all-reviews-container');
+
+            container.innerHTML = allModalReviews.map(renderReviewHtml).join('');
+            viewAllContainer.classList.add('hidden');
+        }
+
+        async function placeOrder() {
+            if (!selectedProduct) return;
+            const qtyBackend = getConvertedQtyForBackend();
+            const btn = document.querySelector('#productModal button[onclick="placeOrder()"]');
+            const originalText = btn.innerText;
+
+            const totalPrice = qtyBackend * parseFloat(selectedProduct.price);
+            const formattedTotal = window.formatPrice(totalPrice);
+            const qtyDisplay = parseFloat(document.getElementById('order-qty').value);
+
+            if (!await showConfirm(`Confirm purchase of ${qtyDisplay}${currentUnit} ${selectedProduct.product_name} for ${formattedTotal}?\n\nYou will be redirected to secure payment.`)) return;
+
+            btn.disabled = true;
+            btn.innerText = "PROCESSING...";
+
+            try {
+                const response = await fetch('../../backend/api/orders/place-order.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        product_id: selectedProduct.id,
+                        quantity: qtyBackend,
+                        currency_code: window.CurrencyManager.settings.code,
+                        exchange_rate: window.CurrencyManager.settings.rate || 1
+                    })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    // Redirect directly to payment
+                    window.location.href = `payment.html?order_id=${result.order_id}&source=catalog`;
+                } else {
+                    showToast(result.message, 'error');
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                }
+            } catch (error) {
+                console.error('Order error:', error);
+                showToast('Connection to marketplace failed.', 'error');
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        }
+    </script>
+    <!-- Stat Detail Modal -->
+    <div id="statModal"
+        style="display:none; position:fixed; inset:0; background:rgba(12,10,9,0.7); backdrop-filter:blur(8px); z-index:1000; align-items:center; justify-content:center; padding:20px;">
+        <div
+            style="background:white; width:100%; max-width:400px; border-radius:24px; padding:32px; position:relative; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1);">
+            <button onclick="closeStatModal()"
+                style="position:absolute; top:20px; right:20px; background:#fafaf9; border:none; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                <img src="https://api.iconify.design/lucide:x.svg?color=%2378716c" width="16">
+            </button>
+            <div style="text-align:center;">
+                <div id="statModalIcon"
+                    style="width:56px; height:56px; border-radius:18px; background:rgba(59, 130, 246, 0.1); display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+                    <img src="https://api.iconify.design/lucide:layers.svg?color=%233b82f6" width="28">
+                </div>
+                <h3 id="statModalTitle" style="font-size:14px; font-weight:700; color:#78716c; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Stock Value</h3>
+                <div id="statModalValue" style="font-size:36px; font-weight:800; color:#1c1917; letter-spacing:-0.03em;">₹ 0.00</div>
+                <p style="font-size:12px; color:#a8a29e; margin-top:16px;">This is the total valuation of all premium spices currently available in our global catalog.</p>
+            </div>
+            <button onclick="closeStatModal()"
+                style="width:100%; margin-top:32px; background:#1c1917; color:white; border:none; padding:14px; border-radius:14px; font-weight:700; font-size:14px; cursor:pointer;">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        function showStatDetail(title, value) {
+            document.getElementById('statModalTitle').textContent = title;
+            document.getElementById('statModalValue').textContent = value;
+            document.getElementById('statModal').style.display = 'flex';
+        }
+        function closeStatModal() {
+            document.getElementById('statModal').style.display = 'none';
+        }
+    </script>
+    <script src="../assets/js/main.js?v=2.2"></script>
+    <script>
+        // Ensure currency data is updated after main.js loads it
+        document.addEventListener('DOMContentLoaded', async () => {
+            await window.CurrencyManager.init();
+            loadCatalog();
+        });
+    </script>
+</body>
+
+</html>

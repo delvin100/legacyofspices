@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+    // Immediate Session Enforcement
+    (async () => {
+        const res = await fetch('../../backend/api/auth/check-session.php');
+        const data = await res.json();
+        if (!data.logged_in) window.location.href = '../auth/login.html';
+    })();
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard | Legacy of Spices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                        'bg-dashboard': '#14110F',
+                        'card-bg': '#1C1917',
+                        'border-color': '#292524',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body style="background: #fafaf9; color: #1c1917;">
+        <aside style="width: 240px; background: white; border-right: 1px solid #e7e5e4; position: fixed; height: 100vh; padding: 24px; z-index: 50; overflow-y: auto; display: flex; flex-direction: column;">
+        <div class="logo" style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
+            <img src="../assets/images/logo.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 22px; color: #1c1917; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">Legacy</h3>
+                <span style="font-size: 11px; color: #ff7e21; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; margin-top: 2px;">Of Spices</span>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+            <a href="customer-dashboard.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: white; background: #FF7E21; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(255, 126, 33, 0.2);">
+                <img src="https://api.iconify.design/lucide:layout-dashboard.svg?color=white" width="20" alt="">
+                <span style="white-space: nowrap;">Dashboard</span>
+            </a>
+            <a href="catalog.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:book-open.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Catalog</span>
+            </a>
+            <a href="orders.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shopping-bag.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Orders</span>
+            </a>
+            <a href="cart.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shopping-cart.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Cart</span>
+            </a>
+            <a href="auctions.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:gavel.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Auctions</span>
+            </a>
+
+            <a href="market-analytics.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:trending-up.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Analytics</span>
+            </a>
+            <a href="returns.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:rotate-ccw.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Returns & Refunds</span>
+            </a>
+
+            <a href="profile.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:user.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Profile</span>
+            </a>
+        </nav>
+
+        <div style="margin-top: auto; padding-top: 24px;">
+            <button onclick="logout()" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; text-decoration: none; color: #ef4444; background: #fef2f2; border: 1px solid #fee2e2; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'">
+                <img src="https://api.iconify.design/lucide:log-out.svg?color=%23ef4444" width="18" style="transform: rotate(180deg);" alt="">
+                Sign Out
+            </button>
+        </div>
+        <script>
+            async function logout() {
+                try {
+                    await fetch('../../backend/api/auth/logout.php');
+                    window.location.href = '../auth/login.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            }
+
+            window.loadDashboard = async function () {
+                try {
+                    const response = await fetch('../../backend/api/customers/get-stats.php');
+                    const result = await response.json();
+
+                    if (result.success && result.stats) {
+                        const name = result.stats.full_name || 'Valued Customer';
+                        const firstName = name.split(' ')[0] || 'Customer';
+                        document.getElementById('welcome-name').innerText = `Hello, ${firstName}`;
+                        document.getElementById('user-name').innerText = name;
+
+                        const avatarEl = document.getElementById('user-avatar');
+                        if (result.stats.profile_image) {
+                            const imgPath = result.stats.profile_image.startsWith('http') ? result.stats.profile_image : '../../' + result.stats.profile_image;
+                            avatarEl.innerHTML = `<img src="${imgPath}" referrerpolicy="no-referrer" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                            avatarEl.style.background = 'transparent';
+                        } else {
+                            avatarEl.innerText = name.split(' ').filter(n => n).map(n => n[0]).join('').toUpperCase() || '?';
+                        }
+
+                        document.getElementById('active-shipments-text').innerText = `${result.stats.active_orders || 0} Active Shipments`;
+
+                        const list = document.getElementById('active-orders-list');
+                        if (result.recent_orders && result.recent_orders.length > 0) {
+                            list.innerHTML = '';
+                            result.recent_orders.forEach(order => {
+                                const orderId = order.id ? order.id.toString().padStart(4, '0') : '????';
+                                list.innerHTML += `
+                                    <div style="border: 1px solid #e7e5e4; border-radius: 12px; padding: 20px; position: relative;">
+                                        <div style="font-size: 11px; color: #1c1917; margin-bottom: 4px;">ORDER #ORD-${orderId}</div>
+                                        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">${order.product_name}</h3>
+                                        <div style="margin-bottom: 8px;">
+                                            <div style="font-size: 11px; color: #1c1917; margin-bottom: 4px;">Status</div>
+                                            <div style="font-size: 13px; font-weight: 700; color: #f97316;">${(() => {
+                                        const s = window.normalizeStatus(order.status || order.STATUS);
+                                        return s === 'shipped_pending' ? 'SHIPPING PENDING' : s.toUpperCase();
+                                    })()}</div>
+                                        </div>
+                                        <div style="height: 2px; background: #e7e5e4; margin: 12px 0;"></div>
+                                        <div style="font-size: 11px; color: #1c1917; display: flex; align-items: center; gap: 6px;">
+                                            <img src="https://api.iconify.design/lucide:package.svg?color=%231c1917" width="12">
+                                            Total: ${(window.CurrencyManager.formatHistorical ? window.CurrencyManager.formatHistorical(order.total_price, order.exchange_rate, order.currency_code) : (window.formatPrice ? window.formatPrice(order.total_price) : '$' + order.total_price))}
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        } else {
+                            list.innerHTML = '<div class="col-span-full py-10 text-center text-stone-400 text-sm">No active orders found.</div>';
+                        }
+
+                        // Populate Transaction History Table
+                        const tableBody = document.getElementById('transactions-body');
+                        if (result.transaction_history && result.transaction_history.length > 0) {
+                            tableBody.innerHTML = result.transaction_history.map(tx => {
+                                const txId = tx.id ? tx.id : '??';
+                                const status = window.normalizeStatus(tx.status || tx.STATUS);
+
+                                let badgeBg = '#fff7ed';
+                                let badgeColor = '#c2410c';
+
+                                if (status === 'delivered') {
+                                    badgeBg = '#dcfce7';
+                                    badgeColor = '#166534';
+                                } else if (status === 'cancelled') {
+                                    badgeBg = '#fee2e2';
+                                    badgeColor = '#991b1b';
+                                }
+
+                                return `
+                                        <tr style="border-bottom: 1px solid #f5f5f4;">
+                                            <td style="padding: 16px; font-weight: 700; font-size: 13px; text-align: center;">ORD-${txId}</td>
+                                    <td style="padding: 16px; font-size: 13px; color: #1c1917; text-align: center;">${new Date(tx.order_date).toLocaleDateString('en-GB')}</td>
+                                    <td style="padding: 16px; font-size: 13px; text-align: center;">${tx.product_name} x${tx.quantity}</td>
+                                            <td style="padding: 16px; font-size: 13px; text-align: center;">
+                                                <span style="text-transform: capitalize; padding: 4px 12px; border-radius: 99px; background: ${badgeBg}; color: ${badgeColor}; font-weight: 700; font-size: 11px;">
+                                                    ${status === 'shipped_pending' ? 'Shipping Pending' : status}
+                                                </span>
+                                            </td>
+                                    <td style="padding: 16px; font-weight: 700; font-size: 14px; text-align: center;">${(window.CurrencyManager.formatHistorical ? window.CurrencyManager.formatHistorical(tx.total_price, tx.exchange_rate, tx.currency_code) : (window.formatPrice ? window.formatPrice(tx.total_price) : '$' + tx.total_price))}</td>
+                                </tr>
+                            `;
+                            }).join('');
+                        } else {
+                            tableBody.innerHTML = '<tr><td colspan="5" style="padding: 24px; text-align: center; color: #a8a29e;">No transaction history available.</td></tr>';
+                        }
+                    } else {
+                        console.error('Failed to load dashboard data:', result.message);
+                        // Optionally redirect to login if not authenticated
+                        if (result.message === 'Unauthorized') {
+                            window.location.href = '../auth/login.html';
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading dashboard:', error);
+                }
+            }
+
+            // onload is overridden at the bottom to also call loadDashboardReturns
+        </script>
+    </aside>
+
+    <main style="margin-left: 240px; padding: 24px 40px;">
+        <header style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px;">
+            <div style="flex: 1;">
+                <!-- Search bar removed as requested -->
+            </div>
+            <div style="display: flex; align-items: center; gap: 20px; margin-top: -8px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="text-align: right;">
+                        <div id="user-name" style="font-weight: 700; font-size: 14px;">Loading...</div>
+                        <div style="font-size: 11px; color: #1c1917;">Global Buyer</div>
+                    </div>
+                    <div id="user-avatar"
+                        style="width: 40px; height: 40px; background: linear-gradient(135deg, #f97316, #ea580c); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: white;">
+                        ...</div>
+                </div>
+            </div>
+        </header>
+
+        <div
+            style="background: linear-gradient(135deg, #fff7ed, #ffedd5); border-radius: 16px; padding: 32px; margin-bottom: 32px;">
+            <h1 id="welcome-name" style="font-size: 32px; font-weight: 700; margin-bottom: 8px; color: #1c1917;">Hello,
+                ...</h1>
+            <p style="color: #1c1917; font-size: 15px;">Welcome back to your global spice command center.</p>
+
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px;">
+            <div style="background: white; border: 1px solid #e7e5e4; border-radius: 16px; padding: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2 style="font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                        <img src="https://api.iconify.design/lucide:package.svg?color=%23ff7e21" width="22" alt="">
+                        Active Orders
+                    </h2>
+                    <a href="orders.html"
+                        style="color: var(--primary); text-decoration: none; font-weight: 700; font-size: 13px;">Track
+                        all orders</a>
+                </div>
+                <div id="active-orders-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <!-- Active orders will be loaded here -->
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 1px solid #fb923c; border-radius: 20px; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.15), 0 4px 6px -2px rgba(249, 115, 22, 0.1); min-height: 240px; transition: all 0.3s ease; cursor: default;"
+                onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 25px -5px rgba(249, 115, 22, 0.2), 0 10px 10px -5px rgba(249, 115, 22, 0.1)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 15px -3px rgba(249, 115, 22, 0.15), 0 4px 6px -2px rgba(249, 115, 22, 0.1)'">
+
+                <div
+                    style="background: rgba(255,255,255,0.6); padding: 16px; border-radius: 50%; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.1);">
+                    <img src="https://api.iconify.design/lucide:truck.svg?color=%23ea580c" width="48" alt="">
+                </div>
+
+                <h3 id="active-shipments-text"
+                    style="font-size: 28px; font-weight: 800; margin: 0; color: #7c2d12; letter-spacing: -0.02em;">
+                    0 Active Shipments
+                </h3>
+                <p style="margin-top: 8px; font-size: 14px; font-weight: 600; color: #c2410c; opacity: 0.8;">In Transit
+                </p>
+            </div>
+        </div>
+
+
+
+        <div style="background: white; border: 1px solid #e7e5e4; border-radius: 16px; padding: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="font-size: 18px; font-weight: 700;">Recent Transactions</h2>
+            </div>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 1px solid #e7e5e4;">
+                        <th
+                            style="text-align: center; padding: 12px; font-size: 11px; color: #1c1917; font-weight: 700; text-transform: uppercase;">
+                            Order ID</th>
+                        <th
+                            style="text-align: center; padding: 12px; font-size: 11px; color: #1c1917; font-weight: 700; text-transform: uppercase;">
+                            Date</th>
+                        <th
+                            style="text-align: center; padding: 12px; font-size: 11px; color: #1c1917; font-weight: 700; text-transform: uppercase;">
+                            Product</th>
+                        <th
+                            style="text-align: center; padding: 12px; font-size: 11px; color: #1c1917; font-weight: 700; text-transform: uppercase;">
+                            Status</th>
+                        <th
+                            style="text-align: center; padding: 12px; font-size: 11px; color: #1c1917; font-weight: 700; text-transform: uppercase;">
+                            Total</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-body">
+                    <!-- Dynamic Data -->
+                    <tr>
+                        <td colspan="5" style="padding: 24px; text-align: center; color: #a8a29e;">Loading
+                            transactions...</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="orders.html"
+                    style="color: var(--primary); text-decoration: none; font-weight: 700; font-size: 13px;">View all
+                    orders</a>
+            </div>
+        </div>
+
+    </main>
+    </main>
+
+    <script>
+        let fullWalletBalance = "₹ 0.00";
+
+        function formatCompactNumber(number) {
+            if (number >= 1000000000) return (number / 1000000000).toFixed(1).replace(/\.0$/, "") + "B";
+            if (number >= 1000000) return (number / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+            if (number >= 1000) return (number / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+            return number.toFixed(2);
+        }
+
+        async function loadDashboardReturns() {
+            try {
+                // Load wallet
+                const wRes = await fetch('../../backend/api/returns/get-wallet.php');
+                const wData = await wRes.json();
+                if (wData.success) {
+                    const rawBalance = parseFloat(wData.balance || 0);
+                    fullWalletBalance = "₹ " + rawBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    document.getElementById('dash-wallet-balance').innerText = formatCompactNumber(rawBalance);
+                }
+
+                // Load returns
+                const rRes = await fetch('../../backend/api/returns/get-customer-returns.php');
+                const rData = await rRes.json();
+                const container = document.getElementById('dash-returns-list');
+
+                if (rData.success && rData.returns && rData.returns.length > 0) {
+                    const STATUS_MAP = {
+                        requested: { label: 'Requested', bg: '#fef3c7', color: '#92400e' },
+                        under_review: { label: 'Under Review', bg: '#dbeafe', color: '#1e40af' },
+                        approved: { label: 'Approved', bg: '#d1fae5', color: '#065f46' },
+                        rejected: { label: 'Rejected', bg: '#fee2e2', color: '#991b1b' },
+                        refund_processing: { label: 'Processing', bg: '#ede9fe', color: '#5b21b6' },
+                        refund_completed: { label: 'Refunded', bg: '#d1fae5', color: '#065f46' },
+                    };
+                    container.innerHTML = rData.returns.slice(0, 5).map(r => {
+                        const sc = STATUS_MAP[r.status] || STATUS_MAP['requested'];
+                        const date = new Date(r.created_at).toLocaleDateString('en-GB');
+                        const amt = parseFloat(r.refund_amount || 0);
+                        return `
+                        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f5f5f4;">
+                            <div style="width:40px;height:40px;border-radius:10px;background:#f5f5f4;overflow:hidden;flex-shrink:0;">
+                                <img src="${r.image_url ? '../../' + r.image_url : 'https://images.unsplash.com/photo-1596040033229?auto=format&fit=crop&w=100'}" style="width:100%;height:100%;object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1596040033229?auto=format&fit=crop&w=100'">
+                            </div>
+                            <div style="flex:1;min-width:0;">
+                                <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                                    <span style="font-size:13px;font-weight:700;color:#1c1917;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.product_name}</span>
+                                </div>
+                                <div style="font-size:11px;color:#78716c;font-weight:600;">RET-${r.id.toString().padStart(5, '0')} · ${date}</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
+                                <span style="background:${sc.bg};color:${sc.color};padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;text-transform:uppercase;">${sc.label}</span>
+                                <span style="font-size:12px;font-weight:700;color:#1c1917;">₹${amt.toFixed(2)}</span>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    container.innerHTML = `
+                        <div style="text-align:center;padding:32px;">
+                            <div style="width:48px;height:48px;background:#f5f5f4;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+                                <img src="https://api.iconify.design/lucide:package.svg?color=%23a8a29e" width="24">
+                            </div>
+                            <p style="color:#a8a29e;font-size:12px;font-weight:600;">No return requests yet</p>
+                        </div>`;
+                }
+            } catch (e) {
+                console.error('Dashboard returns error:', e);
+            }
+        }
+
+        async function loadCustomerActivity() {
+            try {
+                const res = await fetch('../../backend/api/returns/get-customer-activity.php');
+                const data = await res.json();
+                const container = document.getElementById('customer-activity-list');
+
+                if (data.success && data.activity && data.activity.length > 0) {
+                    const TYPE_ICONS = {
+                        order: 'https://api.iconify.design/lucide:shopping-bag.svg',
+                        return: 'https://api.iconify.design/lucide:rotate-ccw.svg',
+                        wallet: 'https://api.iconify.design/lucide:wallet.svg',
+                        bid: 'https://api.iconify.design/lucide:gavel.svg',
+                        export: 'https://api.iconify.design/lucide:globe.svg',
+                        certificate: 'https://api.iconify.design/lucide:award.svg'
+                    };
+
+                    container.innerHTML = data.activity.slice(0, 8).map(a => {
+                        const date = new Date(a.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                        const icon = TYPE_ICONS[a.type] || '📝';
+                        const amountText = a.amount ? ` · ₹${parseFloat(a.amount).toFixed(2)}` : '';
+
+                        return `
+                        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0;">
+                                <img src="${TYPE_ICONS[a.type] || 'https://api.iconify.design/lucide:file-text.svg'}" style="width:100%; height:100%; filter: brightness(0) invert(1);">
+                            </div>
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-size:13px;font-weight:600;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                    ${a.description || (a.type.charAt(0).toUpperCase() + a.type.slice(1))}
+                                </div>
+                                <div style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:500;">
+                                    ${a.status.toUpperCase()} · ${date}${amountText}
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    container.innerHTML = `<p style="color:rgba(255,255,255,0.3);font-size:12px;text-align:center;padding:20px;">No recent activity</p>`;
+                }
+            } catch (e) {
+                console.error('Activity load error:', e);
+            }
+        }
+
+        // Load after main dashboard
+        const origOnload = window.onload;
+        window.onload = async () => {
+            if (typeof CurrencyManager !== 'undefined') await CurrencyManager.init();
+            loadDashboard();
+            loadDashboardReturns();
+            loadCustomerActivity();
+        };
+    </script>
+    <!-- Stat Detail Modal -->
+    <div id="statModal"
+        style="display:none; position:fixed; inset:0; background:rgba(12,10,9,0.7); backdrop-filter:blur(8px); z-index:1000; align-items:center; justify-content:center; padding:20px;">
+        <div
+            style="background:white; width:100%; max-width:400px; border-radius:24px; padding:32px; position:relative; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1);">
+            <button onclick="closeStatModal()"
+                style="position:absolute; top:20px; right:20px; background:#fafaf9; border:none; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                <img src="https://api.iconify.design/lucide:x.svg?color=%2378716c" width="16">
+            </button>
+            <div style="text-align:center;">
+                <div id="statModalIcon"
+                    style="width:56px; height:56px; border-radius:18px; background:rgba(255, 126, 33, 0.1); display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+                    <img src="https://api.iconify.design/lucide:wallet.svg?color=%23FF7E21" width="28">
+                </div>
+                <h3 id="statModalTitle" style="font-size:14px; font-weight:700; color:#78716c; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Wallet Balance</h3>
+                <div id="statModalValue" style="font-size:36px; font-weight:800; color:#1c1917; letter-spacing:-0.03em;">₹ 0.00</div>
+                <p style="font-size:12px; color:#a8a29e; margin-top:16px;">This is your total available balance in the Legacy of Spices wallet.</p>
+            </div>
+            <button onclick="closeStatModal()"
+                style="width:100%; margin-top:32px; background:#1c1917; color:white; border:none; padding:14px; border-radius:14px; font-weight:700; font-size:14px; cursor:pointer;">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        function showStatDetail(title, value) {
+            document.getElementById('statModalTitle').textContent = title;
+            document.getElementById('statModalValue').textContent = value;
+            document.getElementById('statModal').style.display = 'flex';
+        }
+        function closeStatModal() {
+            document.getElementById('statModal').style.display = 'none';
+        }
+    </script>
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

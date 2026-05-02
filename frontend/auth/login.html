@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Spice Trading Made Simple | Legacy of Spices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/country-selector.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Identity Services -->
+    <script src="../assets/js/custom-ui.js?v=1.5"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-dark text-white font-['Outfit'] overflow-x-hidden">
+    <div class="flex flex-col lg:flex-row min-h-screen">
+        <!-- Left Panel: Brand & Visuals -->
+        <div class="hidden lg:flex lg:w-1/2 relative bg-[#080706] p-8 xl:p-12 flex-col overflow-hidden">
+            <!-- Decoupled Brand Header -->
+            <div class="relative z-20 flex items-center gap-2 mb-12 cursor-pointer"
+                onclick="window.location.href='../index.html'">
+                <img src="../assets/images/logo.png" alt="Logo" class="h-16 w-auto"
+                    style="mix-blend-mode: screen; filter: brightness(1.2);">
+                <h2 class="text-3xl font-bold tracking-tight">Legacy of Spices</h2>
+            </div>
+
+            <!-- Hero Visual Area with Overlaid Text -->
+            <div class="relative flex-1 w-full rounded-[40px] overflow-hidden shadow-2xl border border-white/5">
+                <img src="../assets/images/hero_spices_background.png" alt=""
+                    class="absolute inset-0 w-full h-full object-cover">
+
+                <!-- Marketing Text Overlay (Localized Glassmorphism) -->
+                <div class="absolute inset-0 flex flex-col justify-center p-12 xl:p-16">
+                    <!-- Layered overlays for perfect contrast -->
+                    <div class="absolute inset-0 bg-black/20"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent"></div>
+
+                    <div class="relative z-10 max-w-sm">
+                        <div
+                            class="inline-block px-3 py-1 bg-primary/20 backdrop-blur-md border border-primary/30 rounded-full text-primary text-[10px] font-bold tracking-[2px] mb-6 uppercase">
+                            Market Access
+                        </div>
+                        <h1 class="text-4xl xl:text-5xl font-bold leading-tight mb-6 drop-shadow-2xl">Global
+                            Spice<br>Trading Made<br>Simple.</h1>
+                        <p class="text-base xl:text-lg text-white/70 leading-relaxed mb-10">Access the most advanced
+                            spice
+                            marketplace and analytics platform. Trade with confidence and transparency.</p>
+
+                        <div class="flex flex-wrap gap-3">
+                            <div
+                                class="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-md rounded-xl border border-white/10 shadow-lg">
+                                <img src="https://api.iconify.design/lucide:bar-chart-2.svg?color=%23FF7E21"
+                                    class="w-4 h-4" alt="">
+                                <span class="text-[10px] font-bold">Real-time Analytics</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-md rounded-xl border border-white/10 shadow-lg">
+                                <img src="https://api.iconify.design/lucide:globe.svg?color=%23FF7E21" class="w-4 h-4"
+                                    alt="">
+                                <span class="text-[10px] font-bold">Global Trading</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Login Form -->
+        <div
+            class="w-full lg:w-1/2 bg-[#080706] bg-[radial-gradient(circle_at_center,_#110F0C_0%,_#080706_100%)] flex items-center justify-center p-8 sm:p-12 md:p-12 xl:p-20 overflow-y-auto">
+            <div class="w-full max-w-md">
+                <div class="flex items-center p-1 bg-white/[0.03] border border-white/10 rounded-2xl mb-12 w-full">
+                    <a href="#"
+                        class="flex-1 text-center text-[10px] font-bold tracking-[2px] text-primary px-6 py-3 rounded-xl bg-white/5 shadow-inner">LOGIN</a>
+                    <a href="register.html"
+                        class="flex-1 text-center text-[10px] font-bold tracking-[2px] text-white/30 hover:text-white transition-all px-6 py-3 rounded-xl">REGISTER</a>
+                </div>
+
+                <div class="mb-10">
+                    <h2 class="text-4xl font-bold mb-3 tracking-tight">Welcome back</h2>
+                    <p class="text-white/40 text-sm">Log in to your account and manage your spice trade.</p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Google Sign In -->
+                    <div class="relative group">
+                        <button onclick="googleSignIn()"
+                            class="w-full bg-white/5 group-hover:bg-white/10 border border-white/10 text-white py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-3">
+                            <img src="https://api.iconify.design/logos:google-icon.svg" class="w-5 h-5" alt="">
+                            Sign in with Google
+                        </button>
+                    </div>
+
+                    <!-- OR Separator -->
+                    <div class="flex items-center gap-4 py-2">
+                        <div class="h-px flex-1 bg-white/5"></div>
+                        <span class="text-[9px] font-bold tracking-[3px] text-white/20 uppercase">OR</span>
+                        <div class="h-px flex-1 bg-white/5"></div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-bold text-white/30 uppercase tracking-[2px]">Email
+                            Address</label>
+                        <div class="relative group">
+                            <div
+                                class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity">
+                                <img src="https://api.iconify.design/lucide:mail.svg?color=white" class="w-4 h-4"
+                                    alt="">
+                            </div>
+                            <input type="email" id="login-email" placeholder="trade@email.com"
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm outline-none focus:border-primary/50 focus:bg-white/10 transition-all">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label
+                            class="block text-[10px] font-bold text-white/30 uppercase tracking-[2px]">Password</label>
+                        <div class="relative group">
+                            <div
+                                class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity">
+                                <img src="https://api.iconify.design/lucide:lock.svg?color=white" class="w-4 h-4"
+                                    alt="">
+                            </div>
+                            <input type="password" id="login-password" placeholder="••••••••••••"
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-12 py-4 text-sm outline-none focus:border-primary/50 focus:bg-white/10 transition-all">
+                            <button type="button" onclick="togglePasswordVisibility('login-password')"
+                                class="absolute right-4 top-1/2 -translate-y-1/2 background-transparent border-none cursor-pointer p-1">
+                                <img src="https://api.iconify.design/lucide:eye.svg?color=%2394a3b8" width="18"
+                                    id="login-password-icon">
+                            </button>
+                        </div>
+                        <div class="flex justify-end">
+                            <a href="forgot-password.html"
+                                class="text-[10px] font-bold text-primary hover:underline">FORGOT PASSWORD?</a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 py-2 px-1">
+                        <label class="relative flex items-center cursor-pointer">
+                            <input type="checkbox" id="keep-logged"
+                                class="peer h-5 w-5 appearance-none bg-white/5 border border-white/20 rounded-md checked:bg-primary checked:border-primary transition-all">
+                            <img src="https://api.iconify.design/lucide:check.svg?color=white"
+                                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"
+                                alt="">
+                        </label>
+                        <label for="keep-logged"
+                            class="text-xs text-white/50 cursor-pointer select-none hover:text-white transition-colors">
+                            Keep me logged in for 30 days
+                        </label>
+                    </div>
+
+                    <button onclick="emailLogin()"
+                        class="group w-full bg-primary hover:bg-primary-hover text-white py-5 rounded-2xl font-bold text-sm tracking-widest transition-all shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-3 mt-4">
+                        SIGN IN
+                        <img src="https://api.iconify.design/lucide:arrow-right.svg?color=white"
+                            class="w-4 h-4 group-hover:translate-x-1 transition-transform" alt="">
+                    </button>
+
+                    <p class="text-[10px] text-white/10 text-center mt-6 tracking-widest uppercase">
+                        Enterprise-Level Security
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePasswordVisibility(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = document.getElementById(fieldId + '-icon');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.src = 'https://api.iconify.design/lucide:eye-off.svg?color=%2394a3b8';
+            } else {
+                field.type = 'password';
+                icon.src = 'https://api.iconify.design/lucide:eye.svg?color=%2394a3b8';
+            }
+        }
+
+        // Google Identity Services Client initialization
+        let tokenClient;
+        window.onload = async function () {
+            // Check for existing session first
+            try {
+                const sessionResp = await fetch('../../backend/api/auth/check-session.php');
+                const sessionData = await sessionResp.json();
+                if (sessionData.logged_in) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('action') === 'shop') {
+                        window.location.replace('../customer/catalog.html');
+                    } else {
+                        window.location.replace(sessionData.redirect);
+                    }
+                    return;
+                }
+            } catch (e) { console.error("Session check failed", e); }
+
+            try {
+                const configResponse = await fetch('../../backend/api/config/get-public-config.php');
+                const config = await configResponse.json();
+
+                if (!config.google_client_id) {
+                    console.error("Google Client ID not found.");
+                    return;
+                }
+
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: config.google_client_id,
+                    scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+                    callback: (tokenResponse) => {
+                        if (tokenResponse && tokenResponse.access_token) {
+                            handleGoogleAuth(tokenResponse.access_token);
+                        }
+                    },
+                });
+            } catch (error) {
+                console.error("GIS Init Error:", error);
+            }
+        };
+
+        window.googleSignIn = () => {
+            if (tokenClient) {
+                tokenClient.requestAccessToken();
+            } else {
+                showToast("Authentication system is loading. Please try again in a few seconds.", 'error');
+            }
+        };
+
+        async function handleGoogleAuth(accessToken, role = null, extraData = {}) {
+            try {
+                const payload = {
+                    access_token: accessToken,
+                    role: role,
+                    country: extraData.country,
+                    currency_code: extraData.currency_code,
+                    currency_symbol: extraData.currency_symbol
+                };
+
+                const response = await fetch('../../backend/api/auth/google_auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    if (result.role_needed) {
+                        // New user detected, show role modal
+                        window.currentAccessToken = accessToken;
+                        document.getElementById('role-modal').classList.remove('hidden');
+                        document.getElementById('role-modal').classList.add('flex');
+                    } else {
+                        // Debugging logs (Transient)
+                        console.log("Auth Success. Result:", result);
+
+                        // Registration complete or existing user, redirect
+                        if (result.redirect) {
+                            console.log("Redirecting to (backend-driven):", result.redirect);
+                            window.location.replace(result.redirect);
+                        } else {
+                            const role = (result.user.role || '').toLowerCase().trim();
+                            console.log("No backend redirect found. Determining path for role:", role);
+                            const redirectMap = {
+                                'farmer': '../farmer/farmer-dashboard.html',
+                                'customer': '../customer/customer-dashboard.html',
+                                'admin': '../admin/admin-dashboard.html'
+                            };
+                            const target = redirectMap[role] || '../index.html';
+                            console.log("Redirecting to (fallback):", target);
+                            window.location.replace(target);
+                        }
+                    }
+                } else {
+                    showToast(result.message || "Authentication failed", 'error');
+                }
+            } catch (error) {
+                console.error("Auth Error:", error);
+                showToast("Authentication failed. Please try again.", 'error');
+            }
+        }
+
+        window.completeGoogleAuth = async (role) => {
+            document.getElementById('role-modal').classList.add('hidden');
+            handleGoogleAuth(window.currentAccessToken, role);
+        };
+
+        window.emailLogin = async () => {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const keepLogged = document.getElementById('keep-logged').checked;
+
+            if (!email || !password) {
+                showToast("Please enter both email and password.", 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('../../backend/api/auth/login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, keep_logged: keepLogged })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    window.location.href = result.redirect;
+                } else {
+                    showToast(result.message || "Login failed", 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast("An error occurred during login. Please try again.", 'error');
+            }
+        };
+
+        // Enable Enter Key Submission
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = ['login-email', 'login-password'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            emailLogin();
+                        }
+                    });
+                }
+            });
+        });
+
+    </script>
+
+    <!-- Role & Country Selection Modal for Google SSO -->
+    <div id="role-modal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+
+        <!-- Step 1: Role Selection -->
+        <div id="modal-step-role"
+            class="bg-bg-dark border border-white/10 rounded-[32px] p-8 max-w-sm w-full shadow-2xl">
+            <h3 class="text-2xl font-bold mb-2">Almost there!</h3>
+            <p class="text-white/40 text-sm mb-8">Please select your account type to create your profile.</p>
+
+            <div class="space-y-4">
+                <button onclick="selectGoogleRole('farmer')"
+                    class="w-full flex items-center gap-4 p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all text-left group">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all">
+                        <img src="https://api.iconify.design/lucide:sprout.svg?color=%23FF7E21"
+                            class="w-6 h-6 group-hover:invert group-hover:brightness-0" alt="">
+                    </div>
+                    <div>
+                        <span class="block font-bold text-white uppercase tracking-wider text-xs">FARMER</span>
+                        <span class="text-[10px] text-white/30">Sell your global spice harvest</span>
+                    </div>
+                </button>
+
+                <button onclick="selectGoogleRole('customer')"
+                    class="w-full flex items-center gap-4 p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all text-left group">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all">
+                        <img src="https://api.iconify.design/lucide:shopping-bag.svg?color=%23FF7E21"
+                            class="w-6 h-6 group-hover:invert group-hover:brightness-0" alt="">
+                    </div>
+                    <div>
+                        <span class="block font-bold text-white uppercase tracking-wider text-xs">CUSTOMER</span>
+                        <span class="text-[10px] text-white/30">Directly source premium spices</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Country Selection -->
+        <div id="modal-step-country"
+            class="hidden bg-bg-dark border border-white/10 rounded-[32px] p-8 max-w-sm w-full shadow-2xl">
+            <button onclick="backToRoleDetails()"
+                class="mb-4 flex items-center gap-2 text-white/40 hover:text-white transition-colors text-xs uppercase tracking-wider font-bold">
+                <img src="https://api.iconify.design/lucide:arrow-left.svg?color=white" class="w-4 h-4"> Back
+            </button>
+            <h3 class="text-2xl font-bold mb-2">Where are you?</h3>
+            <p class="text-white/40 text-sm mb-8">Select your country to set up currency and shipping.</p>
+
+            <div class="space-y-4">
+                <button type="button" onclick="CountrySelector.show()" id="google-country-btn"
+                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-left text-white/40 outline-none hover:bg-white/10 hover:border-white/30 transition-all flex items-center justify-between group">
+                    <span>Select your country</span>
+                    <img src="https://api.iconify.design/lucide:chevron-down.svg?color=white"
+                        class="w-4 h-4 opacity-40 group-hover:opacity-100">
+                </button>
+
+                <button onclick="finalizeGoogleAuth()" id="google-complete-btn" disabled
+                    class="w-full bg-primary disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-hover text-white py-4 rounded-2xl font-bold text-sm tracking-widest transition-all shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-3 mt-4">
+                    COMPLETE SETUP
+                    <img src="https://api.iconify.design/lucide:check.svg?color=white" class="w-4 h-4" alt="">
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Floating Back to Home Button -->
+    <button onclick="window.location.href='../index.html'" class="fixed bottom-8 left-8 z-50 group">
+        <div
+            class="w-11 h-11 rounded-full bg-primary flex items-center justify-center shadow-2xl shadow-primary/40 group-hover:scale-110 group-active:scale-95 transition-all duration-300 text-white">
+            <img src="https://api.iconify.design/lucide:arrow-left.svg?color=white" class="w-5 h-5" alt="">
+        </div>
+    </button>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/country-selector.js"></script>
+    <script>
+        // Init Country Selector for Google Modal
+        let googleAuthData = {
+            role: null,
+            country: null,
+            currency_code: null,
+            currency_symbol: null
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            CountrySelector.init((country) => {
+                // Determine if we are in the Google Modal context
+                // Since this page only has one country selector, we assume it's for that.
+                googleAuthData.country = country.name;
+                googleAuthData.currency_code = country.currency_code;
+                googleAuthData.currency_symbol = country.currency_symbol;
+
+                const btn = document.getElementById('google-country-btn');
+                if (btn) {
+                    btn.innerHTML = `<span class="text-white font-medium">${country.name}</span> <span class="text-white/50 text-xs">(${country.currency_code})</span>`;
+                    btn.classList.remove('text-white/40');
+
+                    const completeBtn = document.getElementById('google-complete-btn');
+                    completeBtn.disabled = false;
+                }
+            });
+        });
+
+        // New Step 1: Select Role
+        window.selectGoogleRole = (role) => {
+            googleAuthData.role = role;
+            document.getElementById('modal-step-role').classList.add('hidden');
+            document.getElementById('modal-step-country').classList.remove('hidden');
+        };
+
+        // Back Button
+        window.backToRoleDetails = () => {
+            document.getElementById('modal-step-country').classList.add('hidden');
+            document.getElementById('modal-step-role').classList.remove('hidden');
+        };
+
+        // Final Step: Complete Auth
+        window.finalizeGoogleAuth = async () => {
+            document.getElementById('role-modal').classList.add('hidden');
+
+            // Pass the collected data to handleGoogleAuth
+            handleGoogleAuth(window.currentAccessToken, googleAuthData.role, googleAuthData);
+        };
+    </script>
+</body>
+
+</html>

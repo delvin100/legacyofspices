@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+    // Immediate Session Enforcement
+    (async () => {
+        const res = await fetch('../../backend/api/auth/check-session.php');
+        const data = await res.json();
+        if (!data.logged_in) {
+            window.location.href = '../auth/login.html';
+        } else if (data.role !== 'delivery_staff') {
+            window.location.href = data.redirect || '../auth/login.html';
+        }
+    })();
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard | Legacy of Spices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/country-selector.css">
+    <script src="../assets/js/custom-ui.js?v=1.5"></script>
+    <script src="../assets/js/country-selector.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                        'bg-dashboard': '#14110F',
+                        'card-bg': '#1C1917',
+                        'border-color': '#292524',
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <style>
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            font-weight: 700 !important;
+        }
+
+        .nav-item.active img {
+            filter: brightness(0) invert(1);
+        }
+
+        @keyframes otp-focus {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .otp-input:focus {
+            animation: otp-focus 0.2s ease-out;
+            border-color: #FF7E21;
+        }
+    </style>
+</head>
+
+<body style="background: #f8fafc; color: #1e293b; font-family: 'Outfit', sans-serif;">
+    <!-- Sidebar -->
+    <aside style="width: 260px; background: #0f172a; position: fixed; height: 100vh; padding: 24px; color: white;">
+        <div class="logo" style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
+            <img src="../assets/images/logo.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 22px; color: #ffffff; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">Legacy</h3>
+                <span style="font-size: 11px; color: #3b82f6; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; margin-top: 2px;">OF SPICES</span>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 4px;">
+            <a href="#" onclick="switchView('overview')" id="nav-overview" class="nav-item active"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: white; font-weight: 500; font-size: 14px;">
+                <img src="https://api.iconify.design/lucide:layout-grid.svg?color=%2394a3b8" width="18" alt="">
+                Overview
+            </a>
+            <a href="#" onclick="switchView('tasks')" id="nav-tasks" class="nav-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                <img src="https://api.iconify.design/lucide:clock.svg?color=%2394a3b8" width="18" alt="">
+                My Tasks
+            </a>
+            <a href="#" onclick="switchView('history')" id="nav-history" class="nav-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                <img src="https://api.iconify.design/lucide:history.svg?color=%2394a3b8" width="18" alt="">
+                History
+            </a>
+            <a href="#" onclick="switchView('profile')" id="nav-profile" class="nav-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                <img src="https://api.iconify.design/lucide:user.svg?color=%2394a3b8" width="18" alt="">
+                Profile
+            </a>
+        </nav>
+
+        <div style="position: absolute; bottom: 24px; left: 24px; right: 24px;">
+            <button onclick="logout()"
+                style="display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #ff0000; background: transparent; border: 2px solid #ff0000; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px;">
+                <img src="https://api.iconify.design/lucide:log-out.svg?color=%23ff0000" width="18"
+                    style="transform: rotate(180deg);" alt="">
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main style="margin-left: 260px; padding: 24px 40px;">
+        <header style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px;">
+            <div>
+                <h1 id="view-title" style="font-size: 28px; font-weight: 700; margin: 0;">Staff Dashboard</h1>
+                <p id="view-subtitle" style="color: #64748b; margin-top: 4px;">Track your deliveries and assignments.
+                </p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="text-align: right;">
+                    <div id="staff-name-display" style="font-weight: 700; font-size: 14px;">Staff Member</div>
+                    <div style="font-size: 12px; color: #64748b;">Delivery Staff</div>
+                </div>
+                <div id="staff-avatar-display"
+                    style="width: 44px; height: 44px; background: #ff7e21; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">
+                    ST</div>
+            </div>
+        </header>
+
+        <!-- Overview View -->
+        <div id="overview-view">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px;">
+                <div
+                    style="background: white; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                        <div style="background: #eff6ff; padding: 10px; border-radius: 10px;">
+                            <img src="https://api.iconify.design/lucide:truck.svg?color=%233b82f6" width="24" alt="">
+                        </div>
+                        <span style="color: #3b82f6; font-size: 12px; font-weight: 700;">Lifetime</span>
+                    </div>
+                    <div style="font-size: 14px; color: #64748b; font-weight: 500;">Deliveries Made</div>
+                    <div id="stat-completed" style="font-size: 32px; font-weight: 700; margin-top: 8px;">0</div>
+                </div>
+                <div
+                    style="background: white; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                        <div style="background: #fff7ed; padding: 10px; border-radius: 10px;">
+                            <img src="https://api.iconify.design/lucide:clock.svg?color=%23ea580c" width="24" alt="">
+                        </div>
+                        <span style="color: #ea580c; font-size: 12px; font-weight: 700;">Active</span>
+                    </div>
+                    <div style="font-size: 14px; color: #64748b; font-weight: 500;">Pending Tasks</div>
+                    <div id="stat-pending" style="font-size: 32px; font-weight: 700; margin-top: 8px;">0</div>
+                </div>
+                <div class="bg-white p-6 rounded-3xl border border-stone-100 shadow-sm">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-xl">
+                            <img src="https://api.iconify.design/lucide:calendar-check-2.svg?color=%236366f1" width="24"
+                                alt="">
+                        </div>
+                        <span class="text-xs font-bold text-indigo-500 bg-indigo-50 px-2 py-1 rounded-lg">Today</span>
+                    </div>
+                    <div class="text-stone-500 text-sm font-medium mb-1">Today's Deliveries</div>
+                    <div class="text-3xl font-extrabold text-stone-800" id="stat-today">0</div>
+                </div>
+            </div>
+
+            <div
+                style="background: white; border-radius: 20px; padding: 32px; border: 1px solid #e2e8f0; margin-bottom: 40px;">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 style="font-size: 18px; font-weight: 700;">Recently Assigned Tasks</h3>
+                    <button onclick="switchView('tasks')" class="text-primary text-sm font-bold">View All</button>
+                </div>
+                <div id="recent-tasks-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="col-span-full py-8 text-center text-stone-400">Loading tasks...</div>
+                </div>
+            </div>
+
+            <!-- Performance Chart -->
+            <div class="bg-white p-8 rounded-[32px] border border-stone-100 shadow-sm mb-10">
+                <h3 class="text-xl font-bold text-stone-900 mb-6">7-Day Performance</h3>
+                <div class="h-80 w-full">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasks View -->
+        <div id="tasks-view" style="display: none;">
+            <div id="all-tasks-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Tasks will be loaded here -->
+            </div>
+        </div>
+
+        <!-- History View -->
+        <div id="history-view" style="display: none;">
+            <div style="background: white; border-radius: 20px; padding: 32px; border: 1px solid #e2e8f0;">
+                <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #f1f5f9;">
+                            <th style="padding: 12px; font-size: 13px; color: #64748b; text-align: center;">ID</th>
+                            <th style="padding: 12px; font-size: 13px; color: #64748b; text-align: center;">Product</th>
+                            <th style="padding: 12px; font-size: 13px; color: #64748b; text-align: center;">Customer
+                            </th>
+                            <th style="padding: 12px; font-size: 13px; color: #64748b; text-align: center;">Status</th>
+                            <th style="padding: 12px; font-size: 13px; color: #64748b; text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                        <!-- History data -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Profile View -->
+        <div id="profile-view" style="display: none;">
+            <!-- Removed Header -->
+            <div style="margin-top: 40px;"></div>
+
+            <div style="display: grid; grid-template-columns: 320px 1fr; gap: 40px; align-items: start;">
+                <!-- Profile Card -->
+                <div
+                    style="background: white; border: 1px solid #e7e5e4; border-radius: 24px; padding: 32px; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+                    <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 20px;">
+                        <div id="avatar-container"
+                            style="width: 100%; height: 100%; border-radius: 50%; background: #FF7E21; color: white; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 700; overflow: hidden; border: 4px solid #fff; box-shadow: 0 10px 15px -3px rgba(255,126,33,0.3);">
+                            <span id="initials"></span>
+                            <img id="profile-img" src="" referrerpolicy="no-referrer"
+                                style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <button onclick="document.getElementById('profile-upload').click()"
+                            style="position: absolute; bottom: 0; right: 0; width: 36px; height: 36px; border-radius: 50%; background: white; border: 1px solid #e7e5e4; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+                            <img src="https://api.iconify.design/lucide:camera.svg?color=%231c1917" width="18" alt="">
+                        </button>
+                        <input type="file" id="profile-upload" class="hidden" accept="image/*"
+                            onchange="uploadImage(this)">
+                    </div>
+                    <h2 id="display-name"
+                        style="font-size: 20px; font-weight: 700; color: #1c1917; margin-bottom: 4px;">Loading...</h2>
+                    <div
+                        style="display: inline-block; padding: 4px 12px; background: rgba(255, 126, 33, 0.1); color: #FF7E21; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 24px;">
+                        DELIVERY STAFF</div>
+
+                    <div style="text-align: left; background: #fafaf9; border-radius: 16px; padding: 16px;">
+                        <div
+                            style="font-size: 12px; color: #a8a29e; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+                            Account ID</div>
+                        <div id="display-id" style="font-family: monospace; font-size: 14px; color: #1c1917;">
+                            #USR-000000</div>
+                    </div>
+                </div>
+
+                <!-- Edit Form -->
+                <div
+                    style="background: white; border: 1px solid #e7e5e4; border-radius: 24px; padding: 40px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+                    <form id="profile-form" onsubmit="updateProfile(event)"
+                        style="display: flex; flex-direction: column; gap: 24px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Full
+                                    Name</label>
+                                <input type="text" name="full_name" id="input-name" required
+                                    class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all">
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label id="label-email"
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Email
+                                    Address</label>
+                                <input type="email" name="email" id="input-email" readonly
+                                    class="w-full bg-[#f5f5f4] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none transition-all cursor-not-allowed">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Phone
+                                    Number</label>
+                                <input type="tel" name="phone" id="input-phone" placeholder="+1234567890" maxlength="16"
+                                    oninput="validatePhoneInput(this)"
+                                    class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all h-[66px]">
+                                <p class="text-[10px] text-stone-400">Format: <strong>+</strong> followed by
+                                    <strong>8-15 digits</strong>
+                                </p>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Address</label>
+                                <textarea name="address" id="input-address" rows="2"
+                                    placeholder="e.g. Country, State, District, City, Street Name, House Name/House No..."
+                                    class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all resize-none"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Country Selector -->
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 24px;">
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Country
+                                    / Currency</label>
+                                <button type="button" onclick="CountrySelector.show()"
+                                    class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none hover:border-primary transition-all text-left flex justify-between items-center group">
+                                    <span id="display-country"
+                                        class="text-stone-600 group-hover:text-stone-900 transition-colors">Select
+                                        Country</span>
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="text-stone-400 text-[10px] font-bold uppercase tracking-wider currency-code">USD</span>
+                                        <img src="https://api.iconify.design/lucide:chevron-down.svg?color=%23a8a29e"
+                                            class="w-4 h-4 opacity-50" alt="">
+                                    </div>
+                                </button>
+                                <input type="hidden" name="country" id="input-country">
+                                <input type="hidden" name="currency_code" id="input-currency-code">
+                                <input type="hidden" name="currency_symbol" id="input-currency-symbol">
+                            </div>
+
+                            <!-- Password Section -->
+                            <div id="password-section" style="display: none; flex-direction: column; gap: 8px;">
+                                <label
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">New
+                                    Password (Optional)</label>
+                                <div style="position: relative;">
+                                    <input type="password" name="password" id="input-password"
+                                        placeholder="Min. 8 characters to change"
+                                        class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all pr-12">
+                                    <button type="button" onclick="togglePasswordVisibility('input-password')"
+                                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; padding: 4px;">
+                                        <img src="https://api.iconify.design/lucide:eye.svg?color=%2394a3b8" width="18"
+                                            id="input-password-icon">
+                                    </button>
+                                </div>
+                                <p style="font-size: 11px; color: #a8a29e;">Leave blank to keep your current password.
+                                </p>
+                            </div>
+
+                            <div style="padding-top: 24px; margin-top: 24px; border-top: 1px solid #e7e5e4;">
+                                <button type="submit" id="save-btn"
+                                    style="background: #FF7E21; color: white; padding: 14px 32px; border-radius: 14px; border: none; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(255,126,33,0.3);"
+                                    onmouseover="this.style.background='#E66D1A'"
+                                    onmouseout="this.style.background='#FF7E21'">
+                                    Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 p-4">
+        <div
+            class="bg-white rounded-[2.5rem] p-10 max-w-2xl w-full shadow-2xl relative animate-in zoom-in-95 duration-200">
+            <!-- Close Button -->
+            <button onclick="closeModal()"
+                class="absolute right-8 top-8 w-12 h-12 rounded-full bg-stone-50 flex items-center justify-center hover:bg-stone-100 transition-colors group">
+                <img src="https://api.iconify.design/lucide:x.svg?color=%231c1917"
+                    class="w-6 h-6 opacity-70 group-hover:opacity-100">
+            </button>
+
+            <div id="modal-content">
+                <!-- Modal content will be dynamic -->
+            </div>
+
+            <div id="modal-actions" class="mt-10 flex gap-4">
+                <!-- Actions will be dynamic -->
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP Verification Modal -->
+    <div id="otp-modal"
+        class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div
+            class="bg-white rounded-[2.5rem] p-10 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200 text-center relative">
+            <div class="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <img src="https://api.iconify.design/lucide:mail.svg?color=%23f97316" width="32">
+            </div>
+            <h3 class="text-2xl font-extrabold text-stone-900 mb-2">Verify Delivery</h3>
+            <p class="text-stone-500 text-sm font-medium mb-8">We've sent a 4-digit code to the customer's email. Please
+                enter it below.</p>
+
+            <div class="flex justify-center gap-4 mb-8">
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" oninput="handleOTPInput(this, 0)"
+                    onkeydown="handleOTPKeydown(event, 0)" onclick="handleOTPClick(0)"
+                    class="otp-field w-14 h-16 text-center text-2xl font-extrabold text-stone-900 bg-stone-50 border-2 border-stone-100 rounded-2xl focus:outline-none transition-all">
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" disabled
+                    oninput="handleOTPInput(this, 1)" onkeydown="handleOTPKeydown(event, 1)" onclick="handleOTPClick(1)"
+                    class="otp-field w-14 h-16 text-center text-2xl font-extrabold text-stone-900 bg-stone-50 border-2 border-stone-100 rounded-2xl focus:outline-none transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" disabled
+                    oninput="handleOTPInput(this, 2)" onkeydown="handleOTPKeydown(event, 2)" onclick="handleOTPClick(2)"
+                    class="otp-field w-14 h-16 text-center text-2xl font-extrabold text-stone-900 bg-stone-50 border-2 border-stone-100 rounded-2xl focus:outline-none transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" disabled
+                    oninput="handleOTPInput(this, 3)" onkeydown="handleOTPKeydown(event, 3)" onclick="handleOTPClick(3)"
+                    class="otp-field w-14 h-16 text-center text-2xl font-extrabold text-stone-900 bg-stone-50 border-2 border-stone-100 rounded-2xl focus:outline-none transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+            </div>
+
+            <div class="space-y-4">
+                <button onclick="confirmDelivery()" id="verify-otp-btn"
+                    class="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover shadow-xl shadow-primary/20 transition-all">
+                    Confirm Delivery
+                </button>
+                <button onclick="closeOTPModal()"
+                    class="w-full py-4 text-stone-400 font-bold hover:text-stone-600 transition-all text-sm">
+                    Cancel
+                </button>
+            </div>
+            <p class="mt-8 text-xs text-stone-400 font-medium">
+                Didn't receive the code? <button onclick="resendOTP()"
+                    class="text-primary hover:underline">Resend</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal"
+        class="fixed inset-0 z-[100010] hidden flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-300">
+        <div
+            class="bg-white rounded-[2.5rem] p-10 max-w-2xl w-full shadow-2xl animate-in zoom-in-95 duration-200 relative overflow-hidden">
+
+            <div class="mb-10">
+                <span id="success-order-id"
+                    class="text-xs font-bold text-orange-500 uppercase tracking-widest">ORD-00001</span>
+                <h2 class="text-4xl font-extrabold text-stone-900 mt-1">Delivery Details</h2>
+            </div>
+
+            <div class="grid grid-cols-2 gap-12 mb-10">
+                <!-- Product Info -->
+                <div>
+                    <h4 class="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em] mb-4">Product Info
+                    </h4>
+                    <div class="flex items-center gap-4">
+                        <img id="success-product-image" src=""
+                            class="w-24 h-24 rounded-3xl object-cover bg-stone-50 shadow-sm"
+                            onerror="this.src='../assets/images/logo.png'">
+                        <div>
+                            <h3 id="success-product-name" class="text-xl font-bold text-stone-900 leading-tight">
+                                Product Name</h3>
+                            <p id="success-product-qty" class="text-stone-500 font-medium text-sm mt-1">1.00 kg</p>
+                            <p id="success-product-price" class="text-orange-500 font-bold text-2xl mt-2">&#8377;1,300</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Details -->
+                <div>
+                    <h4 class="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em] mb-4">Customer
+                        Details</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+                                <img src="https://api.iconify.design/lucide:user.svg?color=%233b82f6" width="20">
+                            </div>
+                            <span id="success-customer-name" class="text-lg font-bold text-stone-800">Aby
+                                Thomas</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
+                                <img src="https://api.iconify.design/lucide:phone.svg?color=%2322c55e" width="20">
+                            </div>
+                            <span id="success-customer-phone"
+                                class="text-lg font-bold text-stone-800">+91232323232323</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-stone-50 rounded-[2rem] p-8 border border-stone-100 mb-10">
+                <h4 class="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em] mb-4">Delivery Address
+                </h4>
+                <div class="flex items-center gap-5">
+                    <div class="w-12 h-12 rounded-2xl bg-orange-100/50 flex items-center justify-center shrink-0">
+                        <img src="https://api.iconify.design/lucide:map-pin.svg?color=%23f97316" width="24">
+                    </div>
+                    <span id="success-delivery-address" class="text-lg font-bold text-stone-700 leading-snug">India,
+                        Kerala, Pathanamthitta, Chunkappara</span>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-stone-200 flex items-center gap-5">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-100/50 flex items-center justify-center shrink-0">
+                        <img src="https://api.iconify.design/lucide:clock.svg?color=%238b5cf6" width="24">
+                    </div>
+                    <div class="flex flex-col">
+                        <h4 class="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em]">Delivered At
+                        </h4>
+                        <span id="success-delivery-time" class="text-lg font-bold text-stone-800">17/02/2026,
+                            05:57:29 PM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <p class="text-emerald-600 font-bold mb-6 flex items-center gap-2">
+                    <img src="https://api.iconify.design/lucide:check-circle.svg?color=%2310b981" width="18">
+                    The delivery is done.
+                </p>
+                <button id="success-ok-btn" onclick="closeSuccessModal()"
+                    class="w-full max-w-xs py-4 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 shadow-xl shadow-emerald-600/20 transition-all uppercase tracking-widest">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        let currentView = 'overview';
+        let currentTaskDetails = null;
+        let currentVerificationTask = null;
+        let isVerifying = false;
+        let successReloadTimer = null;
+
+        function switchView(viewId) {
+            document.querySelectorAll('main > div').forEach(div => div.style.display = 'none');
+            const target = document.getElementById(`${viewId}-view`);
+            if (target) target.style.display = 'block';
+
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            const nav = document.getElementById(`nav-${viewId}`);
+            if (nav) nav.classList.add('active');
+
+            const titles = {
+                overview: 'Staff Dashboard',
+                tasks: 'My Delivery Tasks',
+                history: 'Delivery History',
+                profile: 'My Profile'
+            };
+            document.getElementById('view-title').textContent = titles[viewId];
+            currentView = viewId;
+
+            if (viewId === 'overview') {
+                loadDeliveries();
+                loadPerformanceChart();
+            }
+            if (viewId === 'tasks') loadDeliveries();
+            if (viewId === 'profile') loadProfileData();
+        }
+
+        // Global price formatter helper
+        function formatDisplayPrice(amount, fromCurrency) {
+            if (window.CurrencyManager && window.CurrencyManager.rates) {
+                try {
+                    const amountInBase = window.CurrencyManager.convert(amount, fromCurrency || 'INR', 'INR');
+                    return window.CurrencyManager.format(amountInBase);
+                } catch (e) {
+                    console.error('Price format error', e);
+                }
+            }
+            const symbol = fromCurrency === 'INR' ? '&#8377;' : (fromCurrency === 'USD' ? '$' : fromCurrency);
+            return symbol + parseFloat(amount).toLocaleString();
+        }
+
+        async function loadDeliveries() {
+            const overviewContainer = document.getElementById('recent-tasks-list');
+            const allTasksContainer = document.getElementById('all-tasks-list');
+            const historyBody = document.getElementById('history-table-body');
+
+            // Ensure CurrencyManager is ready
+            if (window.CurrencyManager) await window.CurrencyManager.init();
+
+            try {
+                const res = await fetch('../../backend/api/delivery/staff/get-assigned-orders.php');
+                const data = await res.json();
+
+                if (data.success) {
+                    const allTasks = [
+                        ...data.orders.map(o => ({ ...o, type: 'order' })),
+                        ...data.auctions.map(a => ({ ...a, type: 'auction' }))
+                    ];
+
+                    const activeTasks = allTasks.filter(t => {
+                        const s = (t.type === 'auction' ? t.shipping_status : t.status) || 'ordered';
+                        return s.toLowerCase() !== 'delivered';
+                    });
+                    const historyTasks = allTasks.filter(t => {
+                        const s = (t.type === 'auction' ? t.shipping_status : t.status) || 'ordered';
+                        return s.toLowerCase() === 'delivered';
+                    });
+
+                    // Sort history by delivered_at latest first
+                    historyTasks.sort((a, b) => {
+                        const dateA = new Date(a.delivered_at || a.delivery_date || a.updated_at || a.order_date || 0);
+                        const dateB = new Date(b.delivered_at || b.delivery_date || b.updated_at || b.order_date || 0);
+                        return dateB - dateA;
+                    });
+
+                    // Update Stats
+                    document.getElementById('stat-completed').textContent = historyTasks.length;
+                    document.getElementById('stat-pending').textContent = activeTasks.length;
+
+                    const today = new Date().toISOString().split('T')[0];
+                    const deliveredToday = historyTasks.filter(t => (t.delivered_at || t.delivery_date || t.updated_at || '').startsWith(today)).length;
+                    document.getElementById('stat-today').textContent = deliveredToday;
+
+                    // Render Containers
+                    const cardsHtml = activeTasks.map(task => renderTaskCard(task)).join('');
+                    const recentCardsHtml = activeTasks.slice(0, 2).map(task => renderTaskCard(task)).join('');
+
+                    const emptyStateHtml = `
+                            <div class="col-span-full py-16 text-center">
+                                <div class="w-24 h-24 bg-stone-50 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-stone-100/50 shadow-sm">
+                                    <img src="https://api.iconify.design/lucide:package-plus.svg?color=%23d1d5db" class="w-12 h-12">
+                                </div>
+                                <h4 class="text-stone-900 font-extrabold text-2xl mb-2">No Assigned Tasks</h4>
+                                <p class="text-stone-400 font-medium max-w-sm mx-auto text-sm leading-relaxed">You're all caught up! There are no active deliveries assigned to you right now. Check back later for new assignments.</p>
+                            </div>
+                        `;
+
+                    if (overviewContainer) overviewContainer.innerHTML = recentCardsHtml || emptyStateHtml;
+                    if (allTasksContainer) allTasksContainer.innerHTML = cardsHtml || emptyStateHtml;
+
+                    // History Table
+                    if (historyBody) {
+                        if (historyTasks.length > 0) {
+                            historyBody.innerHTML = historyTasks.map(task => {
+                                const idPrefix = task.type === 'auction' ? 'AUC' : 'ORD';
+                                const formattedId = `${idPrefix}-${task.id.toString().padStart(5, '0')}`;
+                                return `
+                                    <tr style="border-bottom: 1px solid #f1f5f9;" class="hover:bg-stone-50 transition-colors">
+                                        <td style="padding: 12px; font-size: 14px; text-align: center;">${formattedId}</td>
+                                        <td style="padding: 12px; font-size: 14px; font-weight: 600; text-align: center;">${task.product_name}</td>
+                                        <td style="padding: 12px; font-size: 14px; text-align: center;">${task.customer_name || 'N/A'}</td>
+                                        <td style="padding: 12px; text-align: center;">
+                                            <span class="px-2 py-1 rounded-full bg-green-100 text-green-600 text-[10px] font-bold uppercase">Delivered</span>
+                                        </td>
+                                        <td style="padding: 12px; text-align: center;">
+                                            <button onclick='openDetail(${JSON.stringify(task).replace(/'/g, "&apos;")})' class="text-primary text-sm font-bold hover:underline">Details</button>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('');
+                        } else {
+                            historyBody.innerHTML = `
+                                    <tr>
+                                        <td colspan="5" class="py-20 text-center">
+                                            <div class="w-20 h-20 bg-stone-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                                                <img src="https://api.iconify.design/lucide:history.svg?color=%23d1d5db" class="w-10 h-10">
+                                            </div>
+                                            <h4 class="text-stone-900 font-bold text-xl mb-2">History is Empty</h4>
+                                            <p class="text-stone-400 font-medium max-w-xs mx-auto text-sm">You haven't completed any deliveries yet. Your successful tasks will appear here.</p>
+                                        </td>
+                                    </tr>
+                                `;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                if (overviewContainer) overviewContainer.innerHTML = '<div class="col-span-full text-red-500">Error loading.</div>';
+            }
+        }
+
+        function renderTaskCard(task) {
+            const projectRoot = window.getProjectRoot ? window.getProjectRoot() : '../..';
+            let imgSrc = task.image_url || task.product_image;
+            if (imgSrc && !imgSrc.startsWith('http')) {
+                imgSrc = projectRoot + '/' + (imgSrc.startsWith('/') ? imgSrc.substring(1) : imgSrc);
+            } else if (!imgSrc) {
+                imgSrc = '../assets/images/logo.png';
+            }
+
+            const status = ((task.type === 'auction' ? task.shipping_status : task.status) || 'ordered').toLowerCase();
+            const type = task.type === 'auction' ? 'Auction' : 'Order';
+
+            // Extract phone number if it exists in data or within delivery_address string
+            let phone = task.customer_phone || (task.delivery_address && task.delivery_address.match(/Contact:\s*(\+?\d+)/) ? task.delivery_address.match(/Contact:\s*(\+?\d+)/)[1] : 'N/A');
+            let address = (task.delivery_address || task.shipping_address || 'No address').replace(/Contact:.*$/, '').trim();
+
+            return `
+                <div onclick='openDetail(${JSON.stringify(task).replace(/'/g, "&apos;")})' class="bg-white p-6 rounded-[2rem] border border-stone-100 shadow-sm hover:shadow-xl transition-all group flex items-center gap-6 cursor-pointer">
+                    <img src="${imgSrc}" class="w-28 h-28 rounded-3xl object-cover shadow-sm bg-stone-50 shrink-0" onerror="this.src='../assets/images/logo.png'">
+                    <div class="flex-grow">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xs font-bold text-orange-500 uppercase tracking-wider">
+                                ${task.type === 'auction' ? 'AUC' : 'ORD'}-${task.id.toString().padStart(5, '0')}
+                            </span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${task.type === 'auction' ? 'bg-indigo-50 text-indigo-600 border-indigo-100/50' : 'bg-teal-50 text-teal-600 border-teal-100/50'}">
+                                ${type}
+                            </span>
+                        </div>
+                        <h3 class="font-extrabold text-2xl text-stone-900 leading-tight mb-4">${task.product_name}</h3>
+                        <div class="mb-4">
+                            <span class="text-primary font-bold text-lg">${formatDisplayPrice(task.total_price || task.current_bid || 0, task.currency_code || 'INR')}</span>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center shrink-0">
+                                    <img src="https://api.iconify.design/lucide:map-pin.svg?color=%23f97316" width="16">
+                                </div>
+                                <span class="text-sm font-bold text-stone-700 line-clamp-1">${address}</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center shrink-0">
+                                    <img src="https://api.iconify.design/lucide:phone.svg?color=%2322c55e" width="16">
+                                </div>
+                                <span class="text-sm font-bold text-stone-700">Contact: ${phone}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openDetail(task) {
+            console.log('Opening task detail:', task);
+            currentTaskDetails = task;
+            const content = document.getElementById('modal-content');
+            const actions = document.getElementById('modal-actions');
+            const status = ((task.type === 'auction' ? task.shipping_status : task.status) || 'ordered').toLowerCase();
+            const projectRoot = window.getProjectRoot ? window.getProjectRoot() : '../..';
+
+            let imgSrc = task.image_url || task.product_image;
+            if (imgSrc && !imgSrc.startsWith('http')) {
+                imgSrc = projectRoot + '/' + (imgSrc.startsWith('/') ? imgSrc.substring(1) : imgSrc);
+            } else if (!imgSrc) {
+                imgSrc = '../assets/images/logo.png';
+            }
+
+            const type = task.type === 'auction' ? 'Auction' : 'Order';
+            const idPrefix = task.type === 'auction' ? 'AUC' : 'ORD';
+            const price = task.total_price || task.current_bid || 0;
+            const currency = task.currency_code || 'INR';
+            const formattedPrice = formatDisplayPrice(price, currency);
+
+            // Format phone and address
+            let phone = task.customer_phone || (task.delivery_address && task.delivery_address.match(/Contact:\s*(\+?\d+)/) ? task.delivery_address.match(/Contact:\s*(\+?\d+)/)[1] : 'N/A');
+            let address = (task.delivery_address || task.shipping_address || 'No address').replace(/Contact:.*$/, '').trim();
+
+            content.innerHTML = `
+                <div class="mb-2">
+                    <span class="text-xs font-bold text-orange-500 uppercase tracking-widest">
+                        ${idPrefix}-${task.id.toString().padStart(5, '0')}
+                    </span>
+                    <h2 class="text-3xl font-extrabold text-stone-900 mt-1">Delivery Details</h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-12 mt-10">
+                    <!-- Product Info -->
+                    <div>
+                        <h4 class="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em] mb-4">Product Info</h4>
+                        <div class="flex items-center gap-4">
+                            <img src="${imgSrc}" class="w-24 h-24 rounded-3xl object-cover bg-stone-50" onerror="this.src='../assets/images/logo.png'">
+                            <div>
+                                <h3 class="text-xl font-bold text-stone-900">${task.product_name}</h3>
+                                <p class="text-stone-500 font-medium text-sm mt-1">${task.quantity} ${task.unit || 'kg'}</p>
+                                <p class="text-orange-500 font-bold text-xl mt-2">${formattedPrice}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customer Details -->
+                    <div>
+                        <h4 class="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em] mb-4">Customer Details</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                                    <img src="https://api.iconify.design/lucide:user.svg?color=%233b82f6" width="20">
+                                </div>
+                                <span class="text-lg font-bold text-stone-800">${task.customer_name || 'Anonymous'}</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
+                                    <img src="https://api.iconify.design/lucide:phone.svg?color=%2322c55e" width="20">
+                                </div>
+                                <span class="text-lg font-bold text-stone-800">${phone}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12 bg-stone-50 rounded-[2rem] p-8 border border-stone-100">
+                    <h4 class="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em] mb-4">Delivery Address</h4>
+                    <div class="flex items-center gap-5">
+                        <div class="w-12 h-12 rounded-2xl bg-orange-100/50 flex items-center justify-center shrink-0">
+                            <img src="https://api.iconify.design/lucide:map-pin.svg?color=%23f97316" width="24">
+                        </div>
+                        <span class="text-lg font-bold text-stone-700 leading-snug">${address}</span>
+                    </div>
+
+                    ${status === 'delivered' ? `
+                    <div class="mt-8 pt-8 border-t border-stone-200 flex items-center gap-5">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-100/50 flex items-center justify-center shrink-0">
+                            <img src="https://api.iconify.design/lucide:clock.svg?color=%238b5cf6" width="24">
+                        </div>
+                        <div class="flex flex-col">
+                            <h4 class="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em]">Delivered At</h4>
+                            <span class="text-lg font-bold text-stone-800">
+                                ${(() => {
+                                    const d = new Date(task.delivery_date || task.updated_at);
+                                    const dateStr = d.toLocaleDateString('en-GB');
+                                    const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                                    return `${dateStr}, ${time}`;
+                                })()}
+                            </span>
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+
+            if (status === 'ordered' || status === 'pending') {
+                actions.innerHTML = `
+                    <button onclick="closeModal()" class="flex-1 py-4 bg-stone-100 text-stone-600 rounded-2xl font-bold hover:bg-stone-200 transition-all">Close</button>
+                    <button onclick="updateStatus(${task.id}, 'shipped', '${task.type}')" class="flex-[2] py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover shadow-xl shadow-primary/20 transition-all">Ship Item</button>
+                `;
+            } else if (status === 'shipped') {
+                actions.innerHTML = `
+                    <button onclick="closeModal()" class="flex-1 py-4 bg-stone-100 text-stone-600 rounded-2xl font-bold hover:bg-stone-200 transition-all">Close</button>
+                    <button onclick='initiateDeliveryVerification(${JSON.stringify(task).replace(/'/g, "&apos;")})' class="flex-[2] py-4 bg-green-600 text-white rounded-2xl font-bold hover:bg-green-700 shadow-xl shadow-green-600/20 transition-all">Mark Delivered</button>
+                `;
+            } else {
+                actions.innerHTML = `<button onclick="closeModal()" class="w-full py-4 bg-stone-100 text-stone-600 rounded-2xl font-bold hover:bg-stone-200 transition-all">Close</button>`;
+            }
+            document.getElementById('detail-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // OTP Verification Logic
+        async function initiateDeliveryVerification(task) {
+            console.log('Initiating delivery verification for:', task.id, task.type);
+            currentVerificationTask = task;
+            currentTaskDetails = task; // Redundant safety
+            let loadingToast = null;
+            try {
+                // Remove all previous toasts and overlays to create a clean state
+                const uiContainer = document.getElementById('custom-ui-container');
+                if (uiContainer) uiContainer.innerHTML = '';
+                document.querySelectorAll('[id^="toast-overlay-"]').forEach(o => o.remove());
+                document.querySelectorAll('.fixed').forEach(f => {
+                    if (f.id.startsWith('toast-overlay-')) f.remove();
+                });
+
+                loadingToast = staffToast('Sending OTP to customer...', 'info', 0);
+                console.log('Loading toast created');
+
+                const res = await fetch('../../backend/api/delivery/staff/send-delivery-otp.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        order_id: task.id,
+                        type: task.type
+                    })
+                });
+                const data = await res.json();
+                console.log('OTP response:', data);
+
+                if (loadingToast) {
+                    loadingToast.remove();
+                    console.log('Loading toast removed');
+                }
+
+                if (data.success) {
+                    staffToast(data.message, 'success');
+                    document.getElementById('otp-modal').classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                    // Focus first field
+                    setTimeout(() => document.querySelectorAll('.otp-field')[0].focus(), 100);
+                } else {
+                    staffToast(data.message, 'error');
+                }
+            } catch (e) {
+                console.error('Error in initiateDeliveryVerification:', e);
+                if (loadingToast) loadingToast.remove();
+                staffToast('Failed to initiate verification', 'error');
+            }
+        }
+
+        function handleOTPInput(input, index) {
+            // Only allow numeric input
+            input.value = input.value.replace(/[^0-9]/g, '');
+
+            const fields = document.querySelectorAll('.otp-field');
+
+            if (input.value) {
+                // Enable and focus next field
+                if (index < 3) {
+                    fields[index + 1].disabled = false;
+                    fields[index + 1].focus();
+                }
+
+                // Auto-submit when 4th digit is entered
+                if (index === 3) {
+                    // Remove all notifications and popups before confirming
+                    document.querySelectorAll('.toast').forEach(t => t.remove());
+                    const overlays = document.querySelectorAll('[id^="toast-overlay-"]');
+                    overlays.forEach(o => o.remove());
+
+                    setTimeout(() => confirmDelivery(), 100);
+                }
+            }
+        }
+
+        function handleOTPKeydown(event, index) {
+            const fields = document.querySelectorAll('.otp-field');
+            const input = event.target;
+
+            // Allow: backspace, delete, tab, escape, enter, arrows
+            const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight'];
+
+            if (allowedKeys.includes(event.key)) {
+                // Handle backspace navigation
+                if (event.key === 'Backspace') {
+                    if (!input.value && index > 0) {
+                        // Move to previous field and clear it
+                        event.preventDefault();
+                        fields[index - 1].value = '';
+                        fields[index - 1].focus();
+                        // Disable current field if it's not the first
+                        if (index > 0) {
+                            input.disabled = true;
+                        }
+                    }
+                }
+                return;
+            }
+
+            // Block all non-numeric keys
+            if (event.key.length === 1 && !/[0-9]/.test(event.key)) {
+                event.preventDefault();
+            }
+        }
+
+        function handleOTPClick(index) {
+            const fields = document.querySelectorAll('.otp-field');
+            const clickedField = fields[index];
+
+            // Enable all fields up to and including the clicked one
+            for (let i = 0; i <= index; i++) {
+                fields[i].disabled = false;
+            }
+
+            // Focus the clicked field
+            clickedField.focus();
+            // Select the content for easy replacement
+            clickedField.select();
+        }
+
+        function closeOTPModal() {
+            document.getElementById('otp-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            // Clear inputs and reset disabled state
+            const fields = document.querySelectorAll('.otp-field');
+            fields.forEach((f, i) => {
+                f.value = '';
+                f.disabled = i > 0; // Disable all except first
+            });
+        }
+
+        async function confirmDelivery() {
+            if (isVerifying) return;
+
+            const otpFields = document.querySelectorAll('.otp-field');
+            const otp = Array.from(otpFields).map(f => f.value).join('');
+
+            if (otp.length < 4) {
+                staffToast('Please enter the 4-digit code', 'error');
+                return;
+            }
+
+            isVerifying = true;
+            const btn = document.getElementById('verify-otp-btn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Verifying...';
+
+            let verifyingSpinner = staffToast('Verifying Delivery...', 'info', 0);
+
+            try {
+                const success = await updateStatus(currentVerificationTask.id, 'delivered', currentVerificationTask.type, otp);
+                if (success) {
+                    console.log('Delivery confirmed. Showing success modal...');
+                    closeOTPModal();
+                    closeModal();
+
+                    const finalTaskData = { ...currentVerificationTask };
+
+                    setTimeout(() => {
+                        showSuccessModal(finalTaskData);
+                    }, 100);
+                } else {
+                    otpFields.forEach(f => f.value = '');
+                    otpFields[0].focus();
+                }
+            } catch (e) {
+                console.error('Error in confirmDelivery:', e);
+            } finally {
+                isVerifying = false;
+                btn.disabled = false;
+                btn.textContent = originalText;
+                if (verifyingSpinner) verifyingSpinner.remove();
+            }
+        }
+
+        function showSuccessModal(taskData) {
+            const task = taskData || currentTaskDetails;
+            console.log('Rendering success modal with:', task);
+
+            const uiContainer = document.getElementById('custom-ui-container');
+            if (uiContainer) uiContainer.innerHTML = '';
+            document.querySelectorAll('[id^="toast-overlay-"]').forEach(o => o.remove());
+
+            const successModal = document.getElementById('success-modal');
+            if (successModal) {
+                successModal.classList.remove('hidden');
+                successModal.style.setProperty('display', 'flex', 'important');
+                successModal.style.zIndex = '999999';
+                document.body.style.overflow = 'hidden';
+            }
+
+            try {
+                if (task) {
+                    const projectRoot = window.getProjectRoot ? window.getProjectRoot() : '../..';
+                    const idPrefix = task.type === 'auction' ? 'AUC' : 'ORD';
+                    const formattedId = `${idPrefix}-${(task.id || '0').toString().padStart(5, '0')}`;
+
+                    safeSetText('success-order-id', formattedId);
+                    safeSetText('success-customer-name', task.customer_name || 'N/A');
+
+                    let phone = 'N/A';
+                    if (task.customer_phone) {
+                        phone = task.customer_phone;
+                    } else {
+                        const addr = task.delivery_address || task.shipping_address || '';
+                        const match = addr.match(/Contact:\s*(\+?\d+)/);
+                        if (match) phone = match[1];
+                    }
+                    safeSetText('success-customer-phone', phone);
+
+                    let imgSrc = task.image_url || task.product_image;
+                    if (imgSrc && !imgSrc.startsWith('http')) {
+                        imgSrc = projectRoot + '/' + (imgSrc.startsWith('/') ? imgSrc.substring(1) : imgSrc);
+                    } else if (!imgSrc) {
+                        imgSrc = '../assets/images/logo.png';
+                    }
+
+                    const imgEl = document.getElementById('success-product-image');
+                    if (imgEl) imgEl.src = imgSrc;
+
+                    safeSetText('success-product-name', task.product_name || 'Product Details');
+
+                    const qty = task.quantity || task.bid_quantity || 1;
+                    const unit = task.unit || 'kg';
+                    safeSetText('success-product-qty', `${qty} ${unit}`);
+
+                    const price = task.total_price || task.current_bid || 0;
+                    const currency = task.currency_code || 'INR';
+                    safeSetText('success-product-price', formatDisplayPrice(price, currency));
+
+                    const address = (task.delivery_address || task.shipping_address || 'Address not specified').replace(/Contact:.*$/, '').trim();
+                    safeSetText('success-delivery-address', address);
+
+                    const now = new Date();
+                    const dateStr = now.toLocaleDateString('en-GB');
+                    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                    safeSetText('success-delivery-time', `${dateStr}, ${time}`);
+                }
+            } catch (err) {
+                console.error('Error populating success modal:', err);
+            }
+
+            if (successReloadTimer) clearTimeout(successReloadTimer);
+            successReloadTimer = setTimeout(() => {
+                console.log('Automated site reload triggering...');
+                window.location.reload();
+            }, 6000);
+        }
+
+        function safeSetText(id, text) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        }
+
+        function closeSuccessModal() {
+            console.log('OK button clicked. Clearing timer and reloading...');
+            if (successReloadTimer) clearTimeout(successReloadTimer);
+
+            const btn = document.getElementById('success-ok-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Reloading...';
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
+            // Reload the entire site as requested to ensure fresh state
+            window.location.reload();
+        }
+
+        async function resendOTP() {
+            if (currentVerificationTask) {
+                await initiateDeliveryVerification(currentVerificationTask);
+            }
+        }
+
+        async function updateStatus(id, status, type, otp = null) {
+            try {
+                const res = await fetch('../../backend/api/delivery/update-status.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: id, status: status, type: type, otp: otp })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    // Don't show toast for delivered status - success modal handles it
+                    if (status !== 'delivered') {
+                        staffToast(`Delivery updated to ${status}!`);
+                        loadDeliveries();
+                    }
+                    return true;
+                } else {
+                    staffToast(data.message, 'error');
+                    return false;
+                }
+            } catch (err) {
+                staffToast('Operation failed', 'error');
+                console.error(err);
+                return false;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        async function loadProfileData() {
+            try {
+                const res = await fetch('../../backend/api/auth/get-profile.php');
+                const result = await res.json();
+                if (result.success) {
+                    const user = result.data;
+                    document.getElementById('display-name').textContent = user.full_name;
+                    document.getElementById('staff-name-display').textContent = user.full_name;
+                    document.getElementById('display-id').textContent = '#USR-' + user.id.toString().padStart(6, '0');
+
+                    // Form fields
+                    document.getElementById('input-name').value = user.full_name;
+                    document.getElementById('input-email').value = user.email;
+                    document.getElementById('input-phone').value = user.phone || '';
+                    document.getElementById('input-address').value = user.address || '';
+
+                    // Country/Currency
+                    if (user.country) {
+                        document.getElementById('input-country').value = user.country;
+                        document.getElementById('input-currency-code').value = user.currency_code;
+                        document.getElementById('input-currency-symbol').value = user.currency_symbol;
+                        document.getElementById('display-country').textContent = user.country;
+                        const currencyText = (user.currency_symbol && user.currency_code)
+                            ? `${user.currency_symbol} ${user.currency_code}`
+                            : (user.currency_code || 'USD');
+                        document.querySelectorAll('.currency-code').forEach(el => el.textContent = currencyText);
+                    }
+
+                    // Google User Logic
+                    const isGoogleUser = user.google_id !== null && user.google_id !== "";
+                    const emailInput = document.getElementById('input-email');
+                    const passwordSection = document.getElementById('password-section');
+
+                    if (!isGoogleUser) {
+                        emailInput.readOnly = false;
+                        emailInput.className = "w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all";
+                        emailInput.style.cursor = "text";
+                        passwordSection.style.display = "flex";
+                    } else {
+                        emailInput.readOnly = true;
+                        emailInput.className = "w-full bg-[#f5f5f4] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none transition-all cursor-not-allowed";
+                        passwordSection.style.display = "none";
+                    }
+
+                    // Avatar logic
+                    const img = document.getElementById('profile-img');
+                    const initials = document.getElementById('initials');
+                    const initialsText = user.full_name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+
+                    if (user.profile_image) {
+                        img.onload = () => { img.style.display = 'block'; initials.style.display = 'none'; };
+                        const imgPath = user.profile_image.startsWith('http') ? user.profile_image : '../../' + user.profile_image;
+                        img.src = imgPath;
+
+                        // Header Avatar Update
+                        const headerAvatar = document.getElementById('staff-avatar-display');
+                        headerAvatar.innerHTML = `<img src="${imgPath}" referrerpolicy="no-referrer" style="width: 100%; height: 100%; border-radius: 12px; object-fit: cover;">`;
+                        headerAvatar.style.background = 'transparent';
+                    } else {
+                        img.style.display = 'none';
+                        initials.textContent = initialsText;
+                        initials.style.display = 'block';
+
+                        // Header Avatar Reset
+                        const headerAvatar = document.getElementById('staff-avatar-display');
+                        headerAvatar.innerHTML = initialsText;
+                        headerAvatar.style.background = '#ff7e21';
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function updateProfile(e) {
+            e.preventDefault();
+            console.log('Update profile started');
+            const btn = document.getElementById('save-btn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const formData = new FormData(e.target);
+            try {
+                const res = await fetch('../../backend/api/auth/update-profile.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await res.json();
+
+                if (result.success) {
+                    staffToast('Profile updated successfully!', 'success');
+                    // Refresh CurrencyManager and the UI
+                    if (window.CurrencyManager) {
+                        await window.CurrencyManager.fetchSettings();
+                    }
+                    loadProfileData();
+                    loadDeliveries(); // Reload list to see new currency amounts
+                } else {
+                    staffToast(result.message || 'Update failed', 'error');
+                }
+            } catch (err) {
+                console.error('Update profile error:', err);
+                staffToast('Failed to update profile: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Changes';
+            }
+        }
+
+        async function uploadImage(input) {
+            if (input.files && input.files[0]) {
+                const formData = new FormData();
+                formData.append('profile_image', input.files[0]);
+                formData.append('full_name', document.getElementById('input-name').value);
+
+                try {
+                    const res = await fetch('../../backend/api/auth/update-profile.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                        staffToast('SUCCESS! Profile image updated!');
+                        loadProfileData();
+                    } else {
+                        staffToast(result.message, 'error');
+                    }
+                } catch (err) {
+                    staffToast('Upload failed', 'error');
+                }
+            }
+        }
+
+        function validatePhoneInput(input) {
+            let value = input.value.replace(/[^0-9+]/g, '');
+            value = value.replace(/(?!^)\+/g, '');
+            input.value = value.slice(0, 16);
+        }
+
+        function togglePasswordVisibility(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = document.getElementById(fieldId + '-icon');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.src = 'https://api.iconify.design/lucide:eye-off.svg?color=%2394a3b8';
+            } else {
+                field.type = 'password';
+                icon.src = 'https://api.iconify.design/lucide:eye.svg?color=%2394a3b8';
+            }
+        }
+
+
+        async function logout() {
+            await fetch('../../backend/api/auth/logout.php');
+            window.location.href = '../auth/login.html';
+        }
+
+        window.onload = async () => {
+            console.log('Page loaded, initializing dashboard...');
+            
+            // Initialize Country Selector first
+            const selector = window.CountrySelector || (typeof CountrySelector !== 'undefined' ? CountrySelector : null);
+            if (selector) {
+                console.log('Initializing CountrySelector...');
+                selector.init((country) => {
+                    console.log('Country selected:', country);
+                    document.getElementById('display-country').textContent = country.name;
+                    document.getElementById('input-country').value = country.name;
+                    document.getElementById('input-currency-code').value = country.currency_code;
+                    document.getElementById('input-currency-symbol').value = country.currency_symbol;
+
+                    document.querySelectorAll('.currency-code').forEach(el => {
+                        el.textContent = `${country.currency_symbol} ${country.currency_code}`;
+                    });
+                });
+            } else {
+                console.error('CountrySelector script not found!');
+            }
+
+            await loadProfileData();
+            await loadDeliveries();
+            switchView('overview');
+        };
+
+        function staffToast(message, type = 'success', duration = 3000) {
+            console.log('staffToast called:', message, type);
+
+            // Special handling for loading/info toasts: Show as centered overlay
+            if (type === 'info') {
+                const overlay = document.createElement('div');
+                overlay.id = 'toast-overlay-' + Date.now();
+                // z-[100001] to ensure it is above the toast container and any modals
+                overlay.className = 'fixed inset-0 z-[100001] flex items-center justify-center bg-black/10 backdrop-blur-[2px] transition-all';
+                overlay.innerHTML = `
+                        <div class="bg-white px-8 py-6 rounded-2xl shadow-2xl flex items-center gap-4 animate-in zoom-in-95 border border-stone-100">
+                            <div class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-[#FF7E21] animate-spin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+                            </div>
+                            <span class="font-bold text-stone-800 text-lg">${message}</span>
+                        </div>
+                    `;
+                document.body.appendChild(overlay);
+                console.log('Overlay appended');
+
+                return {
+                    remove: () => {
+                        console.log('Removing overlay');
+                        overlay.classList.add('opacity-0');
+                        setTimeout(() => overlay.remove(), 200);
+                    }
+                };
+            }
+
+            // Standard corner toasts for Success/Error - Delegate to Global CustomUI
+            return CustomUI.showToast(message, type);
+        }
+        async function loadPerformanceChart() {
+            try {
+                const res = await fetch('../../backend/api/delivery/staff/get-performance.php');
+                const data = await res.json();
+
+                if (data.success) {
+                    const ctx = document.getElementById('performanceChart').getContext('2d');
+                    // Check if chart instance exists on canvas element to destroy it properly if re-initializing
+                    if (window.performanceChartInstance) {
+                        window.performanceChartInstance.destroy();
+                    }
+
+                    window.performanceChartInstance = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: 'Successful Deliveries',
+                                data: data.data,
+                                borderColor: '#FF7E21',
+                                backgroundColor: (context) => {
+                                    const ctx = context.chart.ctx;
+                                    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                                    gradient.addColorStop(0, 'rgba(255, 126, 33, 0.2)');
+                                    gradient.addColorStop(1, 'rgba(255, 126, 33, 0)');
+                                    return gradient;
+                                },
+                                borderWidth: 4,
+                                tension: 0.4, // Smooth curve
+                                fill: true,
+                                pointBackgroundColor: '#FF7E21',
+                                pointBorderColor: 'white',
+                                pointBorderWidth: 3,
+                                pointRadius: 6,
+                                pointHoverRadius: 8,
+                                pointHoverBackgroundColor: '#FF7E21',
+                                pointHoverBorderColor: 'white',
+                                pointHoverBorderWidth: 3,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    backgroundColor: '#1c1917',
+                                    titleColor: '#fff',
+                                    bodyColor: '#fff',
+                                    padding: 12,
+                                    titleFont: { size: 14, weight: 'bold', family: "'Outfit', sans-serif" },
+                                    bodyFont: { size: 14, family: "'Outfit', sans-serif" },
+                                    displayColors: false,
+                                    caretSize: 6,
+                                    cornerRadius: 12
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    grid: {
+                                        color: '#f5f5f4',
+                                        drawBorder: false,
+                                    },
+                                    ticks: {
+                                        stepSize: 1,
+                                        color: '#a8a29e',
+                                        font: { weight: '600', family: "'Outfit', sans-serif" },
+                                        padding: 10
+                                    },
+                                    border: { display: false }
+                                },
+                                x: {
+                                    grid: { display: false },
+                                    ticks: {
+                                        color: '#a8a29e',
+                                        font: { weight: '600', family: "'Outfit', sans-serif" },
+                                        padding: 10
+                                    },
+                                    border: { display: false }
+                                }
+                            },
+                            interaction: {
+                                intersect: false,
+                                mode: 'index',
+                            },
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error('Chart load error', err);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

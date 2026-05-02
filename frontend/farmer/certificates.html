@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+    // Immediate Session & Verification Enforcement
+    (async () => {
+        const res = await fetch('../../backend/api/auth/check-session.php');
+        const data = await res.json();
+        if (!data.logged_in) {
+            window.location.href = '../auth/login.html';
+            return;
+        }
+        
+        // Farmer Verification Check
+        if (data.role === 'farmer' && parseInt(data.is_verified) === 0) {
+            if (!window.location.pathname.includes('certificates.html')) {
+                window.location.href = 'certificates.html';
+            }
+        }
+    })();
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard | Legacy of Spices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* ──── Certificates Specific Styles ──── */
+        .progress-banner {
+            background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
+            border-radius: 20px;
+            padding: 28px 32px;
+            margin-bottom: 32px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-banner::before {
+            content: '🌿';
+            position: absolute;
+            right: 32px;
+            font-size: 80px;
+            opacity: 0.08;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .progress-ring-wrap {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+        .progress-ring-wrap svg {
+            transform: rotate(-90deg);
+        }
+        .progress-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .progress-center span:first-child {
+            font-size: 20px;
+            font-weight: 800;
+        }
+        .progress-center span:last-child {
+            font-size: 9px;
+            color: #a8a29e;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 40px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e7e5e4;
+        }
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1c1917;
+        }
+        .section-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .badge-mandatory { background: #fef2f2; color: #ef4444; }
+        .badge-optional { background: #f5f5f4; color: #78716c; }
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+        .cert-card {
+            background: white;
+            border-radius: 20px;
+            border: 1.5px solid #e7e5e4;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .cert-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
+        }
+        .cert-card.verified { border-color: #a7f3d0; background: #f0fdf4; }
+        .cert-card.pending { border-color: #fde68a; background: #fefce8; }
+        .cert-card.rejected { border-color: #fecaca; background: #fef2f2; }
+        .cert-status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .chip-not-uploaded { background: #f5f5f4; color: #a8a29e; }
+        .chip-pending { background: #fef9c3; color: #a16207; }
+        .chip-verified { background: #dcfce7; color: #166534; }
+        .chip-rejected { background: #fee2e2; color: #991b1b; }
+        .btn-upload {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            border-radius: 10px;
+            border: 1.5px solid #FF7E21;
+            background: white;
+            color: #FF7E21;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-upload:hover { background: #fff7ed; }
+        .btn-upload.replace { border-color: #10b981; color: #10b981; }
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 11px;
+            color: #78716c;
+            word-break: break-all;
+        }
+        .admin-note-box {
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #991b1b;
+            display: flex;
+            gap: 8px;
+        }
+        .cert-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 14px;
+        }
+        .uploading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            z-index: 10;
+        }
+        .spin {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #e7e5e4;
+            border-top-color: #FF7E21;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+
+<body style="background: #fafaf9; color: #1c1917; font-family: 'Outfit', sans-serif;">
+    <!-- Sidebar -->
+            <aside style="width: 240px; background: white; border-right: 1px solid #e7e5e4; position: fixed; height: 100vh; padding: 24px; z-index: 50; overflow-y: auto; display: flex; flex-direction: column;">
+        <div class="logo" style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
+            <img src="../assets/images/logo.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 22px; color: #1c1917; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">Legacy</h3>
+                <span style="font-size: 11px; color: #ff7e21; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; margin-top: 2px;">Of Spices</span>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+            <a href="farmer-dashboard.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:layout-dashboard.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Dashboard</span>
+            </a>
+            <a href="inventory.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:package.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Inventory</span>
+            </a>
+            <a href="orders.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shopping-cart.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Orders</span>
+            </a>
+            <a href="returns.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:rotate-ccw.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Returns & Refunds</span>
+            </a>
+            <a href="auctions.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:gavel.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Auctions</span>
+            </a>
+            <a href="analysis.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:bar-chart-3.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Analysis</span>
+            </a>
+            <a href="certificates.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: white; background: #FF7E21; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(255, 126, 33, 0.2);">
+                <img src="https://api.iconify.design/lucide:shield-check.svg?color=white" width="20" alt="">
+                <span style="white-space: nowrap;">Certificates</span>
+            </a>
+
+            <a href="profile.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:user.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Profile</span>
+            </a>
+        </nav>
+
+        <div style="margin-top: auto; padding-top: 24px;">
+            <button onclick="logout()" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; text-decoration: none; color: #ef4444; background: #fef2f2; border: 1px solid #fee2e2; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'">
+                <img src="https://api.iconify.design/lucide:log-out.svg?color=%23ef4444" width="18" style="transform: rotate(180deg);" alt="">
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main style="margin-left: 240px; padding: 32px 40px; min-height: 100vh;">
+        <!-- Header -->
+        <header style="margin-bottom: 28px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                <div>
+                    <h1 style="font-size: 28px; font-weight: 800; color: #1c1917; letter-spacing: -0.02em;">
+                        🛡️ Compliance Certificates
+                    </h1>
+                    <p style="font-size: 14px; color: #78716c; margin-top: 6px;">
+                        Complete your verification to start selling on Legacy of Spices.
+                    </p>
+                </div>
+                <div id="header-verified-badge" style="display:none;">
+                    <div class="verified-badge-banner">
+                        <div class="verified-badge-icon-bg">
+                            <img src="https://api.iconify.design/lucide:shield-check.svg?color=white" width="14" alt="">
+                        </div>
+                        <span>Verified Farmer</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress Banner -->
+        <div class="progress-banner" id="progress-banner">
+            <div class="progress-ring-wrap">
+                <svg width="80" height="80" viewBox="0 0 80 80">
+                    <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" />
+                    <circle id="progress-circle" cx="40" cy="40" r="34" fill="none" stroke="#FF7E21" stroke-width="8" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="213.6" style="transition: stroke-dashoffset 0.8s ease;" />
+                </svg>
+                <div class="progress-center">
+                    <span id="progress-text">0/5</span>
+                    <span>Verified</span>
+                </div>
+            </div>
+            <div style="flex: 1;">
+                <div id="banner-title" style="font-size: 20px; font-weight: 700; margin-bottom: 6px;">Mandatory Verification</div>
+                <div id="banner-desc" style="font-size: 13px; color: #a8a29e; line-height: 1.6;">
+                    Upload all 5 mandatory documents to start selling. Once verified, your products will be visible to customers.
+                </div>
+            </div>
+        </div>
+
+        <!-- Mandatory Section -->
+        <div class="section-header">
+            <span class="section-badge badge-mandatory">✅ Mandatory</span>
+            <h2>Required to start selling</h2>
+        </div>
+        <div class="cert-grid" id="mandatory-grid"></div>
+
+        <!-- Optional Section -->
+        <div class="section-header">
+            <span class="section-badge badge-optional">⚠️ Optional</span>
+            <h2>Applicable when needed</h2>
+        </div>
+        <div class="cert-grid" id="optional-grid"></div>
+    </main>
+
+    <script>
+        const CERT_TYPES = [
+            // Mandatory
+            {
+                type: 'fssai_registration',
+                icon: '🍴',
+                iconBg: '#eff6ff',
+                label: 'FSSAI Registration (Basic)',
+                desc: 'Registration from Food Safety and Standards Authority of India — mandatory for all sellers.',
+                required: true,
+                issuedBy: 'FSSAI'
+            },
+            {
+                type: 'aadhaar_card',
+                icon: '🆔',
+                iconBg: '#f0f9ff',
+                label: 'Aadhaar Card',
+                desc: 'Official government ID proof for individual identity verification.',
+                required: true,
+                issuedBy: 'UIDAI'
+            },
+            {
+                type: 'pan_card',
+                icon: '💳',
+                iconBg: '#fef2f2',
+                label: 'PAN Card',
+                desc: 'Permanent Account Number for tax and financial tracking.',
+                required: true,
+                issuedBy: 'Income Tax Dept'
+            },
+            {
+                type: 'bank_proof',
+                icon: '🏦',
+                iconBg: '#f5f3ff',
+                label: 'Bank Account Proof',
+                desc: 'Copy of cancelled cheque or passbook showing account holder details.',
+                required: true,
+                issuedBy: 'Your Bank'
+            },
+            {
+                type: 'farmer_proof',
+                icon: '👨‍🌾',
+                iconBg: '#f0fdf4',
+                label: 'Farmer Proof',
+                desc: 'Kisan Card OR Land Ownership Record (Patta / land document).',
+                required: true,
+                issuedBy: 'Revenue Dept / Agriculture Dept'
+            },
+            // Optional
+            {
+                type: 'gst_certificate',
+                icon: '🧾',
+                iconBg: '#fdf4ff',
+                label: 'GST Registration Certificate',
+                desc: 'Required only if turnover is high or if you are selling interstate.',
+                required: false,
+                issuedBy: 'GST Portal'
+            },
+            {
+                type: 'organic_certification',
+                icon: '🌿',
+                iconBg: '#ecfdf5',
+                label: 'Organic Certification',
+                desc: 'Upload only if you claim your products are grown organically.',
+                required: false,
+                issuedBy: 'Accredited Body'
+            },
+            {
+                type: 'quality_testing_report',
+                icon: '🔬',
+                iconBg: '#fff7ed',
+                label: 'Lab / Quality Certificate',
+                desc: 'For better trust and quality assurance (not compulsory).',
+                required: false,
+                issuedBy: 'NABL Lab / Spice Board'
+            }
+        ];
+
+        let certs = {};
+
+        async function loadCertificates() {
+            try {
+                const res = await fetch('../../backend/api/export/get-farmer-certificates.php');
+                const data = await res.json();
+                if (data.success) {
+                    certs = data.certificates || {};
+                    const mandatoryCount = CERT_TYPES.filter(ct => ct.required).length;
+                    const verifiedMandatory = CERT_TYPES.filter(ct => ct.required && certs[ct.type]?.verification_status === 'verified').length;
+                    updateProgress(verifiedMandatory, mandatoryCount);
+                }
+            } catch (e) { certs = {}; }
+            renderCertCards();
+        }
+
+        function updateProgress(verified, total) {
+            const pct = verified / total;
+            const circumference = 2 * Math.PI * 34;
+            const offset = circumference * (1 - pct);
+            document.getElementById('progress-circle').style.strokeDashoffset = offset;
+            document.getElementById('progress-text').textContent = `${verified}/${total}`;
+            
+            if (verified === total && total > 0) {
+                document.getElementById('header-verified-badge').style.display = 'block';
+                document.getElementById('banner-title').textContent = '✅ Ready to Sell!';
+                document.getElementById('banner-desc').textContent = 'All mandatory documents verified. Your products are now visible to customers.';
+            }
+        }
+
+        function renderCertCards() {
+            const mandatoryGrid = document.getElementById('mandatory-grid');
+            const optionalGrid = document.getElementById('optional-grid');
+            
+            mandatoryGrid.innerHTML = '';
+            optionalGrid.innerHTML = '';
+
+            CERT_TYPES.forEach((ct, i) => {
+                const cert = certs[ct.type];
+                const status = cert ? cert.verification_status : 'not_uploaded';
+                const chipMap = {
+                    'not_uploaded': ['chip-not-uploaded', '⬜ Not Uploaded'],
+                    'pending': ['chip-pending', '🕒 Pending Review'],
+                    'verified': ['chip-verified', '✅ Verified'],
+                    'rejected': ['chip-rejected', '❌ Rejected'],
+                };
+                const [chipClass, chipLabel] = chipMap[status] || chipMap['not_uploaded'];
+                const cardClass = status === 'verified' ? 'verified' : status === 'pending' ? 'pending' : status === 'rejected' ? 'rejected' : '';
+
+                const html = `
+                <div class="cert-card ${cardClass}">
+                    <div class="cert-icon" style="background:${ct.iconBg};">${ct.icon}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+                        <h3 style="font-size:15px; font-weight:700; color:#1c1917;">${ct.label}</h3>
+                        <span class="cert-status-chip ${chipClass}">${chipLabel}</span>
+                    </div>
+                    <p style="font-size:12px; color:#78716c; line-height:1.6; margin-bottom:12px;">${ct.desc}</p>
+                    ${cert ? `<div class="file-info">${cert.original_filename}</div>` : ''}
+                    <div style="margin-top:14px;">
+                        <label class="btn-upload ${cert ? 'replace' : ''}">
+                            <img src="https://api.iconify.design/lucide:upload-cloud.svg?color=${cert ? '%2310b981' : '%23FF7E21'}" width="14" alt="">
+                            ${cert ? 'Replace' : 'Upload'}
+                            <input type="file" style="display:none;" onchange="uploadCert(this, '${ct.type}')">
+                        </label>
+                    </div>
+                    <div class="uploading-overlay" id="overlay-${ct.type}" style="display:none;"><div class="spin"></div></div>
+                </div>`;
+
+                if (ct.required) mandatoryGrid.innerHTML += html;
+                else optionalGrid.innerHTML += html;
+            });
+        }
+
+        async function uploadCert(input, type) {
+            const file = input.files[0];
+            if (!file) return;
+            const overlay = document.getElementById('overlay-' + type);
+            overlay.style.display = 'flex';
+            const fd = new FormData();
+            fd.append('certificate', file);
+            fd.append('cert_type', type);
+            try {
+                const res = await fetch('../../backend/api/export/upload-farmer-certificate.php', { method: 'POST', body: fd });
+                const data = await res.json();
+                if (data.success) {
+                    await loadCertificates();
+                    showToast('Certificate uploaded successfully', 'success');
+                } else {
+                    showToast(data.message || 'Upload failed', 'error');
+                }
+            } finally { overlay.style.display = 'none'; }
+        }
+
+        async function logout() {
+            await fetch('../../backend/api/auth/logout.php');
+            window.location.href = '../auth/login.html';
+        }
+
+        window.onload = loadCertificates;
+    </script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/custom-ui.js?v=1.8"></script>
+</body>
+</html>

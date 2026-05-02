@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard | Legacy of Spices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* ──── Analysis Specific Styles ──── */
+        .animate-bar {
+            animation: growUp 1s ease-out forwards;
+            transform-origin: bottom;
+        }
+
+        @keyframes growUp {
+            from { transform: scaleY(0); }
+            to { transform: scaleY(1); }
+        }
+
+        .chart-tooltip {
+            position: fixed;
+            background: #1c1917;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+        }
+
+        .chart-tooltip.visible {
+            opacity: 1;
+        }
+
+        #graph-labels span {
+            font-size: 10px;
+            color: #a8a29e;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+
+<body style="background: #fafaf9; color: #1c1917; font-family: 'Outfit', sans-serif;">
+                <aside style="width: 240px; background: white; border-right: 1px solid #e7e5e4; position: fixed; height: 100vh; padding: 24px; z-index: 50; overflow-y: auto; display: flex; flex-direction: column;">
+        <div class="logo" style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
+            <img src="../assets/images/logo.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 22px; color: #1c1917; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">Legacy</h3>
+                <span style="font-size: 11px; color: #ff7e21; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; margin-top: 2px;">Of Spices</span>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+            <a href="farmer-dashboard.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:layout-dashboard.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Dashboard</span>
+            </a>
+            <a href="inventory.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:package.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Inventory</span>
+            </a>
+            <a href="orders.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shopping-cart.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Orders</span>
+            </a>
+            <a href="returns.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:rotate-ccw.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Returns & Refunds</span>
+            </a>
+            <a href="auctions.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:gavel.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Auctions</span>
+            </a>
+            <a href="analysis.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: white; background: #FF7E21; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(255, 126, 33, 0.2);">
+                <img src="https://api.iconify.design/lucide:bar-chart-3.svg?color=white" width="20" alt="">
+                <span style="white-space: nowrap;">Analysis</span>
+            </a>
+            <a href="certificates.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shield-check.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Certificates</span>
+            </a>
+
+            <a href="profile.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:user.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Profile</span>
+            </a>
+        </nav>
+
+        <div style="margin-top: auto; padding-top: 24px;">
+            <button onclick="logout()" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; text-decoration: none; color: #ef4444; background: #fef2f2; border: 1px solid #fee2e2; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'">
+                <img src="https://api.iconify.design/lucide:log-out.svg?color=%23ef4444" width="18" style="transform: rotate(180deg);" alt="">
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <main style="margin-left: 240px; padding: 32px 40px; min-height: 100vh;">
+        <header style="margin-bottom: 32px;">
+            <h1 style="font-size: 28px; font-weight: 700; color: #1c1917;">Business Analysis</h1>
+            <p style="font-size: 15px; color: #1c1917; margin-top: 4px;">Deep dive into your sales and inventory
+                performance.</p>
+        </header>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px; margin-bottom: 32px;">
+            <!-- Sales Trends (Relocated) -->
+            <div
+                style="background: white; border: 1px solid #e7e5e4; border-radius: 24px; padding: 32px; display: flex; flex-direction: column;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px;">
+                    <div>
+                        <h3 style="font-size: 18px; font-weight: 700; color: #1c1917;">Sales Performance</h3>
+                        <p style="font-size: 14px; color: #1c1917; margin-top: 4px;">Revenue trends over the last 4
+                            weeks</p>
+                    </div>
+                </div>
+                <div id="sales-chart"
+                    style="flex: 1; display: flex; align-items: flex-end; gap: 16px; min-height: 200px; padding-bottom: 20px; border-bottom: 1px solid #f5f5f4;">
+                    <p style="margin: auto; color: #a8a29e; font-size: 12px;">No sales data available yet.</p>
+                </div>
+                <div id="graph-labels"
+                    style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 11px; color: #a8a29e; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <!-- Labels injected by JS -->
+                </div>
+            </div>
+
+            <!-- Top Products -->
+            <div style="background: white; border: 1px solid #e7e5e4; border-radius: 24px; padding: 32px;">
+                <h3 style="font-size: 18px; font-weight: 700; color: #1c1917; margin-bottom: 20px;">Top Products</h3>
+                <div id="top-products-list" style="display: flex; flex-direction: column; gap: 20px;">
+                    <p style="color: #a8a29e; font-size: 12px;">No sales data yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+            <!-- Order Status Distribution -->
+            <div style="background: white; border: 1px solid #e7e5e4; border-radius: 24px; padding: 32px;">
+                <h3 style="font-size: 18px; font-weight: 700; color: #1c1917; margin-bottom: 24px;">Order Status
+                    Distribution</h3>
+                <div id="status-distribution" style="display: flex; flex-direction: column; gap: 16px;">
+                    <!-- Status bars will go here -->
+                    <p style="color: #a8a29e; font-size: 12px;">No status data available.</p>
+                </div>
+            </div>
+
+            <!-- Satisfaction & Growth -->
+            <div
+                style="background: white; border: 1px solid #e7e5e4; border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 24px;">
+                <div>
+                    <h3 style="font-size: 18px; font-weight: 700; color: #1c1917; margin-bottom: 20px;">Top Loyal
+                        Customers</h3>
+                    <div id="top-customers-list" style="display: flex; flex-direction: column; gap: 16px;">
+                        <p style="color: #a8a29e; font-size: 12px;">No customer data available.</p>
+                    </div>
+                </div>
+
+                <div style="padding-top: 24px; border-top: 1px solid #f5f5f4;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h4 style="font-size: 14px; font-weight: 700; color: #1c1917;">Growth Target</h4>
+                        <span id="target-percentage"
+                            style="font-size: 12px; font-weight: 700; color: #FF7E21; background: #fff7ed; padding: 2px 8px; border-radius: 6px;">0%</span>
+                    </div>
+                    <div
+                        style="width: 100%; height: 12px; background: #f5f5f4; border-radius: 6px; overflow: hidden; margin-bottom: 8px;">
+                        <div id="target-progress"
+                            style="width: 0%; height: 100%; background: linear-gradient(90deg, #FF7E21 0%, #ff9d52 100%); border-radius: 6px; transition: width 1s ease-in-out;">
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                        <p style="font-size: 11px; color: #1c1917;">Targeting <span id="target-display"
+                                style="font-weight: 700; color: #1c1917;">₹500.00</span> monthly revenue</p>
+                        <button onclick="openTargetModal()"
+                            style="font-size: 10px; color: #FF7E21; font-weight: 700; background: transparent; border: none; cursor: pointer; text-transform: uppercase;">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Target Edit Modal -->
+    <div id="targetModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
+        <div class="bg-white p-8 rounded-3xl w-full max-w-sm relative shadow-2xl animate-in zoom-in-95 duration-200">
+            <h3 class="text-xl font-bold text-stone-900 mb-2">Set Revenue Target</h3>
+            <p class="text-sm text-stone-500 mb-6">Enter your monthly revenue goal in your local currency.</p>
+
+            <div class="mb-6">
+                <label class="block text-xs font-bold text-stone-400 uppercase tracking-widest mb-2">Monthly Target
+                    (<span class="currency-code">INR</span>)</label>
+                <div class="flex items-center bg-stone-50 border border-stone-200 rounded-xl px-4 py-3">
+                    <span class="currency-symbol text-stone-400 font-bold mr-2">₹</span>
+                    <input id="new-target-input" type="number"
+                        class="w-full bg-transparent border-none outline-none font-bold text-stone-900 text-lg"
+                        placeholder="0.00">
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeTargetModal()"
+                    class="flex-1 py-3 rounded-xl font-bold text-stone-500 hover:bg-stone-100 transition-colors">Cancel</button>
+                <button onclick="saveTarget()"
+                    class="flex-1 bg-primary hover:bg-primary-hover text-white py-3 rounded-xl font-bold shadow-lg transition-all">Save
+                    Target</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function logout() {
+            try {
+                await fetch('../../backend/api/auth/logout.php');
+                window.location.href = '../auth/login.html';
+            } catch (error) { console.error('Logout error:', error); }
+        }
+
+        window.onload = async () => {
+            await CurrencyManager.init();
+            loadAnalysis();
+        };
+
+        async function loadAnalysis() {
+            try {
+                const response = await fetch('../../backend/api/analytics/get-farmer-stats.php');
+                const result = await response.json();
+
+                if (result.success) {
+                    // 1. Sales Chart
+                    const chart = document.getElementById('sales-chart');
+                    if (result.weekly_performance && result.weekly_performance.length > 0) {
+                        chart.innerHTML = '';
+                        const maxVal = Math.max(...result.weekly_performance.map(w => w.weekly_total)) || 1;
+                        const labelsContainer = document.getElementById('graph-labels');
+                        labelsContainer.innerHTML = '';
+
+                        // Create Tooltip Element if not exists
+                        let tooltip = document.getElementById('chart-tooltip');
+                        if (!tooltip) {
+                            tooltip = document.createElement('div');
+                            tooltip.id = 'chart-tooltip';
+                            tooltip.className = 'chart-tooltip';
+                            document.body.appendChild(tooltip);
+                        }
+
+                        result.weekly_performance.forEach((w, i) => {
+                            const height = (w.weekly_total / maxVal) * 100;
+                            const bar = document.createElement('div');
+                            bar.className = 'animate-bar';
+                            bar.style.flex = '1';
+                            bar.style.background = '#FF7E21';
+                            bar.style.height = `${Math.max(height, 5)}%`;
+                            bar.style.borderRadius = '8px 8px 0 0';
+                            bar.style.opacity = (0.5 + (i * 0.15)); // Gradient opacity
+                            bar.style.animationDelay = `${i * 0.1}s`;
+                            bar.style.cursor = 'pointer';
+                            bar.style.transition = 'all 0.2s';
+
+                            // Hover Effects
+                            bar.onmouseover = () => {
+                                bar.style.opacity = '1';
+                                bar.style.transform = 'scaleY(1.05)';
+                                tooltip.innerText = formatPrice(w.weekly_total);
+                                tooltip.classList.add('visible');
+                            };
+
+                            bar.onmousemove = (e) => {
+                                tooltip.style.left = `${e.clientX - (tooltip.offsetWidth / 2)}px`;
+                                tooltip.style.top = `${e.clientY - 40}px`;
+                            };
+
+                            bar.onmouseout = () => {
+                                bar.style.opacity = (0.5 + (i * 0.15));
+                                bar.style.transform = 'scaleY(1)';
+                                tooltip.classList.remove('visible');
+                            };
+
+                            chart.appendChild(bar);
+
+                            // Add Label
+                            const label = document.createElement('span');
+                            label.innerText = w.label;
+                            label.style.textAlign = 'center';
+                            label.style.flex = '1';
+                            labelsContainer.appendChild(label);
+                        });
+                    } else {
+                        chart.innerHTML = '<p style="margin: auto; color: #a8a29e; font-size: 12px;">No sales data available yet.</p>';
+                    }
+
+                    // 2. Top Products
+                    const topList = document.getElementById('top-products-list');
+                    if (result.top_products && result.top_products.length > 0) {
+                        topList.innerHTML = '';
+                        const maxRevenue = Math.max(...result.top_products.map(p => p.revenue)) || 1;
+                        result.top_products.forEach(product => {
+                            const width = (product.revenue / maxRevenue) * 100;
+                            topList.innerHTML += `
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 8px;">
+                                        <span>${product.product_name}</span>
+                                        <span style="color: #FF7E21;">${formatPrice(product.revenue)}</span>
+                                    </div>
+                                    <div style="width: 100%; height: 8px; background: #f5f5f4; border-radius: 4px; overflow: hidden;">
+                                        <div style="width: ${width}%; height: 100%; background: #FF7E21; border-radius: 4px;"></div>
+                                    </div>
+                                    <p style="font-size: 11px; color: #a8a29e; margin-top: 4px;">${product.sales_count} sales generated</p>
+                                </div>`;
+                        });
+                    } else {
+                        topList.innerHTML = '<p style="color: #a8a29e; font-size: 12px;">No sales data yet.</p>';
+                    }
+
+                    // 3. Status Distribution
+                    const statusDist = document.getElementById('status-distribution');
+                    if (result.status_distribution && result.status_distribution.length > 0) {
+                        statusDist.innerHTML = '';
+                        const total = result.status_distribution.reduce((acc, curr) => acc + parseInt(curr.count), 0);
+                        const statusMap = {
+                            'ordered': 'Ordered',
+                            'processing': 'Processing',
+                            'shipped': 'Shipped',
+                            'shipped_pending': 'Shipping Pending',
+                            'delivered': 'Delivered',
+                            'cancelled': 'Cancelled',
+                            'awaiting_payment': 'Awaiting Payment',
+                            'refunded': 'Refunded'
+                        };
+
+                        result.status_distribution.forEach(s => {
+                            const rawStatus = s.status || s.STATUS;
+                            const statusKey = window.normalizeStatus(rawStatus);
+                            const displayStatus = statusMap[statusKey] || statusKey.charAt(0).toUpperCase() + statusKey.slice(1);
+                            const percentage = Math.round((s.count / total) * 100);
+                            statusDist.innerHTML += `
+                                <div style="display: flex; align-items: center; gap: 16px;">
+                                    <div style="width: 140px; font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase; white-space: nowrap;">${displayStatus}</div>
+                                    <div style="flex: 1; height: 12px; background: #f5f5f4; border-radius: 6px; overflow: hidden;">
+                                        <div style="width: ${percentage}%; height: 100%; background: ${getStatusColor(s.status)};"></div>
+                                    </div>
+                                    <div style="width: 40px; text-align: right; font-size: 14px; font-weight: 800; color: #1c1917;">${s.count}</div>
+                                </div>`;
+                        });
+                    } else {
+                        statusDist.innerHTML = '<p style="color: #a8a29e; font-size: 12px;">No status data.</p>';
+                    }
+
+                    // 4. Top Customers (Replaced Rating Dist)
+                    const topCustList = document.getElementById('top-customers-list');
+                    if (result.top_customers && result.top_customers.length > 0) {
+                        topCustList.innerHTML = '';
+                        result.top_customers.forEach(qty => {
+                            topCustList.innerHTML += `
+                                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f5f5f4; padding-bottom: 8px;">
+                                    <div>
+                                        <p style="font-size: 13px; font-weight: 700; color: #1c1917;">${qty.full_name}</p>
+                                        <p style="font-size: 11px; color: #a8a29e;">${qty.order_count} orders</p>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <p style="font-size: 13px; font-weight: 700; color: #FF7E21;">${formatPrice(qty.total_spent)}</p>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        topCustList.innerHTML = '<p style="color: #a8a29e; font-size: 12px;">No customer data yet.</p>';
+                    }
+
+                    // 5. Growth Target Logic
+                    const revenue = parseFloat(result.stats.revenue) || 0;
+                    const baseTarget = parseFloat(result.stats.target) || 500;
+
+                    // Format for display (converts to local user currency)
+                    document.getElementById('target-display').innerText = window.CurrencyManager.format(baseTarget);
+
+                    // Calculate progress (Both are now in INR/Base)
+                    const progress = Math.min(Math.round((revenue / baseTarget) * 100), 100);
+                    document.getElementById('target-progress').style.width = `${progress}%`;
+                    document.getElementById('target-percentage').innerText = `${progress}%`;
+                }
+            } catch (error) {
+                console.error('Data error:', error);
+            }
+        }
+
+        function openTargetModal() {
+            document.getElementById('targetModal').classList.remove('hidden');
+            // Show current target converted to local value for editing
+            const rate = window.CurrencyManager.settings.rate || 1;
+            // Get raw USD value from backend (we can fetch again or store in a global var, 
+            // but simplest is to grab from the stored stats if available, or parse. 
+            // Lets just use 2500 default if not found for now, or better: fetch triggers loadAnalysis which stores it)
+            // For simplicity, we assume the user knows their target. 
+            // To be precise:
+            // We need the base USD target. Let's store it on the element data attribute for easy access.
+            const baseTarget = parseFloat(document.getElementById('target-display').innerText.replace(/[^0-9.]/g, '')) || 500;
+
+            // BUT simpler: Reset input to empty or 0 to let them type fresh.
+            document.getElementById('new-target-input').value = '';
+
+            // Update modal symbols
+            document.querySelector('#targetModal .currency-symbol').innerText = window.CurrencyManager.settings.symbol;
+            document.querySelector('#targetModal .currency-code').innerText = window.CurrencyManager.settings.code;
+        }
+
+        function closeTargetModal() {
+            document.getElementById('targetModal').classList.add('hidden');
+        }
+
+        async function saveTarget() {
+            const inputVal = parseFloat(document.getElementById('new-target-input').value);
+            const saveBtn = document.querySelector('#targetModal button[onclick="saveTarget()"]');
+
+            if (!inputVal || inputVal <= 0) {
+                showToast('Please enter a valid target amount.', 'error');
+                return;
+            }
+
+            // Show loading state
+            const originalText = saveBtn.innerText;
+            saveBtn.innerText = 'Saving...';
+            saveBtn.disabled = true;
+
+            // Convert local input BACK to INR for storage
+            const rate = window.CurrencyManager.settings.rate || 1;
+            const targetInBase = inputVal / rate;
+
+            try {
+                const response = await fetch('../../backend/api/analytics/update-target.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ target: targetInBase })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    closeTargetModal();
+                    await loadAnalysis(); // Reload to see changes
+                    // Optional: Show a toast? For now, the update is visible immediately.
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                showToast('Failed to save target. Please check your connection.', 'error');
+            } finally {
+                // Restore button
+                saveBtn.innerText = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'ordered': '#FF7E21',
+                'processing': '#F97316',
+                'pending': '#FACC15',
+                'awaiting_payment': '#78716C',
+                'shipped': '#3B82F6',
+                'confirmed': '#10B981',
+                'delivered': '#10B981',
+                'cancelled': '#EF4444',
+                'refunded': '#059669'
+            };
+            return colors[status] || '#a8a29e';
+        }
+    </script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/custom-ui.js?v=1.8"></script>
+</body>
+
+</html>

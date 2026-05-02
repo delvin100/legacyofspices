@@ -1,0 +1,36 @@
+# --- Environment & Secrets ---
+.env
+backend/config/service-account.json
+
+# --- Dependencies ---
+vendor/
+backend/vendor/
+node_modules/
+.pnp
+.pnp.js
+
+# --- User & Cache Content ---
+uploads/
+backend/data/*.json
+!backend/data/.gitkeep
+
+# --- Deployment Tooling ---
+.vercel/
+.railway/
+
+# --- Temporary & System Files ---
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# --- IDE & Tooling ---
+.vscode/
+.idea/
+.gemini/
+*.sublime-project
+*.sublime-workspace

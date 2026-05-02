@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Join Legacy | Pure & Global Spice Trade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/country-selector.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Identity Services -->
+    <script src="../assets/js/custom-ui.js?v=1.5"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-dark text-white font-['Outfit'] overflow-x-hidden">
+    <div class="flex flex-col lg:flex-row min-h-screen">
+        <!-- Left Panel: Brand & Visuals -->
+        <div class="hidden lg:flex lg:w-1/2 relative bg-[#080706] p-8 xl:p-12 flex-col overflow-hidden">
+            <!-- Decoupled Brand Header -->
+            <div class="relative z-20 flex items-center gap-2 mb-12 cursor-pointer"
+                onclick="window.location.href='../index.html'">
+                <img src="../assets/images/logo.png" alt="Logo" class="h-16 w-auto"
+                    style="mix-blend-mode: screen; filter: brightness(1.2);">
+                <h2 class="text-3xl font-bold tracking-tight">Legacy of Spices</h2>
+            </div>
+
+            <!-- Hero Visual Area with Overlaid Text -->
+            <div class="relative flex-1 w-full rounded-[40px] overflow-hidden shadow-2xl border border-white/5">
+                <img src="../assets/images/hero_spices_background.png" alt=""
+                    class="absolute inset-0 w-full h-full object-cover">
+
+                <!-- Marketing Text Overlay (Localized Glassmorphism) -->
+                <div class="absolute inset-0 flex flex-col justify-center p-12 xl:p-16">
+                    <!-- Layered overlays for perfect contrast -->
+                    <div class="absolute inset-0 bg-black/20"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent"></div>
+
+                    <div class="relative z-10 max-w-sm">
+                        <div
+                            class="inline-block px-3 py-1 bg-primary/20 backdrop-blur-md border border-primary/30 rounded-full text-primary text-[10px] font-bold tracking-[2px] mb-6 uppercase">
+                            Global Spice Network
+                        </div>
+                        <h1 class="text-4xl xl:text-5xl font-bold leading-tight mb-6 drop-shadow-2xl">Empowering
+                            the<br>spice originators.</h1>
+                        <p class="text-base xl:text-lg text-white/70 leading-relaxed mb-10">Join the world's most
+                            transparent spice trade network. Connect directly with customers and access real-time market
+                            data.</p>
+
+                        <div class="flex flex-wrap gap-3">
+                            <div
+                                class="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-md rounded-xl border border-white/10 shadow-lg">
+                                <img src="https://api.iconify.design/lucide:check-circle.svg?color=%23FF7E21"
+                                    class="w-4 h-4" alt="">
+                                <span class="text-[10px] font-bold">Direct Sourcing</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-md rounded-xl border border-white/10 shadow-lg">
+                                <img src="https://api.iconify.design/lucide:check-circle.svg?color=%23FF7E21"
+                                    class="w-4 h-4" alt="">
+                                <span class="text-[10px] font-bold">World-Class Producers</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Registration Form -->
+        <div
+            class="w-full lg:w-1/2 bg-[#080706] bg-[radial-gradient(circle_at_center,_#110F0C_0%,_#080706_100%)] flex items-center justify-center p-8 sm:p-12 md:p-12 xl:p-20 overflow-y-auto">
+            <div class="w-full max-w-md">
+                <div class="flex items-center p-1 bg-white/[0.03] border border-white/10 rounded-2xl mb-12 w-full">
+                    <a href="login.html"
+                        class="flex-1 text-center text-[10px] font-bold tracking-[2px] text-white/30 hover:text-white transition-all px-6 py-3 rounded-xl">LOGIN</a>
+                    <a href="#"
+                        class="flex-1 text-center text-[10px] font-bold tracking-[2px] text-primary px-6 py-3 rounded-xl bg-white/5 shadow-inner">REGISTER</a>
+                </div>
+
+                <div class="mb-8">
+                    <h2 class="text-4xl font-bold mb-3 tracking-tight">Get Started</h2>
+                    <p class="text-white/40 text-sm">Fill in your details to create your secure account.</p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Google Sign Up -->
+                    <button onclick="googleSignIn()"
+                        class="w-full bg-white/5 group-hover:bg-white/10 border border-white/10 text-white py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-3">
+                        <img src="https://api.iconify.design/logos:google-icon.svg" class="w-5 h-5" alt="">
+                        Sign up with Google
+                    </button>
+
+                    <!-- OR Separator -->
+                    <div class="flex items-center gap-4 py-2">
+                        <div class="h-px flex-1 bg-white/5"></div>
+                        <span class="text-[9px] font-bold tracking-[3px] text-white/20 uppercase">OR</span>
+                        <div class="h-px flex-1 bg-white/5"></div>
+                    </div>
+
+                    <!-- Role Selection -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-white/30 uppercase tracking-[2px] mb-4">Account
+                            Type</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="selectRole('farmer')" id="role-farmer"
+                                class="role-card group active flex flex-col items-center justify-center p-5 rounded-2xl border bg-white/5 border-white/10 hover:border-primary/40 transition-all duration-300">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                                    <img src="https://api.iconify.design/lucide:sprout.svg?color=%23FF7E21"
+                                        class="w-5 h-5" alt="">
+                                </div>
+                                <span
+                                    class="text-[10px] font-bold tracking-wider text-white/60 group-hover:text-primary transition-colors uppercase">Farmer</span>
+                            </button>
+                            <button onclick="selectRole('customer')" id="role-customer"
+                                class="role-card group flex flex-col items-center justify-center p-5 rounded-2xl border bg-transparent border-white/10 hover:border-primary/40 transition-all duration-300">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                                    <img src="https://api.iconify.design/lucide:shopping-bag.svg?color=%236B7280"
+                                        class="w-5 h-5" alt="">
+                                </div>
+                                <span
+                                    class="text-[10px] font-bold tracking-wider text-white/50 group-hover:text-primary transition-colors uppercase">Customer</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Input Fields -->
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-white/30 uppercase tracking-[2px]">Full
+                                Name</label>
+                            <div class="relative group">
+                                <div
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity">
+                                    <img src="https://api.iconify.design/lucide:user.svg?color=white" class="w-4 h-4"
+                                        alt="">
+                                </div>
+                                <input type="text" id="register-name" placeholder="John Doe"
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm outline-none focus:border-primary/50 focus:bg-white/10 transition-all">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-white/30 uppercase tracking-[2px]">Email
+                                Address</label>
+                            <div class="relative group">
+                                <div
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity">
+                                    <img src="https://api.iconify.design/lucide:mail.svg?color=white" class="w-4 h-4"
+                                        alt="">
+                                </div>
+                                <input type="email" id="register-email" placeholder="trade@email.com"
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm outline-none focus:border-primary/50 focus:bg-white/10 transition-all">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label
+                                class="block text-[10px] font-bold text-white/30 uppercase tracking-[2px]">Password</label>
+                            <div class="relative group">
+                                <div
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity">
+                                    <img src="https://api.iconify.design/lucide:lock.svg?color=white" class="w-4 h-4"
+                                        alt="">
+                                </div>
+                                <input type="password" id="register-password" placeholder="Min. 8 characters"
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-12 py-4 text-sm outline-none focus:border-primary/50 focus:bg-white/10 transition-all">
+                                <button type="button" onclick="togglePasswordVisibility('register-password')"
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 background-transparent border-none cursor-pointer p-1">
+                                    <img src="https://api.iconify.design/lucide:eye.svg?color=%2394a3b8" width="18"
+                                        id="register-password-icon">
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label
+                                class="block text-[10px] font-bold text-white/30 uppercase tracking-[2px]">Confirm Password</label>
+                            <div class="relative group">
+                                <div
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity">
+                                    <img src="https://api.iconify.design/lucide:lock.svg?color=white" class="w-4 h-4"
+                                        alt="">
+                                </div>
+                                <input type="password" id="register-confirm-password" placeholder="Repeat your password"
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-12 py-4 text-sm outline-none focus:border-primary/50 focus:bg-white/10 transition-all">
+                                <button type="button" onclick="togglePasswordVisibility('register-confirm-password')"
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 background-transparent border-none cursor-pointer p-1">
+                                    <img src="https://api.iconify.design/lucide:eye.svg?color=%2394a3b8" width="18"
+                                        id="register-confirm-password-icon">
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-white/30 uppercase tracking-[2px]">Country &
+                                Currency</label>
+                            <div class="relative group">
+                                <div
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity">
+                                    <img src="https://api.iconify.design/lucide:globe.svg?color=white" class="w-4 h-4"
+                                        alt="">
+                                </div>
+                                <button type="button" onclick="CountrySelector.show()" id="country-display-btn"
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm text-left text-white/40 outline-none focus:border-primary/50 focus:bg-white/10 transition-all">
+                                    Select your country
+                                </button>
+                                <input type="hidden" id="register-country">
+                                <input type="hidden" id="register-currency-code">
+                                <input type="hidden" id="register-currency-symbol">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="flex items-center gap-3 py-2">
+                        <input type="checkbox" id="keep-logged"
+                            class="w-5 h-5 rounded-lg bg-white/5 border border-white/10 checked:bg-primary appearance-none cursor-pointer relative checked:after:content-['âœ“'] checked:after:absolute checked:after:left-1 checked:after:top-0 checked:after:text-white checked:after:text-[12px] transition-all">
+                        <label for="keep-logged" class="text-sm text-white/40 cursor-pointer">Keep me logged in for 30
+                            days</label>
+                    </div>
+
+                    <!-- Submit -->
+                    <button onclick="emailRegister()"
+                        class="group w-full bg-primary hover:bg-primary-hover text-white py-5 rounded-2xl font-bold text-sm tracking-widest transition-all shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-3">
+                        CREATE ACCOUNT
+                        <img src="https://api.iconify.design/lucide:arrow-right.svg?color=white"
+                            class="w-4 h-4 group-hover:translate-x-1 transition-transform" alt="">
+                    </button>
+
+                    <p class="text-[10px] text-white/10 text-center mt-6 tracking-widest uppercase">
+                        Trusted & Secure Trading Partner
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .role-card.active {
+            background: rgba(255, 126, 33, 0.08) !important;
+            border-color: rgba(255, 126, 33, 0.4) !important;
+            box-shadow: 0 0 25px rgba(255, 126, 33, 0.1);
+        }
+
+        .role-card.active span {
+            color: #FF7E21 !important;
+            opacity: 1;
+        }
+
+        .role-card.active .shadow-inner {
+            background: rgba(255, 126, 33, 0.1) !important;
+        }
+    </style>
+
+    <script>
+        function togglePasswordVisibility(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = document.getElementById(fieldId + '-icon');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.src = 'https://api.iconify.design/lucide:eye-off.svg?color=%2394a3b8';
+            } else {
+                field.type = 'password';
+                icon.src = 'https://api.iconify.design/lucide:eye.svg?color=%2394a3b8';
+            }
+        }
+
+        // Google Identity Services Client initialization
+        let tokenClient;
+
+        window.onload = async function () {
+            try {
+                const response = await fetch('../../backend/api/config/get-public-config.php');
+                const config = await response.json();
+                
+                if (config && config.google_client_id) {
+                    tokenClient = google.accounts.oauth2.initTokenClient({
+                        client_id: config.google_client_id,
+                        scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+                        callback: (tokenResponse) => {
+                            if (tokenResponse && tokenResponse.access_token) {
+                                handleGoogleAuth(tokenResponse.access_token);
+                            }
+                        },
+                    });
+                }
+            } catch (error) {
+                console.error("GIS Init Error:", error);
+            }
+        };
+
+        window.googleSignIn = () => {
+            if (tokenClient) {
+                tokenClient.requestAccessToken();
+            } else {
+                showToast("Authentication system is loading. Please try again in a few seconds.", 'error');
+            }
+        };
+
+        async function handleGoogleAuth(accessToken, role) {
+            try {
+                const response = await fetch('../../backend/api/auth/google_auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ access_token: accessToken, role: role })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    if (result.role_needed) {
+                        // New user, show modal
+                        window.currentAccessToken = accessToken;
+                        document.getElementById('role-modal').classList.remove('hidden');
+                        document.getElementById('role-modal').classList.add('flex');
+                    } else {
+                        // Debugging logs (Transient)
+                        console.log("Auth Success. Result:", result);
+
+                        if (result.redirect) {
+                            console.log("Redirecting to (backend-driven):", result.redirect);
+                            window.location.replace(result.redirect);
+                        } else {
+                            const role = (result.user.role || '').toLowerCase().trim();
+                            console.log("No backend redirect found. Determining path for role:", role);
+                            const redirectMap = {
+                                'farmer': '../farmer/farmer-dashboard.html',
+                                'customer': '../customer/customer-dashboard.html',
+                                'admin': '../admin/admin-dashboard.html'
+                            };
+                            const target = redirectMap[role] || '../index.html';
+                            console.log("Redirecting to (fallback):", target);
+                            window.location.replace(target);
+                        }
+                    }
+                } else {
+                    showToast(result.message || "Registration failed", 'error');
+                }
+            } catch (error) {
+                console.error("Auth Error:", error);
+                showToast("Authentication failed. Please try again.", 'error');
+            }
+        }
+
+        let selectedRole = 'farmer';
+
+        window.selectRole = (role) => {
+            selectedRole = role;
+            document.querySelectorAll('.role-card').forEach(btn => {
+                btn.classList.remove('active');
+                const img = btn.querySelector('img');
+                if (img) img.src = img.src.replace('color=%23FF7E21', 'color=%236B7280');
+            });
+            const id = role === 'farmer' ? 'role-farmer' : 'role-customer';
+            const activeBtn = document.getElementById(id);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                const activeImg = activeBtn.querySelector('img');
+                if (activeImg) activeImg.src = activeImg.src.replace('color=%236B7280', 'color=%23FF7E21');
+            }
+        };
+
+        // Advanced Validation
+        const validateForm = (email, password, confirmPassword, name) => {
+            if (!name || name.length < 2) return "Please enter a valid full name.";
+            if (!/^[a-zA-Z\s'-]+$/.test(name)) return "Please enter a valid full name.";
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Please enter a valid email address.";
+
+            if (password.length < 8) return "Password must be at least 8 characters.";
+            if (password.includes(' ')) return "Password cannot contain spaces.";
+            if (password !== confirmPassword) return "Passwords do not match.";
+
+            return null;
+        };
+
+        window.emailRegister = async () => {
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const full_name = document.getElementById('register-name').value;
+            const country = document.getElementById('register-country').value;
+            const currency_code = document.getElementById('register-currency-code').value;
+            const currency_symbol = document.getElementById('register-currency-symbol').value;
+            const keepLogged = document.getElementById('keep-logged').checked;
+            const btn = document.querySelector('button[onclick="emailRegister()"]');
+
+            const error = validateForm(email, password, confirmPassword, full_name);
+            if (error) {
+                showToast(error, 'error');
+                return;
+            }
+
+            if (!country) {
+                showToast("Please select your country", 'error');
+                CountrySelector.show();
+                return;
+            }
+
+            // Disable button
+            btn.disabled = true;
+            btn.innerHTML = `<img src="https://api.iconify.design/lucide:loader-2.svg?color=white" class="w-5 h-5 animate-spin"> CREATING...`;
+
+            try {
+
+                // 1. Create User in MySQL (Source of Truth for App Data)
+                const response = await fetch('../../backend/api/auth/register.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email, password, full_name,
+                        role: selectedRole, keep_logged: keepLogged,
+                        country, currency_code, currency_symbol
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    window.location.href = result.redirect;
+                } else {
+                    showToast(result.message || "Registration failed", 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = `CREATE ACCOUNT <img src="https://api.iconify.design/lucide:arrow-right.svg?color=white" class="w-4 h-4 group-hover:translate-x-1 transition-transform">`;
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showToast("Registration failed. Please try again.", 'error');
+                btn.disabled = false;
+                btn.innerHTML = `CREATE ACCOUNT <img src="https://api.iconify.design/lucide:arrow-right.svg?color=white" class="w-4 h-4 group-hover:translate-x-1 transition-transform">`;
+            }
+        };
+
+        window.completeGoogleAuth = async (role) => {
+            document.getElementById('role-modal').classList.add('hidden');
+            handleGoogleAuth(window.currentAccessToken, role);
+        };
+
+        // Enable Enter Key Submission
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = ['register-name', 'register-email', 'register-password', 'register-confirm-password'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            emailRegister();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <!-- Role Selection Modal for Google SSO -->
+    <div id="role-modal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+        <div class="bg-bg-dark border border-white/10 rounded-[32px] p-8 max-w-sm w-full shadow-2xl">
+            <h3 class="text-2xl font-bold mb-2">Final Step</h3>
+            <p class="text-white/40 text-sm mb-8">Please select your account type to continue.</p>
+
+            <div class="space-y-4">
+                <button onclick="completeGoogleAuth('farmer')"
+                    class="w-full flex items-center gap-4 p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all text-left group">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all">
+                        <img src="https://api.iconify.design/lucide:sprout.svg?color=%23FF7E21"
+                            class="w-6 h-6 group-hover:invert group-hover:brightness-0" alt="">
+                    </div>
+                    <div>
+                        <span class="block font-bold text-white uppercase tracking-wider text-xs">FARMER</span>
+                        <span class="text-[10px] text-white/30">Sell your global spice harvest</span>
+                    </div>
+                </button>
+
+                <button onclick="completeGoogleAuth('customer')"
+                    class="w-full flex items-center gap-4 p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all text-left group">
+                    <div
+                        class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all">
+                        <img src="https://api.iconify.design/lucide:shopping-bag.svg?color=%23FF7E21"
+                            class="w-6 h-6 group-hover:invert group-hover:brightness-0" alt="">
+                    </div>
+                    <div>
+                        <span class="block font-bold text-white uppercase tracking-wider text-xs">CUSTOMER</span>
+                        <span class="text-[10px] text-white/30">Directly source premium spices</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Floating Back to Home Button -->
+    <button onclick="window.location.href='../index.html'" class="fixed bottom-8 left-8 z-50 group">
+        <div
+            class="w-11 h-11 rounded-full bg-primary flex items-center justify-center shadow-2xl shadow-primary/40 group-hover:scale-110 group-active:scale-95 transition-all duration-300 text-white">
+            <img src="https://api.iconify.design/lucide:arrow-left.svg?color=white" class="w-5 h-5" alt="">
+        </div>
+    </button>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/country-selector.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            CountrySelector.init((country) => {
+                document.getElementById('register-country').value = country.name;
+                document.getElementById('register-currency-code').value = country.currency_code;
+                document.getElementById('register-currency-symbol').value = country.currency_symbol;
+
+                const btn = document.getElementById('country-display-btn');
+                btn.innerHTML = `${country.name} (${country.currency_symbol} ${country.currency_code})`;
+                btn.classList.remove('text-white/40');
+                btn.classList.add('text-white');
+            });
+        });
+    </script>
+</body>
+
+</html>

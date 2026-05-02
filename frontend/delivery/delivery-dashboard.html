@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+    // Immediate Session Enforcement
+    (async () => {
+        const res = await fetch('../../backend/api/auth/check-session.php');
+        const data = await res.json();
+        if (!data.logged_in) {
+            window.location.href = '../auth/login.html';
+        } else if (data.role !== 'delivery_agent') {
+            window.location.href = data.redirect;
+        }
+    })();
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Agent Dashboard | Legacy of Spices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/country-selector.css">
+    <script src="../assets/js/custom-ui.js?v=1.5"></script>
+    <script src="../assets/js/country-selector.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                        'bg-dashboard': '#14110F',
+                        'card-bg': '#1C1917',
+                        'border-color': '#292524',
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <style>
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            font-weight: 700 !important;
+        }
+
+        .nav-item.active img {
+            filter: brightness(0) invert(1);
+        }
+    </style>
+</head>
+
+<body style="background: #f8fafc; color: #1e293b; font-family: 'Outfit', sans-serif;">
+    <!-- Sidebar -->
+    <aside style="width: 260px; background: #0f172a; position: fixed; height: 100vh; padding: 24px; color: white;">
+        <div class="logo" style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
+            <img src="../assets/images/logo.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 22px; color: #ffffff; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">Legacy</h3>
+                <span style="font-size: 11px; color: #3b82f6; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; margin-top: 2px;">OF SPICES</span>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 4px;">
+            <a href="#" onclick="switchView('overview')" id="nav-overview" class="nav-item active"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: white; font-weight: 500; font-size: 14px;">
+                <img src="https://api.iconify.design/lucide:layout-grid.svg?color=%2394a3b8" width="18" alt="">
+                Overview
+            </a>
+            <a href="#" onclick="switchView('tasks')" id="nav-tasks" class="nav-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                <img src="https://api.iconify.design/lucide:clock.svg?color=%2394a3b8" width="18" alt="">
+                Active Tasks
+            </a>
+            <a href="#" onclick="switchView('staff')" id="nav-staff" class="nav-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                <img src="https://api.iconify.design/lucide:users.svg?color=%2394a3b8" width="18" alt="">
+                Manage Staff
+            </a>
+            <a href="#" onclick="switchView('history')" id="nav-history" class="nav-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                <img src="https://api.iconify.design/lucide:history.svg?color=%2394a3b8" width="18" alt="">
+                Delivery History
+            </a>
+            <a href="#" onclick="switchView('profile')" id="nav-profile" class="nav-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                <img src="https://api.iconify.design/lucide:user.svg?color=%2394a3b8" width="18" alt="">
+                Profile
+            </a>
+        </nav>
+
+        <div style="position: absolute; bottom: 24px; left: 24px; right: 24px;">
+            <button onclick="logout()"
+                style="display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #ff0000; background: transparent; border: 2px solid #ff0000; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px;">
+                <img src="https://api.iconify.design/lucide:log-out.svg?color=%23ff0000" width="18"
+                    style="transform: rotate(180deg);" alt="">
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main style="margin-left: 260px; padding: 24px 40px;">
+        <header style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px;">
+            <div>
+                <h1 id="view-title" style="font-size: 28px; font-weight: 700; margin: 0;">Delivery Dashboard</h1>
+                <p id="view-subtitle" style="color: #64748b; margin-top: 4px;">Track your deliveries and earnings
+                    performance.</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="text-align: right;">
+                    <div id="agent-name-display" style="font-weight: 700; font-size: 14px;">Agent</div>
+                    <div style="font-size: 12px; color: #64748b;">Delivery Agent</div>
+                </div>
+                <div id="agent-avatar-display"
+                    style="width: 44px; height: 44px; background: #ff7e21; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">
+                    AG</div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div id="overview-view">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px;">
+                <div
+                    style="background: white; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                        <div style="background: #eff6ff; padding: 10px; border-radius: 10px;">
+                            <img src="https://api.iconify.design/lucide:truck.svg?color=%233b82f6" width="24" alt="">
+                        </div>
+                        <span style="color: #3b82f6; font-size: 12px; font-weight: 700;">Lifetime</span>
+                    </div>
+                    <div style="font-size: 14px; color: #64748b; font-weight: 500;">Deliveries Made</div>
+                    <div id="stat-completed" style="font-size: 32px; font-weight: 700; margin-top: 8px;">--</div>
+                </div>
+                <div
+                    style="background: white; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                        <div style="background: #fff7ed; padding: 10px; border-radius: 10px;">
+                            <img src="https://api.iconify.design/lucide:clock.svg?color=%23ea580c" width="24" alt="">
+                        </div>
+                        <span style="color: #ea580c; font-size: 12px; font-weight: 700;">Active</span>
+                    </div>
+                    <div style="font-size: 14px; color: #64748b; font-weight: 500;">Pending Tasks</div>
+                    <div id="stat-pending" style="font-size: 32px; font-weight: 700; margin-top: 8px;">--</div>
+                </div>
+                <!-- Today's Deliveries Card -->
+                <div class="bg-white p-6 rounded-3xl border border-stone-100 shadow-sm">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-xl">
+                            <img src="https://api.iconify.design/lucide:calendar-check-2.svg?color=%236366f1" width="24"
+                                alt="">
+                        </div>
+                        <span class="text-xs font-bold text-indigo-500 bg-indigo-50 px-2 py-1 rounded-lg">Today</span>
+                    </div>
+                    <div class="text-stone-500 text-sm font-medium mb-1">Today's Deliveries</div>
+                    <div class="text-3xl font-extrabold text-stone-800" id="stat-today">0</div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
+                <div style="background: white; border-radius: 20px; padding: 32px; border: 1px solid #e2e8f0;">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 style="font-size: 18px; font-weight: 700;">Recent Assigned Tasks</h3>
+                        <button onclick="switchView('tasks')" class="text-primary text-sm font-bold">View All</button>
+                    </div>
+                    <div id="recent-tasks-list" class="space-y-4">
+                        <div class="text-center py-8 text-stone-400">Loading tasks...</div>
+                    </div>
+                </div>
+                <div style="background: white; border-radius: 20px; padding: 32px; border: 1px solid #e2e8f0;">
+                    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 24px;">7-Day Performance</h3>
+                    <div style="height: 300px;">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasks View -->
+        <div id="tasks-view" style="display: none;">
+            <div id="all-tasks-list" class="space-y-4">
+                <!-- Tasks will be loaded here -->
+            </div>
+        </div>
+
+        <!-- History View -->
+        <div id="history-view" style="display: none;">
+            <div style="background: white; border-radius: 20px; padding: 32px; border: 1px solid #e2e8f0;">
+                <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #f1f5f9;">
+                            <th style="padding: 12px; font-size: 13px; color: #64748b; text-align: center;">Order ID
+                            </th>
+                            <th style="padding: 12px; font-size: 13px; color: #64748b; text-align: center;">Product &
+                                Customer</th>
+                            <th style="padding: 12px; font-size: 13px; color: #64748b; text-align: center;">Amount</th>
+                            <th style="padding: 12px; font-size: 13px; color: #64748b; text-align: center;">Delivery
+                                Date</th>
+                            <th style="padding: 12px; font-size: 13px; color: #64748b; text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                        <!-- History data -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Staff View -->
+        <div id="staff-view" style="display: none;">
+            <div
+                class="flex flex-col md:flex-row justify-between items-center gap-6 mb-10 bg-white p-8 rounded-3xl border border-stone-100 shadow-sm transition-all duration-300">
+                <div>
+                    <h3 class="text-xl font-bold text-stone-900">Personnel Status</h3>
+                    <p class="text-stone-400 text-sm font-medium mt-1">Real-time overview of your delivery team.</p>
+                </div>
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <div class="relative flex-grow md:w-64">
+                        <input type="text" id="staff-search" oninput="filterStaff(this.value)"
+                            placeholder="Search by name..."
+                            class="w-full pl-11 pr-4 py-3 bg-stone-50 border border-stone-100 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2">
+                            <img src="https://api.iconify.design/lucide:search.svg?color=%2394a3b8" width="18">
+                        </div>
+                    </div>
+                    <button onclick="openAddStaffModal()"
+                        class="bg-[#1c1917] text-white px-7 py-3 rounded-2xl font-bold text-sm hover:bg-black transition-all flex items-center gap-3 active:scale-95 group whitespace-nowrap">
+                        <div
+                            class="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-all">
+                            <img src="https://api.iconify.design/lucide:user-plus.svg?color=white" width="16">
+                        </div>
+                        Add Member
+                    </button>
+                </div>
+            </div>
+            <div id="staff-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Staff members will be loaded here -->
+                <div class="col-span-full py-20 text-center">
+                    <div
+                        class="animate-spin inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full mb-4">
+                    </div>
+                    <p class="text-stone-400 font-medium">Loading your team...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile View -->
+        <div id="profile-view" style="display: none;">
+            <!-- Removed Header -->
+            <div style="margin-top: 40px;"></div>
+
+            <div style="display: grid; grid-template-columns: 320px 1fr; gap: 40px; align-items: start;">
+                <!-- Profile Card -->
+                <div
+                    style="background: white; border: 1px solid #e7e5e4; border-radius: 24px; padding: 32px; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+                    <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 20px;">
+                        <div id="avatar-container"
+                            style="width: 100%; height: 100%; border-radius: 50%; background: #FF7E21; color: white; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 700; overflow: hidden; border: 4px solid #fff; box-shadow: 0 10px 15px -3px rgba(255,126,33,0.3);">
+                            <span id="initials"></span>
+                            <img id="profile-img" src=""
+                                style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <button onclick="document.getElementById('profile-upload').click()"
+                            style="position: absolute; bottom: 0; right: 0; width: 36px; height: 36px; border-radius: 50%; background: white; border: 1px solid #e7e5e4; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); transition: all 0.2s;"
+                            onmouseover="this.style.background='#fafaf9'" onmouseout="this.style.background='white'">
+                            <img src="https://api.iconify.design/lucide:camera.svg?color=%231c1917" width="18" alt="">
+                        </button>
+                        <input type="file" id="profile-upload" class="hidden" accept="image/*"
+                            onchange="uploadImage(this)">
+                    </div>
+
+                    <h2 id="display-name"
+                        style="font-size: 20px; font-weight: 700; color: #1c1917; margin-bottom: 4px;">
+                        Loading...</h2>
+                    <div id="display-role"
+                        style="display: inline-block; padding: 4px 12px; background: rgba(255, 126, 33, 0.1); color: #FF7E21; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 24px;">
+                        DELIVERY AGENT</div>
+
+                    <div style="text-align: left; background: #fafaf9; border-radius: 16px; padding: 16px;">
+                        <div
+                            style="font-size: 12px; color: #a8a29e; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+                            Account ID</div>
+                        <div id="display-id" style="font-family: monospace; font-size: 14px; color: #1c1917;">
+                            #USR-000000</div>
+                    </div>
+                </div>
+
+                <!-- Edit Form -->
+                <div
+                    style="background: white; border: 1px solid #e7e5e4; border-radius: 24px; padding: 40px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+                    <form id="profile-form" onsubmit="updateProfile(event)"
+                        style="display: flex; flex-direction: column; gap: 24px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Full
+                                    Name</label>
+                                <input type="text" name="full_name" id="input-name" required
+                                    class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all">
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label id="label-email"
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Email
+                                    Address (Read-only)</label>
+                                <input type="email" name="email" id="input-email" readonly
+                                    class="w-full bg-[#f5f5f4] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none transition-all cursor-not-allowed">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Phone
+                                    Number</label>
+                                <input type="tel" name="phone" id="input-phone" placeholder="+1234567890" maxlength="16"
+                                    oninput="validatePhoneInput(this)"
+                                    class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all h-[66px]">
+                                <p class="text-[10px] text-stone-400">Format: <strong>+</strong> followed by
+                                    <strong>8-15
+                                        digits</strong>
+                                </p>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Address</label>
+                                <textarea name="address" id="input-address" rows="2"
+                                    placeholder="e.g. Country, State, District, City, Street Name, House Name/House No..."
+                                    class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all resize-none"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Country Selector -->
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 24px;">
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Country
+                                    / Currency</label>
+                                <button type="button" onclick="CountrySelector.show()"
+                                    class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none hover:border-primary transition-all text-left flex justify-between items-center group">
+                                    <span id="display-country"
+                                        class="text-stone-600 group-hover:text-stone-900 transition-colors">Select
+                                        Country</span>
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="text-stone-400 text-[10px] font-bold uppercase tracking-wider currency-code">USD</span>
+                                        <img src="https://api.iconify.design/lucide:chevron-down.svg?color=%23a8a29e"
+                                            class="w-4 h-4 opacity-50" alt="">
+                                    </div>
+                                </button>
+                                <input type="hidden" name="country" id="input-country">
+                                <input type="hidden" name="currency_code" id="input-currency-code">
+                                <input type="hidden" name="currency_symbol" id="input-currency-symbol">
+                            </div>
+
+                            <!-- Password Section -->
+                            <div id="password-section" style="display: none; flex-direction: column; gap: 8px;">
+                                <label
+                                    style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">New
+                                    Password (Optional)</label>
+                                <div style="position: relative;">
+                                    <input type="password" name="password" id="input-password"
+                                        placeholder="Min. 8 characters to change"
+                                        class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all pr-12">
+                                    <button type="button" onclick="togglePasswordVisibility('input-password')"
+                                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; padding: 4px;">
+                                        <img src="https://api.iconify.design/lucide:eye.svg?color=%2394a3b8" width="18"
+                                            id="input-password-icon">
+                                    </button>
+                                </div>
+                                <p style="font-size: 11px; color: #a8a29e;">Leave blank to keep your current password.
+                                </p>
+                            </div>
+
+                            <div style="padding-top: 24px; margin-top: 24px; border-top: 1px solid #e7e5e4;">
+                                <button type="submit" id="save-btn"
+                                    style="background: #FF7E21; color: white; padding: 14px 32px; border-radius: 14px; border: none; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(255,126,33,0.3);"
+                                    onmouseover="this.style.background='#E66D1A'"
+                                    onmouseout="this.style.background='#FF7E21'">
+                                    Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Order Detail Modal -->
+    <div id="order-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <span id="modal-order-id-label"
+                        class="text-primary font-bold text-sm tracking-widest uppercase">Order #123</span>
+                    <h3 class="text-2xl font-bold text-stone-900 mt-1">Delivery Details</h3>
+                </div>
+                <button onclick="closeOrderModal()"
+                    class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors">
+                    <img src="https://api.iconify.design/lucide:x.svg?color=%231c1917" width="20">
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Product Info</h4>
+                    <div class="flex items-center gap-4">
+                        <img id="modal-product-image" src="" alt=""
+                            class="w-20 h-20 rounded-2xl object-cover shadow-sm">
+                        <div>
+                            <div id="modal-product-name" class="font-bold text-stone-800 text-lg leading-tight">Product
+                                Name</div>
+                            <div id="modal-product-qty" class="text-stone-500 text-sm mt-1">1.00 kg</div>
+                            <div id="modal-product-price" class="text-primary font-bold text-lg mt-1">$45.00</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Customer Details</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                                <img src="https://api.iconify.design/lucide:user.svg?color=%233b82f6" width="16">
+                            </div>
+                            <span id="modal-customer-name" class="font-bold text-stone-800">Customer Name</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
+                                <img src="https://api.iconify.design/lucide:phone.svg?color=%2322c55e" width="16">
+                            </div>
+                            <span id="modal-customer-phone" class="font-bold text-stone-800">+1 234 567 890</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 p-6 bg-stone-50 rounded-2xl border border-stone-100 space-y-6">
+                <div>
+                    <h4 class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">Delivery Address</h4>
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+                            <img src="https://api.iconify.design/lucide:map-pin.svg?color=%23f97316" width="20">
+                        </div>
+                        <p id="modal-delivery-address" class="text-stone-700 font-medium text-lg leading-relaxed">
+                            Loading...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New: Staff Assignment -->
+            <div id="modal-staff-assignment" class="mt-8 pt-8 border-t border-stone-200">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center">
+                        <img src="https://api.iconify.design/lucide:user-plus.svg?color=%23f97316" width="16">
+                    </div>
+                    <h4 class="text-sm font-bold text-stone-800 uppercase tracking-widest">Assigned Staff Member</h4>
+                </div>
+
+
+                <div id="current-assigned-staff" class="mt-3">
+                    <!-- Content injected by JS -->
+                </div>
+            </div>
+
+            <div id="modal-actions" class="mt-10 flex gap-4">
+                <!-- Dynamic actions based on status -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Staff Modal -->
+    <div id="add-staff-modal"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full shadow-2xl animate-in zoom-in-95 duration-200">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-stone-900">Add Staff Member</h3>
+                <button onclick="closeAddStaffModal()"
+                    class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200">
+                    <img src="https://api.iconify.design/lucide:x.svg?color=%231c1917" width="18">
+                </button>
+            </div>
+            <form id="add-staff-form" onsubmit="event.preventDefault(); submitStaffForm();">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Full
+                            Name</label>
+                        <input type="text" id="staff-name" required placeholder="Full Name"
+                            class="w-full px-4 py-2 rounded-xl border border-stone-200 bg-stone-50 focus:border-orange-500 focus:outline-none font-medium">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label
+                                class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Email</label>
+                            <input type="email" id="staff-email" required placeholder="Email"
+                                class="w-full px-4 py-2 rounded-xl border border-stone-200 bg-stone-50 focus:border-orange-500 focus:outline-none font-medium">
+                        </div>
+                        <div>
+                            <label
+                                class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Phone</label>
+                            <input type="tel" id="staff-phone" required maxlength="16" placeholder="Phone"
+                                oninput="validatePhoneInput(this)"
+                                class="w-full px-4 py-2 rounded-xl border border-stone-200 bg-stone-50 focus:border-orange-500 focus:outline-none font-medium">
+                            <p class="text-[10px] text-stone-400 mt-1">Format: +1234567890</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label
+                                class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Password</label>
+                            <div class="relative">
+                                <input type="password" id="staff-password" required minlength="8" placeholder="Password"
+                                    class="w-full px-4 py-2 pr-10 rounded-xl border border-stone-200 bg-stone-50 focus:border-orange-500 focus:outline-none font-medium">
+                                <button type="button" onclick="togglePasswordVisibility('staff-password')"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer p-1">
+                                    <img src="https://api.iconify.design/lucide:eye.svg?color=%2394a3b8" width="18"
+                                        id="staff-password-icon">
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Confirm
+                                Password</label>
+                            <div class="relative">
+                                <input type="password" id="staff-confirm-password" required minlength="8"
+                                    placeholder="Confirm Password"
+                                    class="w-full px-4 py-2 pr-10 rounded-xl border border-stone-200 bg-stone-50 focus:border-orange-500 focus:outline-none font-medium">
+                                <button type="button" onclick="togglePasswordVisibility('staff-confirm-password')"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer p-1">
+                                    <img src="https://api.iconify.design/lucide:eye.svg?color=%2394a3b8" width="18"
+                                        id="staff-confirm-password-icon">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Country
+                            & Currency</label>
+                        <button type="button" onclick="openCountrySelectorForStaff()"
+                            class="w-full px-4 py-2 rounded-xl border border-stone-200 bg-stone-50 text-left font-medium flex justify-between items-center hover:border-orange-500 focus:outline-none transition-colors">
+                            <span id="staff-country-display" class="text-stone-400">Select Country</span>
+                            <img src="https://api.iconify.design/lucide:chevron-down.svg?color=%2394a3b8" width="18">
+                        </button>
+                        <input type="hidden" id="staff-country">
+                        <input type="hidden" id="staff-currency-code">
+                        <input type="hidden" id="staff-currency-symbol">
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Address</label>
+                        <textarea id="staff-address" rows="2"
+                            placeholder="e.g. Country, State, District, City, Street Name, House Name/House No..."
+                            class="w-full px-4 py-2 rounded-xl border border-stone-200 bg-stone-50 focus:border-orange-500 focus:outline-none font-medium"></textarea>
+                    </div>
+                    <div id="staff-form-error"
+                        class="hidden p-3 bg-red-50 text-red-500 text-xs font-bold rounded-lg flex items-center gap-2">
+                        <img src="https://api.iconify.design/lucide:alert-circle.svg?color=%23ef4444" width="14">
+                        <span id="staff-form-error-msg">Error message</span>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 mt-8">
+                    <button type="button" onclick="closeAddStaffModal()"
+                        class="px-5 py-2.5 rounded-xl bg-stone-100 text-stone-600 font-bold text-sm hover:bg-stone-200 transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-5 py-2.5 rounded-xl bg-orange-500 text-white font-bold text-sm hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20">
+                        Create Staff
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Staff Details Modal -->
+    <div id="staff-details-modal"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div
+            class="bg-white rounded-3xl p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto transform transition-all">
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center gap-4">
+                    <div id="sd-avatar"
+                        class="w-16 h-16 rounded-2xl bg-stone-900 text-white flex items-center justify-center text-2xl font-bold shadow-lg shadow-stone-200">
+                        D
+                    </div>
+                    <div>
+                        <h3 id="sd-name" class="text-2xl font-bold text-stone-900">Staff Name</h3>
+                        <div
+                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-extrabold uppercase mt-1">
+                            <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div> Active Staff
+                        </div>
+                    </div>
+                </div>
+                <button onclick="closeStaffDetailsModal()"
+                    class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors">
+                    <img src="https://api.iconify.design/lucide:x.svg?color=%231c1917" width="20">
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">Contact Information
+                        </h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center">
+                                    <img src="https://api.iconify.design/lucide:mail.svg?color=%23f97316" width="18">
+                                </div>
+                                <div>
+                                    <div class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Email
+                                        Address</div>
+                                    <div id="sd-email" class="text-stone-700 font-bold text-sm">email@example.com</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
+                                    <img src="https://api.iconify.design/lucide:phone.svg?color=%2322c55e" width="18">
+                                </div>
+                                <div>
+                                    <div class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Phone
+                                        Number</div>
+                                    <div id="sd-phone" class="text-stone-700 font-bold text-sm">+1 234 567 890</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">Work Details</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                <img src="https://api.iconify.design/lucide:map-pin.svg?color=%233b82f6" width="18">
+                            </div>
+                            <div class="flex-grow">
+                                <div class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Base Address
+                                </div>
+                                <div id="sd-address" class="text-stone-700 font-bold text-sm leading-tight mt-0.5">Not
+                                    provided</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                <img src="https://api.iconify.design/lucide:calendar.svg?color=%23a855f7" width="18">
+                            </div>
+                            <div class="flex-grow">
+                                <div class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Member Since
+                                </div>
+                                <div id="sd-since" class="text-stone-700 font-bold text-sm mt-0.5">February 15, 2026
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-stone-100 pt-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h4 class="text-lg font-bold text-stone-900">Assigned Activities</h4>
+                </div>
+            </div>
+            <div id="sd-activities" class="space-y-4">
+                <!-- Activities will be loaded here -->
+                <div class="flex items-center justify-center py-10">
+                    <img src="https://api.iconify.design/lucide:loader-2.svg"
+                        class="w-8 h-8 animate-spin text-stone-200">
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Toast Container -->
+
+
+    <script>
+        let currentView = 'overview';
+        let performanceChart = null;
+        let allStaffData = [];
+        let isActionInProgress = false;
+
+        function switchView(viewId) {
+            document.querySelectorAll('main > div').forEach(div => div.style.display = 'none');
+            document.getElementById(`${viewId}-view`).style.display = 'block';
+
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            document.getElementById(`nav-${viewId}`).classList.add('active');
+
+            const titles = {
+                overview: 'Delivery Dashboard',
+                tasks: 'Active Delivery Tasks',
+                history: 'Delivery Success History',
+                profile: 'Agent Profile Settings',
+                staff: 'Delivery Squad'
+            };
+            const subtitles = {
+                overview: 'Track your deliveries and earnings performance.',
+                tasks: 'Manage and update your ongoing delivery assignments.',
+                history: 'Review your track record of successful deliveries.',
+                profile: 'Manage your contact information and preferences.',
+                staff: "Manage your hub's delivery staff and active personnel."
+            };
+
+            document.getElementById('view-title').textContent = titles[viewId];
+            document.getElementById('view-subtitle').textContent = subtitles[viewId];
+            currentView = viewId;
+
+            if (viewId === 'overview') loadOverview();
+            if (viewId === 'tasks') loadTasks();
+            if (viewId === 'history') loadHistory();
+            if (viewId === 'profile') loadProfileData();
+            if (viewId === 'staff') loadStaff();
+        }
+
+        async function loadStaff() {
+            const container = document.getElementById('staff-list');
+            try {
+                const res = await fetch('../../backend/api/delivery/staff/list.php');
+                const data = await res.json();
+
+                if (data.success) {
+                    allStaffData = data.staff;
+                    renderStaffList(allStaffData);
+                } else {
+                    throw new Error(data.message || 'Unknown error');
+                }
+            } catch (err) {
+                console.error('Staff load error:', err);
+                container.innerHTML = `
+                    <div class="col-span-full py-20 text-center bg-red-50 rounded-3xl border border-red-100 p-8">
+                        <img src="https://api.iconify.design/lucide:alert-circle.svg?color=%23ef4444" class="w-12 h-12 mx-auto mb-4">
+                        <h4 class="text-red-900 font-bold text-lg mb-2">Error Loading Squad</h4>
+                        <p class="text-red-600 font-medium mb-6">${err.message}</p>
+                        <button onclick="loadStaff()" class="bg-red-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-red-700 transition-all">Try Again</button>
+                    </div>
+                `;
+            }
+        }
+
+        function filterStaff(query) {
+            const q = query.toLowerCase().trim();
+            const filtered = allStaffData.filter(s =>
+                s.full_name.toLowerCase().includes(q)
+            );
+            renderStaffList(filtered, !!q);
+        }
+
+        function renderStaffList(staff, isFiltered = false) {
+            const container = document.getElementById('staff-list');
+
+            if (staff.length > 0) {
+                container.innerHTML = staff.map(s => {
+                    const statusBadge = s.is_active == 1
+                        ? `<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-extrabold uppercase mt-1">
+                            <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                            Active Staff
+                           </div>`
+                        : `<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-600 text-[10px] font-extrabold uppercase mt-1">
+                            <div class="w-1.5 h-1.5 rounded-full bg-red-500"></div>
+                            Disabled
+                           </div>`;
+
+                    const toggleLabel = s.is_active == 1 ? 'Disable' : 'Enable';
+                    const toggleAction = s.is_active == 1 ? 'block' : 'unblock';
+
+                    return `
+                        <div class="bg-white p-8 rounded-[32px] border border-stone-100 shadow-sm hover:shadow-xl hover:shadow-stone-200 transition-all group relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-stone-50 rounded-full -mr-16 -mt-16 group-hover:bg-primary/5 transition-colors"></div>
+                            
+                            <div class="relative z-10">
+                                <div class="flex items-center gap-5 mb-8">
+                                    <div class="w-16 h-16 rounded-2xl bg-stone-900 text-white flex items-center justify-center text-2xl font-bold shadow-lg shadow-stone-200">
+                                        ${s.full_name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <div class="text-xl font-black text-stone-900 mb-1">${s.full_name}</div>
+                                        ${statusBadge}
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-4 mb-8">
+                                    <div class="flex items-center gap-3 text-stone-500">
+                                        <div class="w-8 h-8 rounded-lg bg-stone-50 flex items-center justify-center">
+                                            <img src="https://api.iconify.design/lucide:mail.svg?color=%2378716c" width="16">
+                                        </div>
+                                        <span class="text-sm font-bold">${s.email}</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-stone-500">
+                                        <div class="w-8 h-8 rounded-lg bg-stone-50 flex items-center justify-center">
+                                            <img src="https://api.iconify.design/lucide:phone.svg?color=%2378716c" width="16">
+                                        </div>
+                                        <span class="text-sm font-bold">${s.phone || 'No phone'}</span>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button onclick="openStaffDetails(${s.id})" 
+                                            class="py-3.5 px-4 bg-stone-50 text-stone-600 rounded-2xl font-bold text-sm hover:bg-stone-100 transition-all active:scale-95 flex items-center justify-center gap-2">
+                                        Details
+                                    </button>
+                                    <div class="flex gap-2">
+                                        <button onclick="toggleStaffStatus(${s.id}, '${toggleAction}')"
+                                                class="flex-1 py-3.5 px-4 ${s.is_active == 1 ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-green-50 text-green-600 hover:bg-green-100'} rounded-2xl font-bold text-sm transition-all active:scale-95">
+                                            ${toggleLabel}
+                                        </button>
+                                        <button onclick="deleteStaff(${s.id}, '${s.email}')"
+                                                class="w-12 h-12 flex items-center justify-center bg-stone-50 text-stone-400 hover:bg-red-50 hover:text-red-500 rounded-2xl transition-all active:scale-95">
+                                            <img src="https://api.iconify.design/lucide:trash-2.svg" class="w-5 h-5 opacity-50 group-hover:opacity-100">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                container.innerHTML = `
+                    <div class="col-span-full py-24 text-center">
+                        <div class="w-24 h-24 bg-stone-50 rounded-[40px] flex items-center justify-center mx-auto mb-6">
+                            <img src="https://api.iconify.design/lucide:users.svg?color=%23d1d5db" class="w-10 h-10">
+                        </div>
+                        <h4 class="text-stone-900 font-black text-2xl mb-2">Your Squad is Empty</h4>
+                        <p class="text-stone-500 font-medium mb-10 max-w-sm mx-auto">Start building your local delivery team to handle more hub assignments efficiently.</p>
+                        ${isFiltered ? '' : '<button onclick="openAddStaffModal()" class="bg-primary text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-all active:scale-95">Add First Member</button>'}
+                    </div>
+                `;
+            }
+        }
+
+        function openAddStaffModal() {
+            document.getElementById('add-staff-modal').classList.remove('hidden');
+            document.getElementById('staff-form-error').classList.add('hidden');
+            document.getElementById('add-staff-form').reset();
+            document.body.style.overflow = 'hidden';
+            // Reset placeholder display
+            const display = document.getElementById('staff-country-display');
+            display.textContent = 'Select Country';
+            display.classList.remove('text-stone-900');
+            display.classList.add('text-stone-400');
+            // Explicitly reset country fields
+            document.getElementById('staff-country').value = '';
+            document.getElementById('staff-currency-code').value = '';
+            document.getElementById('staff-currency-symbol').value = '';
+        }
+
+        function openCountrySelectorForStaff() {
+            CountrySelector.onSelectCallback = (country) => {
+                document.getElementById('staff-country').value = country.name;
+                document.getElementById('staff-currency-code').value = country.currency_code;
+                document.getElementById('staff-currency-symbol').value = country.currency_symbol;
+                const display = document.getElementById('staff-country-display');
+                display.textContent = `${country.name} (${country.currency_symbol} ${country.currency_code})`;
+                display.classList.remove('text-stone-400');
+                display.classList.add('text-stone-900');
+            };
+            CountrySelector.show();
+        }
+
+        function closeAddStaffModal() {
+            document.getElementById('add-staff-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+
+        async function submitStaffForm() {
+            const name = document.getElementById('staff-name').value;
+            const email = document.getElementById('staff-email').value;
+            const phone = document.getElementById('staff-phone').value;
+            const password = document.getElementById('staff-password').value;
+            const confirmPassword = document.getElementById('staff-confirm-password').value;
+            const address = document.getElementById('staff-address').value;
+
+            const country = document.getElementById('staff-country').value;
+            const currency_code = document.getElementById('staff-currency-code').value;
+            const currency_symbol = document.getElementById('staff-currency-symbol').value;
+
+            const errorDiv = document.getElementById('staff-form-error');
+            const errorMsg = document.getElementById('staff-form-error-msg');
+
+            if (!name.trim() || !email.trim() || !phone.trim() || !password.trim() || !country) {
+                errorMsg.textContent = "Please fill in all fields (Country is required).";
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                errorMsg.textContent = "Please enter a valid email address";
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            const phoneRegex = /^\+?[0-9]{10,15}$/;
+            if (!phoneRegex.test(phone)) {
+                errorMsg.textContent = "Phone format invalid. Allowed: + at start, 10-15 digits.";
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            if (password.length < 8) {
+                errorMsg.textContent = "Password must be at least 8 characters";
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                errorMsg.textContent = "Passwords do not match";
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            errorDiv.classList.add('hidden');
+
+            try {
+                const response = await fetch('../../backend/api/delivery/staff/create.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name, email, phone, password, address,
+                        country, currency_code, currency_symbol
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Staff member created successfully!', 'success');
+                    closeAddStaffModal();
+                    loadStaff();
+                } else {
+                    errorMsg.textContent = result.message || "Failed to create staff";
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error creating staff:', error);
+                errorMsg.textContent = "Connection error. Please try again.";
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        async function loadOverview() {
+            try {
+                const res = await fetch('../../backend/api/delivery/get-delivery-stats.php');
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('stat-completed').textContent = data.stats.completed;
+                    document.getElementById('stat-pending').textContent = data.stats.pending;
+                    document.getElementById('stat-today').textContent = data.stats.today_completed;
+                }
+                loadRecentTasks();
+                loadPerformanceChart();
+            } catch (err) {
+                console.error('Error loading stats', err);
+            }
+        }
+
+        async function loadRecentTasks() {
+            const container = document.getElementById('recent-tasks-list');
+            try {
+                const res = await fetch('../../backend/api/delivery/get-assigned-orders.php');
+                const data = await res.json();
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.slice(0, 2).map(task => renderTaskCard(task)).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="flex flex-col items-center justify-center py-12 bg-white rounded-3xl border border-stone-100 shadow-sm transition-all duration-300">
+                            <div class="w-20 h-20 bg-stone-50 rounded-[32px] flex items-center justify-center mb-6 ring-4 ring-stone-50/50">
+                                <img src="https://api.iconify.design/lucide:package-open.svg?color=%23d1d5db" class="w-10 h-10">
+                            </div>
+                            <h3 class="text-xl font-black text-stone-900 mb-2 tracking-tight">Rest & Recharge</h3>
+                            <p class="text-stone-500 font-medium text-center leading-relaxed italic text-xs px-6">
+                                "All clear! No active tasks found at the moment."
+                            </p>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                container.innerHTML = 'Error loading tasks.';
+            }
+        }
+
+        async function loadTasks() {
+            const container = document.getElementById('all-tasks-list');
+            container.innerHTML = '<div class="text-center py-20"><img src="https://api.iconify.design/lucide:loader-2.svg" class="w-12 h-12 animate-spin mx-auto text-primary"></div>';
+            try {
+                const res = await fetch('../../backend/api/delivery/get-assigned-orders.php');
+                const data = await res.json();
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(task => renderTaskCard(task)).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="py-32 bg-white rounded-[40px] border border-stone-100 text-center flex flex-col items-center">
+                            <img src="https://api.iconify.design/lucide:package-open.svg?color=%23e2e8f0" class="w-10 h-10 mb-6">
+                            <p class="text-stone-400 font-medium italic">"No active tasks found at the moment."</p>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                container.innerHTML = 'Error loading tasks.';
+            }
+        }
+
+        async function loadHistory() {
+            const tbody = document.getElementById('history-table-body');
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-20"><img src="https://api.iconify.design/lucide:loader-2.svg" class="w-10 h-10 animate-spin mx-auto text-primary"></td></tr>';
+            try {
+                const res = await fetch('../../backend/api/delivery/get-delivery-history.php');
+                const data = await res.json();
+                if (data.success && data.data.length > 0) {
+                    tbody.innerHTML = data.data.map(h => {
+                        const projectRoot = window.getProjectRoot();
+                        const paddedId = h.id.toString().padStart(5, '0');
+                        const prefix = (h.type === 'auction') ? 'AUC-' : 'ORD-';
+                        return `
+                            <tr style="border-bottom: 1px solid #f1f5f9;" class="hover:bg-stone-50 transition-colors">
+                                <td style="padding: 16px; font-weight: 700; text-align: center;">${prefix}${paddedId}</td>
+                                <td style="padding: 16px; text-align: center;">
+                                    <div style="font-weight: 700; color: #1e293b;">${h.product_name}</div>
+                                    <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Customer: ${h.customer_name}</div>
+                                </td>
+                                <td style="padding: 16px; font-weight: 700; color: #16a34a; text-align: center;">${CurrencyManager.format(h.total_price)}</td>
+                                <td style="padding: 16px; font-size: 13px; color: #1e293b; font-weight: 600; text-align: center;">${new Date(h.delivered_at).toLocaleDateString('en-GB')}</td>
+                                <td style="padding: 16px; text-align: center;">
+                                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; background: #dcfce7; color: #16a34a;">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div> DELIVERED
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-20 text-stone-400">Your delivery history is currently empty.</td></tr>';
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderTaskCard(task) {
+            const projectRoot = window.getProjectRoot();
+            let imgSrc = task.product_image;
+
+            if (!imgSrc) {
+                imgSrc = projectRoot + '/frontend/assets/images/logo.png';
+            } else if (imgSrc.startsWith('http')) {
+            } else if (imgSrc.startsWith('uploads/')) {
+                imgSrc = projectRoot + '/' + imgSrc;
+            } else if (imgSrc.startsWith('/uploads/')) {
+                imgSrc = projectRoot + imgSrc;
+            } else {
+                imgSrc = projectRoot + '/uploads/products/' + imgSrc;
+            }
+
+            const isReassignedPending = task.status === 'shipped' &&
+                task.latest_comment &&
+                (task.latest_comment.toLowerCase().includes('transferred') || task.latest_comment.toLowerCase().includes('reassigned')) &&
+                !task.latest_comment.toLowerCase().includes('confirmed receipt');
+
+            const statusColors = {
+                'ordered': 'bg-blue-100 text-blue-700',
+                'shipped_pending': 'bg-orange-100 text-orange-700',
+                'shipped': isReassignedPending ? 'bg-orange-100 text-orange-700' : 'bg-purple-100 text-purple-700',
+                'delivered': 'bg-green-100 text-green-700',
+                'cancelled': 'bg-red-100 text-red-700'
+            };
+            const statusLabel = (task.status === 'shipped_pending' || isReassignedPending) ? 'Shipment Pending' : (task.status ? (task.status.charAt(0).toUpperCase() + task.status.slice(1)) : 'Unknown');
+            const statusClass = statusColors[task.status] || 'bg-stone-50 text-stone-600';
+
+            return `
+                <div class="p-6 rounded-2xl border border-stone-100 bg-white hover:border-primary/30 hover:shadow-xl hover:shadow-stone-200 transition-all group">
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <img src="${imgSrc}" 
+                             style="width: 100px; height: 100px; border-radius: 20px; object-fit: cover;"
+                             onerror="this.src='/frontend/assets/images/logo.png'">
+                        <div class="flex-grow">
+                            <div class="mb-1 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-extrabold text-primary uppercase tracking-widest">
+                                        ${task.type === 'auction' ? `AUC-${task.id.toString().padStart(5, '0')}` : `ORD-${task.id.toString().padStart(5, '0')}`}
+                                    </span>
+                                    ${task.type === 'auction'
+                    ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-indigo-100 text-indigo-700">Auction</span>'
+                    : '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-teal-100 text-teal-700">Order</span>'}
+                                </div>
+                            </div>
+                            <h4 class="text-xl font-bold text-stone-800">${task.product_name}</h4>
+                            <div class="flex flex-col gap-2 mt-3">
+                                <div class="flex items-center gap-2 text-sm font-semibold text-stone-600">
+                                    <div class="w-6 h-6 rounded bg-orange-50 flex items-center justify-center flex-shrink-0">
+                                         <img src="https://api.iconify.design/lucide:map-pin.svg?color=%23f97316" width="14">
+                                    </div>
+                                    <span>${task.delivery_address.replace(/Contact:.*$/, '').trim()}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm font-semibold text-stone-600">
+                                    <div class="w-6 h-6 rounded bg-green-50 flex items-center justify-center flex-shrink-0">
+                                         <img src="https://api.iconify.design/lucide:phone.svg?color=%2322c55e" width="14">
+                                    </div>
+                                    <span>Contact: ${task.customer_phone || (task.delivery_address.match(/Contact:\s*(\+?\d+)/) ? task.delivery_address.match(/Contact:\s*(\+?\d+)/)[1] : 'N/A')}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end gap-2 -mt-2">
+                            <div class="flex items-center gap-3 mb-10">
+                                <span class="text-stone-400 text-xs font-bold uppercase tracking-wider">
+                                    ${new Date(task.order_date).toLocaleDateString('en-GB')}
+                                </span>
+                                <span class="${statusClass} text-[10px] font-bold px-3 py-1.5 rounded-lg border border-transparent shadow-sm">
+                                    ${statusLabel}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                ${(task.status === 'shipped_pending' || isReassignedPending) ? `
+                                    <button onclick='confirmReceipt("${task.id}", "${task.type || 'order'}")' 
+                                            class="bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all shadow-md active:scale-95 px-6 py-2.5">
+                                        Confirm
+                                    </button>
+                                ` : ''}
+                                <button onclick='openAssignmentTypeModal(${JSON.stringify(task).replace(/'/g, "&apos;")})' 
+                                        class="bg-primary text-white rounded-xl font-bold text-sm hover:bg-primary-hover transition-all shadow-md active:scale-95 px-6 py-2.5 ${(task.status === 'shipped_pending' || isReassignedPending) ? 'opacity-50 pointer-events-none' : ''}">
+                                    ${!task.delivery_staff_id ? 'Assign' : 'Reassign'}
+                                </button>
+                                <button onclick='openOrderModal(${JSON.stringify(task).replace(/'/g, "&apos;")})' 
+                                        class="bg-stone-900 text-white rounded-xl font-bold text-sm hover:bg-black transition-all shadow-md active:scale-95 px-6 py-2.5">
+                                    Details
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-end gap-2 mt-10 ${task.delivery_staff_id && task.staff_name ? '' : 'invisible'}">
+                                <div class="w-5 h-5 rounded-full bg-green-50 flex items-center justify-center">
+                                    <img src="https://api.iconify.design/lucide:user-check.svg?color=%2322c55e" width="12">
+                                </div>
+                                <span class="text-xs font-bold text-stone-600">Assigned to: <span class="text-green-600">${task.staff_name || 'Placeholder'}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function updateStatus(orderId, status) {
+            const confirmMsg = status === 'delivered' ? 'Mark this order as successfully delivered?' : `Update order to ${status}?`;
+            if (!confirm(confirmMsg)) return;
+
+            try {
+                const type = document.getElementById('modal-order-id-label').getAttribute('data-type') || 'order';
+                const res = await fetch('../../backend/api/delivery/update-status.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: orderId, status: status, type: type })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Order updated to ${status} successfully!`, 'success');
+                    closeOrderModal();
+                    if (currentView === 'overview') loadOverview();
+                    else if (currentView === 'tasks') loadTasks();
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (err) {
+                showToast('Connection failed. Try again.', 'error');
+            }
+        }
+
+        function openOrderModal(task) {
+            const projectRoot = window.getProjectRoot();
+            const label = document.getElementById('modal-order-id-label');
+            const paddedId = task.id.toString().padStart(5, '0');
+            const prefix = task.type === 'auction' ? 'AUC-' : 'ORD-';
+            label.textContent = `${prefix}${paddedId}`;
+            label.setAttribute('data-type', task.type || 'order');
+            document.getElementById('modal-product-name').textContent = task.product_name;
+            document.getElementById('modal-product-qty').textContent = `${task.quantity} ${task.unit || 'kg'}`;
+            document.getElementById('modal-product-price').textContent = CurrencyManager.format(task.total_price);
+            document.getElementById('modal-customer-name').textContent = task.customer_name;
+            document.getElementById('modal-customer-phone').textContent = task.customer_phone || 'No phone provided';
+            document.getElementById('modal-delivery-address').textContent = task.delivery_address.replace(/Contact:.*$/, '').trim();
+
+            const imgEl = document.getElementById('modal-product-image');
+            let imgSrc = task.product_image;
+            if (!imgSrc) {
+                imgSrc = window.getProjectRoot() + '/frontend/assets/images/logo.png';
+            } else if (imgSrc.startsWith('http')) {
+            } else if (imgSrc.startsWith('uploads/')) {
+                imgSrc = window.getProjectRoot() + '/' + imgSrc;
+            } else if (imgSrc.startsWith('/uploads/')) {
+                imgSrc = window.getProjectRoot() + imgSrc;
+            } else {
+                imgSrc = window.getProjectRoot() + '/uploads/products/' + imgSrc;
+            }
+            imgEl.src = imgSrc;
+            imgEl.onerror = () => imgEl.src = '../assets/images/logo.png';
+
+            // Assignment Status
+            const statusEl = document.getElementById('current-assigned-staff');
+
+            if (task.delivery_staff_id) {
+                const staff = allStaffData.find(s => s.id == task.delivery_staff_id) || { full_name: task.staff_name || 'Staff Member' };
+
+                statusEl.innerHTML = `
+                    <div class="flex items-center justify-between gap-4 bg-green-50 rounded-2xl p-4 border border-green-100">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-white border-2 border-green-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+                                <span class="text-lg font-black text-green-600">${staff.full_name.charAt(0).toUpperCase()}</span>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-black text-stone-900 leading-none">${staff.full_name}</h4>
+                            </div>
+                        </div>
+                        <button onclick="openStaffDetails(${task.delivery_staff_id})" class="text-sm font-bold text-green-700 hover:text-green-800 hover:underline">
+                            View Details
+                        </button>
+                    </div>
+                `;
+            } else {
+                statusEl.innerHTML = `
+                    <div class="flex items-center justify-center gap-3 bg-stone-50 rounded-2xl p-6 border-2 border-dashed border-stone-200">
+                        <div class="w-2 h-2 rounded-full bg-stone-300"></div>
+                        <span class="text-sm font-bold text-stone-400">Not currently assigned</span>
+                    </div>
+                `;
+            }
+
+            const isReassignedPending = task.status === 'shipped' &&
+                task.latest_comment &&
+                (task.latest_comment.toLowerCase().includes('transferred') || task.latest_comment.toLowerCase().includes('reassigned')) &&
+                !task.latest_comment.toLowerCase().includes('confirmed receipt');
+
+            const actions = document.getElementById('modal-actions');
+            if (task.status === 'ordered') {
+                actions.innerHTML = `
+                    <button onclick="updateStatus(${task.id}, 'shipped')" 
+                        class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-200">
+                        <img src="https://api.iconify.design/lucide:truck.svg?color=white" width="20">
+                        Start Shipping
+                    </button>
+                `;
+            } else if (task.status === 'shipped_pending' || isReassignedPending) {
+                actions.innerHTML = `
+                    <button onclick='confirmReceipt("${task.id}", "${task.type || 'order'}")' 
+                        class="flex-1 py-4 bg-orange-500 text-white rounded-2xl font-bold hover:bg-orange-600 transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-200">
+                        <img src="https://api.iconify.design/lucide:check-circle.svg?color=white" width="20">
+                        Confirm
+                    </button>
+                `;
+            } else {
+                actions.innerHTML = `
+                    <div class="flex-1 py-4 bg-stone-50 text-stone-400 rounded-2xl font-bold text-center border border-dashed border-stone-200">
+                        Shipping in progress
+                    </div>
+                `;
+            }
+
+            document.getElementById('order-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeOrderModal() {
+            document.getElementById('order-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Initialize Country Selector
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof CountrySelector !== 'undefined') {
+                CountrySelector.init((country) => {
+                    document.getElementById('input-country').value = country.name;
+                    document.getElementById('input-currency-code').value = country.currency_code;
+                    document.getElementById('input-currency-symbol').value = country.currency_symbol;
+                    document.getElementById('display-country').textContent = country.name;
+                    document.querySelectorAll('.currency-code').forEach(el => el.textContent = `${country.currency_symbol} ${country.currency_code}`);
+
+                    if (window.CurrencyManager) {
+                        const updateSettings = async () => {
+                            if (Object.keys(CurrencyManager.rates).length === 0) await CurrencyManager.fetchRates();
+                            const rate = CurrencyManager.rates[country.currency_code] || 1;
+                            CurrencyManager.settings = { symbol: country.currency_symbol, code: country.currency_code, rate: rate };
+                            sessionStorage.setItem('user_currency_settings', JSON.stringify(CurrencyManager.settings));
+                            CurrencyManager.applyToStaticMarkers();
+                        };
+                        updateSettings();
+                    }
+                });
+            }
+        });
+
+        let currentTargetTask = null;
+
+        let assignmentTargetType = 'staff'; // 'staff' or 'agent'
+
+        function openAssignmentTypeModal(task) {
+            currentTargetTask = task;
+            // Show the selection modal regardless of current assignment status
+            document.getElementById('assignment-type-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAssignmentTypeModal() {
+            document.getElementById('assignment-type-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function selectAssignmentType(type) {
+            assignmentTargetType = type;
+            closeAssignmentTypeModal();
+            openAssignModal(currentTargetTask);
+        }
+
+        async function openAssignModal(task) {
+            currentTargetTask = task;
+            const searchInput = document.getElementById('assign-agent-search');
+            const modalTitle = document.getElementById('assign-modal-title');
+
+            if (searchInput) {
+                searchInput.value = '';
+                searchInput.placeholder = assignmentTargetType === 'agent' ? 'Search agents by name or place...' : 'Search staff...';
+            }
+            if (modalTitle) {
+                modalTitle.textContent = assignmentTargetType === 'agent' ? 'Assign to Other Agent' : 'Assign Delivery Staff';
+            }
+
+            document.getElementById('assign-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            const container = document.getElementById('assign-staff-list');
+
+            if (assignmentTargetType === 'staff') {
+                if (allStaffData.length === 0) {
+                    container.innerHTML = `<div class="text-center py-8 text-stone-400">Loading squad...</div>`;
+                    try {
+                        const res = await fetch('../../backend/api/delivery/staff/list.php');
+                        const data = await res.json();
+                        if (data.success) {
+                            allStaffData = data.staff;
+                        } else {
+                            container.innerHTML = `<div class="text-center py-8 text-red-500">Failed to load staff list.</div>`;
+                            return;
+                        }
+                    } catch (e) {
+                        console.error("Failed to load staff", e);
+                        container.innerHTML = `<div class="text-center py-8 text-red-500">Connection error.</div>`;
+                        return;
+                    }
+                }
+                renderAssignStaffList();
+            } else {
+                // Initial load for agents (empty or recent)
+                container.innerHTML = `<div class="text-center py-8 text-stone-400">Search for agents by name or location</div>`;
+            }
+        }
+
+        function closeAssignModal() {
+            document.getElementById('assign-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            currentTargetTask = null;
+        }
+
+        function renderAssignStaffList(staffToRender = allStaffData) {
+            const container = document.getElementById('assign-staff-list');
+
+            // Filter out disabled/blocked staff
+            const activeStaff = staffToRender.filter(s => s.is_active == 1);
+
+            if (!activeStaff || activeStaff.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-stone-400 font-medium">${staffToRender.length > 0 ? 'No active agents available' : 'No agents found'}</div>`;
+                return;
+            }
+
+            container.innerHTML = activeStaff.map(s => `
+                <button onclick="confirmCardAssignment(${s.id}, '${s.full_name}')"
+                        class="w-full text-left bg-white border border-stone-100 rounded-3xl p-5 mb-3 hover:shadow-lg hover:border-primary/20 transition-all group duration-300">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-1">
+                             <span class="text-xl font-black text-orange-600">${s.full_name.charAt(0)}</span>
+                        </div>
+                        <div class="flex-grow min-w-0">
+                             <h4 class="text-lg font-black text-stone-900 leading-tight mb-2 truncate">${s.full_name}</h4>
+                             
+                             <div class="flex items-start gap-2 mb-1.5">
+                                 <div class="mt-0.5 min-w-[14px]">
+                                     <img src="https://api.iconify.design/lucide:map-pin.svg?color=%2378716c" width="14">
+                                 </div>
+                                 <p class="text-sm font-medium text-stone-500 line-clamp-2 leading-relaxed break-words">
+                                     ${s.address || 'Location not available'}
+                                 </p>
+                             </div>
+                             
+                             <div class="flex items-center gap-2">
+                                 <div class="min-w-[14px]">
+                                     <img src="https://api.iconify.design/lucide:phone.svg?color=%2378716c" width="14">
+                                 </div>
+                                 <p class="text-sm font-bold text-stone-400 tracking-wide">${s.phone || 'No phone'}</p>
+                             </div>
+                        </div>
+                    </div>
+                </button>
+            `).join('');
+        }
+
+        let searchTimeout = null;
+        function filterAssignStaff(query) {
+            if (assignmentTargetType === 'staff') {
+                const q = query.toLowerCase().trim();
+                const filtered = allStaffData.filter(s =>
+                    s.full_name.toLowerCase().includes(q)
+                );
+                renderAssignStaffList(filtered);
+            } else {
+                // Search agents API with debounce
+                if (searchTimeout) clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    searchAgents(query);
+                }, 300);
+            }
+        }
+
+        async function searchAgents(query) {
+            const container = document.getElementById('assign-staff-list');
+            if (!query.trim()) {
+                container.innerHTML = `<div class="text-center py-8 text-stone-400">Search for agents by name or location</div>`;
+                return;
+            }
+
+            container.innerHTML = `<div class="text-center py-8 text-stone-400"><div class="animate-spin inline-block w-6 h-6 border-2 border-primary border-t-transparent rounded-full mb-2"></div><br>Searching agents...</div>`;
+
+            try {
+                const res = await fetch(`../../backend/api/delivery/search-agents.php?q=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                if (data.success) {
+                    renderAssignAgentList(data.agents);
+                } else {
+                    container.innerHTML = `<div class="text-center py-8 text-red-500">${data.message}</div>`;
+                }
+            } catch (err) {
+                container.innerHTML = `<div class="text-center py-8 text-red-500">Search failed</div>`;
+            }
+        }
+
+        function renderAssignAgentList(agents) {
+            const container = document.getElementById('assign-staff-list');
+            if (!agents || agents.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-stone-400 font-medium italic">No agents found matching your search</div>`;
+                return;
+            }
+
+            container.innerHTML = agents.map(a => `
+                <button onclick="confirmCardAssignment(${a.id}, '${a.full_name}')"
+                        class="w-full text-left bg-white border border-stone-100 rounded-3xl p-5 mb-3 hover:shadow-lg hover:border-primary/20 transition-all group duration-300">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-1">
+                             <span class="text-xl font-black text-orange-600">${a.full_name.charAt(0)}</span>
+                        </div>
+                        <div class="flex-grow min-w-0">
+                             <h4 class="text-lg font-black text-stone-900 leading-tight mb-2 truncate">${a.full_name}</h4>
+                             
+                             <div class="flex items-start gap-2 mb-1.5">
+                                 <div class="mt-0.5 min-w-[14px]">
+                                     <img src="https://api.iconify.design/lucide:map-pin.svg?color=%2378716c" width="14">
+                                 </div>
+                                 <p class="text-sm font-medium text-stone-500 line-clamp-2 leading-relaxed break-words">
+                                     ${a.address || 'Address not provided'}
+                                 </p>
+                             </div>
+                             
+
+                        </div>
+                    </div>
+                </button>
+            `).join('');
+        }
+
+        async function confirmCardAssignment(targetId, targetName) {
+            if (!currentTargetTask) return;
+
+            const endpoint = assignmentTargetType === 'staff'
+                ? '../../backend/api/delivery/staff/assign-order.php'
+                : '../../backend/api/delivery/assign-to-agent.php';
+
+            const payload = {
+                order_id: currentTargetTask.id,
+                type: currentTargetTask.type || 'order'
+            };
+
+            if (assignmentTargetType === 'staff') {
+                payload.staff_id = targetId;
+            } else {
+                payload.agent_id = targetId;
+            }
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Task successfully assigned to ${targetName}!`, 'success');
+                    closeAssignModal();
+                    if (currentView === 'overview') loadOverview();
+                    else if (currentView === 'tasks') loadTasks();
+
+                    if (!document.getElementById('order-modal').classList.contains('hidden')) {
+                        if (assignmentTargetType === 'staff') {
+                            currentTargetTask.delivery_staff_id = targetId;
+                            currentTargetTask.staff_name = targetName;
+                            currentTargetTask.delivery_agent_id = null;
+                        } else {
+                            closeOrderModal(); // Close detail modal if reassigned to another hub
+                        }
+                        if (!document.getElementById('order-modal').classList.contains('hidden')) {
+                            openOrderModal(currentTargetTask);
+                        }
+                    }
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to assign task. Try again.', 'error');
+            }
+        }
+
+        async function confirmReceipt(taskId, type) {
+            currentTargetTask = { id: taskId, type: type };
+            document.getElementById('confirm-receipt-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeConfirmReceiptModal() {
+            document.getElementById('confirm-receipt-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            currentTargetTask = null;
+        }
+
+        async function processReceiptConfirmation() {
+            if (!currentTargetTask) return;
+
+            const btn = document.getElementById('confirm-receipt-btn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+
+            try {
+                const res = await fetch('../../backend/api/delivery/confirm-receipt.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        order_id: currentTargetTask.id,
+                        type: currentTargetTask.type
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    closeConfirmReceiptModal();
+                    if (currentView === 'overview') loadOverview();
+                    else if (currentView === 'tasks') loadTasks();
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to confirm receipt. Try again.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        async function openStaffDetails(staffId) {
+            try {
+                const modal = document.getElementById('staff-details-modal');
+                modal.classList.remove('hidden');
+                modal.style.zIndex = '9999';
+                document.body.style.overflow = 'hidden';
+
+                document.getElementById('sd-activities').innerHTML = '<div class="flex justify-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>';
+
+                const res = await fetch(`../../backend/api/delivery/staff/get-staff-details.php?staff_id=${staffId}`);
+                const data = await res.json();
+
+                if (data.success) {
+                    const staff = data.staff;
+                    const activities = data.activities;
+
+                    document.getElementById('sd-name').textContent = staff.full_name || 'Staff Member';
+                    document.getElementById('sd-avatar').textContent = staff.full_name.charAt(0).toUpperCase();
+                    document.getElementById('sd-email').textContent = staff.email || '';
+                    document.getElementById('sd-phone').textContent = staff.phone || 'N/A';
+
+                    if (staff.address) {
+                        const parts = staff.address.split(',');
+                        if (parts.length > 3) {
+                            const firstLine = parts.slice(0, 3).join(',') + ',';
+                            const secondLine = parts.slice(3).join(',').trim();
+                            document.getElementById('sd-address').innerHTML = `${firstLine}<br>${secondLine}`;
+                        } else {
+                            document.getElementById('sd-address').textContent = staff.address;
+                        }
+                    } else {
+                        document.getElementById('sd-address').textContent = 'No address provided';
+                    }
+
+                    document.getElementById('sd-since').textContent = new Date(staff.created_at).toLocaleDateString('en-GB');
+
+                    const activityContainer = document.getElementById('sd-activities');
+                    if (!activities || activities.length === 0) {
+                        activityContainer.innerHTML = `
+                            <div class="py-12 bg-stone-50 rounded-2xl border border-dashed border-stone-200 text-center">
+                                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mx-auto mb-3 shadow-sm">
+                                    <img src="https://api.iconify.design/lucide:activity.svg?color=%23d1d5db" width="24">
+                                </div>
+                                <p class="text-sm font-bold text-stone-400">No activities assigned yet</p>
+                            </div>
+                        `;
+                    } else {
+                        activityContainer.innerHTML = activities.map(act => {
+                            let displayStatus = act.status;
+                            return `
+                                <div class="flex items-center gap-4 p-4 rounded-2xl bg-stone-50 border border-stone-100 group/activity hover:border-primary/20 hover:bg-white transition-all">
+                                    <div class="w-12 h-12 rounded-xl bg-white border border-stone-100 flex items-center justify-center overflow-hidden flex-shrink-0">
+                                        <img src="${window.getProjectRoot()}/${act.image_url}" class="w-full h-full object-cover" onerror="this.src='../assets/images/logo.png'">
+                                    </div>
+                                    <div class="flex-grow">
+                                        <div class="flex items-center gap-2 mb-0.5">
+                                            <span class="text-[9px] font-extrabold text-primary uppercase tracking-widest">${act.type === 'auction' ? 'AUC' : 'ORD'}-${act.id.toString().padStart(5, '0')}</span>
+                                            <span class="px-2 py-0.5 rounded-[4px] text-[8px] font-bold uppercase tracking-wider ${displayStatus === 'delivered' ? 'bg-green-100 text-green-700' : displayStatus === 'shipped' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">${displayStatus}</span>
+                                        </div>
+                                        <div class="text-sm font-bold text-stone-800">${act.product_name}</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-[9px] font-bold text-stone-400 uppercase tracking-widest">Date</div>
+                                        <div class="text-[10px] font-bold text-stone-600">${new Date(act.date).toLocaleDateString('en-GB')}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                } else {
+                    showToast(data.message || 'Failed to load details', 'error');
+                    closeStaffDetailsModal();
+                }
+            } catch (err) {
+                console.error('Fetch Error:', err);
+                showToast('Failed to load staff details', 'error');
+                closeStaffDetailsModal();
+            }
+        }
+
+        function closeStaffDetailsModal() {
+            document.getElementById('staff-details-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        async function loadProfileData() {
+            try {
+                const res = await fetch('../../backend/api/auth/get-profile.php');
+                const result = await res.json();
+
+                if (result.success) {
+                    const user = result.data;
+                    document.getElementById('display-name').textContent = user.full_name;
+                    document.getElementById('display-role').textContent = (user.role || 'DELIVERY AGENT').replace(/_/g, ' ');
+                    document.getElementById('display-id').textContent = '#USR-' + user.id.toString().padStart(6, '0');
+
+                    document.getElementById('input-name').value = user.full_name;
+                    document.getElementById('input-email').value = user.email;
+                    document.getElementById('input-phone').value = user.phone || '';
+                    document.getElementById('input-address').value = user.address || '';
+
+                    if (user.country) {
+                        document.getElementById('input-country').value = user.country;
+                        document.getElementById('input-currency-code').value = user.currency_code;
+                        document.getElementById('input-currency-symbol').value = user.currency_symbol;
+                        document.getElementById('display-country').textContent = user.country;
+                        const currencyText = (user.currency_symbol && user.currency_code)
+                            ? `${user.currency_symbol} ${user.currency_code}`
+                            : (user.currency_code || 'USD');
+                        document.querySelectorAll('.currency-code').forEach(el => el.textContent = currencyText);
+                    }
+
+                    const isGoogleUser = user.google_id !== null && user.google_id !== "";
+                    const emailInput = document.getElementById('input-email');
+                    const emailLabel = document.getElementById('label-email');
+                    const passwordSection = document.getElementById('password-section');
+
+                    if (!isGoogleUser) {
+                        emailInput.readOnly = false;
+                        emailInput.className = "w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all";
+                        emailInput.style.cursor = "text";
+                        emailLabel.textContent = "Email Address";
+                        passwordSection.style.display = "flex";
+                    } else {
+                        emailInput.readOnly = true;
+                        emailInput.className = "w-full bg-[#f5f5f4] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none transition-all cursor-not-allowed";
+                        emailLabel.textContent = "Email Address (Read-only)";
+                        passwordSection.style.display = "none";
+                    }
+
+                    const img = document.getElementById('profile-img');
+                    const initials = document.getElementById('initials');
+
+                    if (user.profile_image) {
+                        img.onload = () => { img.style.display = 'block'; initials.style.display = 'none'; };
+                        const imgPath = user.profile_image.startsWith('http') ? user.profile_image : '../../' + user.profile_image;
+                        img.src = imgPath;
+                        img.setAttribute('referrerpolicy', 'no-referrer');
+
+                        const headerAvatar = document.getElementById('agent-avatar-display');
+                        headerAvatar.innerHTML = `<img src="${imgPath}" referrerpolicy="no-referrer" style="width: 100%; height: 100%; border-radius: 12px; object-fit: cover;">`;
+                        headerAvatar.style.background = 'transparent';
+                    } else {
+                        img.style.display = 'none';
+                        initials.textContent = user.full_name.charAt(0).toUpperCase();
+                        initials.style.display = 'block';
+
+                        const headerAvatar = document.getElementById('agent-avatar-display');
+                        headerAvatar.innerHTML = user.full_name.charAt(0).toUpperCase();
+                        headerAvatar.style.background = '#ff7e21';
+                    }
+
+                    document.getElementById('agent-name-display').textContent = user.full_name;
+                }
+            } catch (err) { console.error('Profile load error', err); }
+        }
+
+
+        const validateProfile = (name, email, password, isGoogleUser) => {
+            if (!name || name.length < 2) return "Please enter a valid name.";
+            if (!/^[a-zA-Z\s'-]+$/.test(name)) return "Please enter a valid name.";
+
+            const phone = document.getElementById('input-phone').value;
+            if (phone && !/^\+?[0-9]{10,15}$/.test(phone)) {
+                return "Invalid Phone Number. Use format: +1234567890 (10-15 digits)";
+            }
+
+            if (!isGoogleUser) {
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Please enter a valid email address.";
+                if (password && password.length > 0) {
+                    if (password.length < 8) return "Password must be at least 8 characters.";
+                    if (password.includes(' ')) return "Password cannot contain spaces.";
+                }
+            }
+            return null;
+        };
+
+        async function updateProfile(event) {
+            event.preventDefault();
+            const btn = document.getElementById('save-btn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const formData = new FormData(event.target);
+            const name = formData.get('full_name');
+            const email = formData.get('email');
+            const password = formData.get('password');
+            const isGoogleUser = document.getElementById('password-section').style.display === 'none';
+
+            const error = validateProfile(name, email, password, isGoogleUser);
+            if (error) {
+                showToast(error, 'error');
+                btn.disabled = false;
+                btn.textContent = originalText;
+                return;
+            }
+
+            try {
+                const res = await fetch('../../backend/api/auth/update-profile.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Profile updated successfully!', 'success');
+                    loadProfileData();
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to save profile.', 'error');
+                console.error(err);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        async function uploadImage(input) {
+            if (input.files && input.files[0]) {
+                const name = document.getElementById('input-name').value;
+                const formData = new FormData();
+                formData.append('profile_image', input.files[0]);
+                formData.append('full_name', name);
+
+                try {
+                    const response = await fetch('../../backend/api/auth/update-profile.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        loadProfileData();
+                        showToast('SUCCESS! Profile image updated!', 'success');
+                    } else {
+                        showToast(result.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    showToast('Upload failed', 'error');
+                }
+            }
+        }
+
+        function validatePhoneInput(input) {
+            let value = input.value.replace(/[^0-9+]/g, '');
+            value = value.replace(/(?!^)\+/g, '');
+            const digits = value.replace(/[^0-9]/g, '');
+            if (digits.length > 15) {
+                const maxLen = value.startsWith('+') ? 16 : 15;
+                value = value.slice(0, maxLen);
+            }
+            input.value = value;
+        }
+
+        function togglePasswordVisibility(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = document.getElementById(fieldId + '-icon');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.src = 'https://api.iconify.design/lucide:eye-off.svg?color=%2394a3b8';
+            } else {
+                field.type = 'password';
+                icon.src = 'https://api.iconify.design/lucide:eye.svg?color=%2394a3b8';
+            }
+        }
+
+        async function loadPerformanceChart() {
+            try {
+                const res = await fetch('../../backend/api/delivery/get-performance.php');
+                const data = await res.json();
+
+                if (data.success) {
+                    const ctx = document.getElementById('performanceChart').getContext('2d');
+                    if (performanceChart) performanceChart.destroy();
+
+                    performanceChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: 'Successful Deliveries',
+                                data: data.data,
+                                borderColor: '#ff7e21',
+                                backgroundColor: 'rgba(255, 126, 33, 0.1)',
+                                borderWidth: 5,
+                                tension: 0.4,
+                                fill: true,
+                                pointBackgroundColor: '#ff7e21',
+                                pointBorderColor: 'white',
+                                pointBorderWidth: 2,
+                                pointRadius: 6,
+                                pointHoverRadius: 8,
+                                clip: false // Prevent clipping of thick lines/points at edges
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            layout: {
+                                padding: {
+                                    bottom: 10, // Increased to ensure the bottom of the thick line isn't cut
+                                    left: 10,
+                                    right: 15,
+                                    top: 10
+                                }
+                            },
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    backgroundColor: '#0f172a',
+                                    padding: 12,
+                                    titleFont: { size: 14, weight: 'bold' },
+                                    bodyFont: { size: 14 },
+                                    displayColors: false,
+                                    callbacks: {
+                                        label: (context) => 'Deliveries: ' + context.parsed.y
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    min: -0.5, // Increased offset to give room for the '0' label
+                                    suggestedMax: 5,
+                                    border: {
+                                        display: false
+                                    },
+                                    grid: {
+                                        color: '#f1f5f9',
+                                        drawTicks: false,
+                                        lineWidth: 1
+                                    },
+                                    ticks: {
+                                        stepSize: 1,
+                                        // Explicitly show 0 and positive integers
+                                        callback: function (value) {
+                                            if (value === 0) return '0';
+                                            if (value > 0 && value % 1 === 0) return value;
+                                            return '';
+                                        },
+                                        color: '#64748b',
+                                        font: { weight: 'bold', size: 12 },
+                                        padding: 10
+                                    }
+                                },
+                                x: {
+                                    border: {
+                                        display: false
+                                    },
+                                    grid: { display: false },
+                                    ticks: {
+                                        color: '#64748b',
+                                        font: { weight: 'bold', size: 11 },
+                                        padding: 8 // Even more padding to move days down
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (err) { console.error('Chart load error', err); }
+        }
+
+        async function logout() {
+            await fetch('../../backend/api/auth/logout.php');
+            window.location.href = '../auth/login.html';
+        }
+
+        window.onload = () => {
+            CurrencyManager.init().then(() => {
+                loadOverview();
+                fetch('../../backend/api/auth/get-profile.php')
+                    .then(r => r.json())
+                    .then(d => {
+                        if (d.success) {
+                            const user = d.data;
+                            document.getElementById('agent-name-display').textContent = user.full_name;
+                            const initials = user.full_name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                            const headerAvatar = document.getElementById('agent-avatar-display');
+
+                            if (user.profile_image) {
+                                const imgPath = user.profile_image.startsWith('http') ? user.profile_image : '../../' + user.profile_image;
+                                headerAvatar.innerHTML = `<img src="${imgPath}" referrerpolicy="no-referrer" style="width: 100%; height: 100%; border-radius: 12px; object-fit: cover;">`;
+                                headerAvatar.style.background = 'transparent';
+                            } else {
+                                headerAvatar.innerHTML = initials;
+                                headerAvatar.style.background = '#ff7e21';
+                            }
+                        }
+                    });
+            });
+        };
+
+        async function toggleStaffStatus(staffId, action) {
+            if (isActionInProgress) return;
+            isActionInProgress = true;
+
+            try {
+                const message = action === 'block'
+                    ? 'Are you sure you want to disable this staff member? They will not be able to log in.'
+                    : 'Are you sure you want to enable this staff member?';
+
+                const confirmed = await showConfirm(message);
+                if (!confirmed) {
+                    isActionInProgress = false;
+                    return;
+                }
+
+                let toast = showToast('Updating status...', 'info', 0);
+                try {
+                    const res = await fetch('../../backend/api/delivery/staff/update-status.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ staff_id: staffId, action: action })
+                    });
+                    const result = await res.json();
+                    toast.remove();
+                    if (result.success) {
+                        showToast(result.message, 'success');
+                        await loadStaff();
+                    } else {
+                        showToast(result.message, 'error');
+                    }
+                } catch (e) {
+                    if (toast) toast.remove();
+                    showToast('Failed to update status', 'error');
+                }
+            } finally {
+                isActionInProgress = false;
+            }
+        }
+
+        async function deleteStaff(staffId, email) {
+            if (isActionInProgress) return;
+            isActionInProgress = true;
+
+            try {
+                const confirmed = await showConfirm(`Are you sure you want to delete ${email}? This action cannot be undone.`);
+                if (!confirmed) {
+                    isActionInProgress = false;
+                    return;
+                }
+
+                let toast = showToast('Deleting staff member...', 'info', 0);
+                try {
+                    const res = await fetch('../../backend/api/delivery/staff/delete.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ staff_id: staffId })
+                    });
+                    const result = await res.json();
+                    toast.remove();
+                    if (result.success) {
+                        showToast(result.message, 'success');
+                        await loadStaff();
+                    } else {
+                        showToast(result.message, 'error');
+                    }
+                } catch (e) {
+                    if (toast) toast.remove();
+                    showToast('Failed to delete staff member', 'error');
+                }
+            } finally {
+                isActionInProgress = false;
+            }
+        }
+    </script>
+
+    <!-- Confirm Receipt Modal -->
+    <div id="confirm-receipt-modal"
+        class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div
+            class="bg-white rounded-[32px] p-10 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200 text-center">
+            <div
+                class="w-20 h-20 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center mb-6 mx-auto">
+                <img src="https://api.iconify.design/lucide:package-check.svg?color=%23f97316" width="40">
+            </div>
+            <h3 class="text-2xl font-bold text-stone-900 mb-3">Confirm Receipt</h3>
+            <p class="text-stone-500 text-base leading-relaxed mb-8">Are you sure you have received the item for
+                delivery? This will mark the order as SHIPPED and ready for assignment.</p>
+
+            <div class="flex gap-4">
+                <button onclick="closeConfirmReceiptModal()"
+                    class="flex-1 px-6 py-4 rounded-2xl border-2 border-stone-100 text-stone-500 font-bold text-sm hover:bg-stone-50 transition-all uppercase tracking-wider">Close</button>
+                <button id="confirm-receipt-btn" onclick="processReceiptConfirmation()"
+                    class="flex-1 bg-gradient-to-r from-[#FF7E21] to-[#ff9142] hover:from-[#E66D1A] hover:to-[#ff7e21] text-white py-4 rounded-2xl font-bold text-sm shadow-[0_8px_20px_rgba(255,126,33,0.3)] hover:shadow-orange-500/40 transition-all uppercase tracking-wider">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assignment Type Selection Modal -->
+    <div id="assignment-type-modal"
+        class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-2xl font-black text-stone-900 tracking-tight">Assign Task</h3>
+                <button onclick="closeAssignmentTypeModal()"
+                    class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors">
+                    <img src="https://api.iconify.design/lucide:x.svg?color=%231c1917" width="20">
+                </button>
+            </div>
+
+            <p class="text-stone-500 font-medium mb-8">Who would you like to assign this delivery task to?</p>
+
+            <div class="grid grid-cols-1 gap-4">
+                <button onclick="selectAssignmentType('agent')"
+                    class="flex items-center gap-6 p-6 rounded-3xl border-2 border-stone-50 hover:border-orange-200 hover:bg-orange-50/20 transition-all group text-left">
+                    <div
+                        class="w-20 h-20 rounded-2xl bg-[#FFF4E8] flex items-center justify-center group-hover:scale-105 transition-transform">
+                        <img src="https://api.iconify.design/lucide:building-2.svg?color=%23FF7E21" width="36">
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-black text-stone-900 mb-1">Other Agent</h4>
+                        <p class="text-sm text-stone-500 font-medium leading-relaxed">Assign to another delivery agent in a different area.</p>
+                    </div>
+                </button>
+
+                <button onclick="selectAssignmentType('staff')"
+                    class="flex items-center gap-6 p-6 rounded-3xl border-2 border-stone-50 hover:border-indigo-200 hover:bg-indigo-50/20 transition-all group text-left">
+                    <div
+                        class="w-20 h-20 rounded-2xl bg-[#EEF2FF] flex items-center justify-center group-hover:scale-105 transition-transform">
+                        <img src="https://api.iconify.design/lucide:users.svg?color=%236366f1" width="36">
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-black text-stone-900 mb-1">Direct Staff</h4>
+                        <p class="text-sm text-stone-500 font-medium leading-relaxed">Assign to one of your locally managed delivery personnel.</p>
+                    </div>
+                </button>
+            </div>
+
+            <div class="mt-10">
+                <button onclick="closeAssignmentTypeModal()"
+                    class="w-full py-4 rounded-2xl bg-[#F5F5F5] text-[#999999] font-black text-sm hover:bg-stone-200 transition-all uppercase tracking-widest">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Staff/Agent Modal -->
+    <div id="assign-modal"
+        class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-[2.5rem] p-8 max-w-xl w-full shadow-2xl transform transition-all">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-black text-stone-900 tracking-tight" id="assign-modal-title">Assign Delivery
+                    Staff</h3>
+                <button onclick="closeAssignModal()"
+                    class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center hover:bg-stone-200 transition-colors">
+                    <img src="https://api.iconify.design/lucide:x.svg?color=%231c1917" width="18">
+                </button>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative mb-6">
+                <input type="text" id="assign-agent-search" placeholder="Search..."
+                    oninput="filterAssignStaff(this.value)"
+                    class="w-full pl-12 pr-4 py-4 bg-stone-50 border border-stone-100 rounded-2xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-stone-600 placeholder:text-stone-400">
+                <div class="absolute left-4 top-1/2 -translate-y-1/2">
+                    <img src="https://api.iconify.design/lucide:search.svg?color=%23FF7E21" width="20">
+                </div>
+            </div>
+
+            <div class="space-y-3 max-h-[450px] overflow-y-auto pr-2 no-scrollbar" id="assign-staff-list">
+                <!-- Items will be injected here -->
+                <div class="text-center py-8 text-stone-400">Loading...</div>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+
+</html>

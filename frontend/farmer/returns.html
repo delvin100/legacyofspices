@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+    // Immediate Session & Verification Enforcement
+    (async () => {
+        const res = await fetch('../../backend/api/auth/check-session.php');
+        const data = await res.json();
+        if (!data.logged_in) {
+            window.location.href = '../auth/login.html';
+            return;
+        }
+        
+        // Farmer Verification Check
+        if (data.role === 'farmer' && parseInt(data.is_verified) === 0) {
+            if (!window.location.pathname.includes('certificates.html')) {
+                window.location.href = 'certificates.html';
+            }
+        }
+    })();
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard | Legacy of Spices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                        'bg-dark': '#0C0A09',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hide-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body style="background: #fafaf9; color: #1c1917; font-family: 'Outfit', sans-serif;">
+                <aside style="width: 240px; background: white; border-right: 1px solid #e7e5e4; position: fixed; height: 100vh; padding: 24px; z-index: 50; overflow-y: auto; display: flex; flex-direction: column;">
+        <div class="logo" style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
+            <img src="../assets/images/logo.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 22px; color: #1c1917; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">Legacy</h3>
+                <span style="font-size: 11px; color: #ff7e21; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; margin-top: 2px;">Of Spices</span>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+            <a href="farmer-dashboard.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:layout-dashboard.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Dashboard</span>
+            </a>
+            <a href="inventory.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:package.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Inventory</span>
+            </a>
+            <a href="orders.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shopping-cart.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Orders</span>
+            </a>
+            <a href="returns.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: white; background: #FF7E21; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(255, 126, 33, 0.2);">
+                <img src="https://api.iconify.design/lucide:rotate-ccw.svg?color=white" width="20" alt="">
+                <span style="white-space: nowrap;">Returns & Refunds</span>
+            </a>
+            <a href="auctions.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:gavel.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Auctions</span>
+            </a>
+            <a href="analysis.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:bar-chart-3.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Analysis</span>
+            </a>
+            <a href="certificates.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shield-check.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Certificates</span>
+            </a>
+
+            <a href="profile.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:user.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Profile</span>
+            </a>
+        </nav>
+
+        <div style="margin-top: auto; padding-top: 24px;">
+            <button onclick="logout()" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; text-decoration: none; color: #ef4444; background: #fef2f2; border: 1px solid #fee2e2; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'">
+                <img src="https://api.iconify.design/lucide:log-out.svg?color=%23ef4444" width="18" style="transform: rotate(180deg);" alt="">
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <main style="margin-left: 240px; padding: 32px 40px; min-height: 100vh;">
+        <header style="margin-bottom:40px;">
+            <h1 style="font-size:32px;font-weight:800;color:#1c1917;letter-spacing:-0.02em;">Returns & Refunds</h1>
+            <p style="font-size:15px;color:#78716c;margin-top:4px;">Manage return requests and overview your financial
+                impact.</p>
+        </header>
+
+        <!-- Farmer Wallet Card -->
+        <div
+            style="background:linear-gradient(135deg,#1c1917,#3d2b1f);border-radius:32px;padding:36px;margin-bottom:40px;position:relative;overflow:hidden;">
+            <div
+                style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;background:rgba(255,126,33,0.15);border-radius:50%;">
+            </div>
+            <div
+                style="position:absolute;bottom:-50px;left:100px;width:240px;height:240px;background:rgba(255,126,33,0.08);border-radius:50%;">
+            </div>
+            <div style="position:relative;z-index:1;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;">
+                    <div>
+                        <p
+                            style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:8px;">
+                            Business Earnings</p>
+                        <p id="farmer-wallet-balance"
+                            style="font-size:48px;font-weight:800;color:white;letter-spacing:-0.03em;">₹0</p>
+                        <p style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;">Total revenue after return
+                            deductions</p>
+                    </div>
+                    <div style="background:rgba(255,126,33,0.2);border-radius:20px;padding:16px;text-align:center;">
+                        <img src="https://api.iconify.design/lucide:wallet.svg?color=%23FF7E21" width="28">
+                        <p style="font-size:10px;color:#FF7E21;font-weight:700;margin-top:4px;">EARNINGS</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Return Requests Section -->
+        <div id="return-requests-section" style="margin-bottom:32px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                <div>
+                    <h3 style="font-size:18px;font-weight:700;color:#1c1917;">Return Requests</h3>
+                    <p style="font-size:13px;color:#78716c;margin-top:2px;">Returns filed against your products</p>
+                </div>
+                <!-- Add stats badges container here -->
+                <div id="return-stats-badges" style="display:flex;gap:8px;"></div>
+            </div>
+
+            <!-- Return Filter Tabs -->
+            <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;" id="return-tabs">
+                <button onclick="loadFarmerReturns('all')" id="rtab-all" class="return-tab-btn"
+                    style="padding:6px 16px;border-radius:16px;border:1px solid #1c1917;background:#1c1917;color:white;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;">All</button>
+                <button onclick="loadFarmerReturns('requested')" id="rtab-requested" class="return-tab-btn"
+                    style="padding:6px 16px;border-radius:16px;border:1px solid #e7e5e4;background:white;color:#78716c;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;">Requested</button>
+                <button onclick="loadFarmerReturns('refund_completed')" id="rtab-refund_completed"
+                    class="return-tab-btn"
+                    style="padding:6px 16px;border-radius:16px;border:1px solid #e7e5e4;background:white;color:#78716c;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;">Refunded</button>
+                <button onclick="loadFarmerReturns('rejected')" id="rtab-rejected" class="return-tab-btn"
+                    style="padding:6px 16px;border-radius:16px;border:1px solid #e7e5e4;background:white;color:#78716c;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;">Rejected</button>
+                <div style="width:1px;height:20px;background:#e7e5e4;margin:0 4px;align-self:center;"></div>
+                <button onclick="document.getElementById('refund-history-section').scrollIntoView({ behavior: 'smooth' })"
+                    style="padding:6px 16px;border-radius:16px;border:1px solid #dbeafe;background:#eff6ff;color:#1e40af;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:all 0.2s;"
+                    onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">
+                    <img src="https://api.iconify.design/lucide:history.svg?color=%231e40af" width="14"> History
+                </button>
+            </div>
+
+            <div id="farmer-returns-list" style="min-height: 400px;">
+                <div style="text-align:center;padding:40px;">
+                    <p style="color:#a8a29e;font-size:12px;font-weight:600;">Loading return requests...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Refund History Section -->
+        <div id="refund-history-section" style="margin-top:32px;">
+            <div style="background:white;border:1px solid #e7e5e4;border-radius:24px;padding:24px;">
+                <h3
+                    style="font-size:18px;font-weight:700;color:#1c1917;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                    <img src="https://api.iconify.design/lucide:history.svg?color=%23FF7E21" width="20"> Refund
+                    History
+                </h3>
+                <div id="farmer-refund-history">
+                    <p style="color:#a8a29e;font-size:12px;text-align:center;padding:24px;">Loading refund
+                        history...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Return Detail Modal -->
+    <div id="returnDetailModal"
+        style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:24px;">
+        <div style="background:white;border-radius:32px;padding:0;width:100%;max-width:560px;position:relative;max-height:90vh;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.15);"
+            onclick="event.stopPropagation()">
+            <!-- Modal Header -->
+            <div style="padding:28px 32px 20px;border-bottom:1px solid #f5f5f4;">
+                <button onclick="closeReturnDetail()"
+                    style="position:absolute;top:20px;right:24px;background:none;border:none;cursor:pointer;font-size:28px;color:#a8a29e;line-height:1;">&times;</button>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                    <div
+                        style="width:40px;height:40px;background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                        <img src="https://api.iconify.design/lucide:rotate-ccw.svg?color=%2392400e" width="20">
+                    </div>
+                    <div>
+                        <h2 id="rdm-title" style="font-size:20px;font-weight:800;color:#1c1917;letter-spacing:-0.02em;">
+                            Return Details</h2>
+                        <p id="rdm-subtitle" style="font-size:12px;color:#78716c;font-weight:600;"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Body (scrollable) -->
+            <div class="hide-scrollbar" style="padding:24px 32px 28px;overflow-y:auto;max-height:calc(90vh - 120px);">
+                <!-- Status Pipeline -->
+                <div id="rdm-pipeline"
+                    style="display:flex;align-items:center;gap:0;margin-bottom:24px;padding:16px;background:#fafaf9;border-radius:16px;overflow-x:auto;">
+                </div>
+
+                <!-- Product & Customer Info -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+                    <div style="background:#f5f5f4;border-radius:14px;padding:14px;">
+                        <p
+                            style="font-size:10px;font-weight:700;color:#a8a29e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">
+                            Product</p>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <img id="rdm-product-img" src=""
+                                style="width:40px;height:40px;border-radius:10px;object-fit:cover;background:#e7e5e4;">
+                            <div>
+                                <p id="rdm-product-name" style="font-size:13px;font-weight:700;color:#1c1917;"></p>
+                                <p id="rdm-order-id" style="font-size:10px;color:#a8a29e;font-weight:600;"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background:#f5f5f4;border-radius:14px;padding:14px;">
+                        <p
+                            style="font-size:10px;font-weight:700;color:#a8a29e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">
+                            Customer</p>
+                        <p id="rdm-customer-name" style="font-size:13px;font-weight:700;color:#1c1917;"></p>
+                        <p id="rdm-customer-email" style="font-size:10px;color:#78716c;font-weight:600;"></p>
+                    </div>
+                </div>
+
+                <!-- Return Reason -->
+                <div style="margin-bottom:16px;">
+                    <p
+                        style="font-size:10px;font-weight:700;color:#a8a29e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">
+                        Return Reason</p>
+                    <div id="rdm-reason"
+                        style="background:#fef3c7;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:700;color:#92400e;">
+                    </div>
+                </div>
+
+                <!-- Customer Description -->
+                <div id="rdm-desc-wrap" style="margin-bottom:16px;display:none;">
+                    <p
+                        style="font-size:10px;font-weight:700;color:#a8a29e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">
+                        Customer's Description</p>
+                    <div id="rdm-description"
+                        style="background:#f5f5f4;border-radius:12px;padding:12px 14px;font-size:13px;color:#44403c;line-height:1.5;">
+                    </div>
+                </div>
+
+                <!-- Proof Image -->
+                <div id="rdm-proof-wrap" style="margin-bottom:16px;display:none;">
+                    <p
+                        style="font-size:10px;font-weight:700;color:#a8a29e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">
+                        Proof Image</p>
+                    <a id="rdm-proof-link" href="" target="_blank"
+                        style="display:block;border-radius:16px;overflow:hidden;border:1px solid #e7e5e4;">
+                        <img id="rdm-proof-img" src=""
+                            style="width:100%;max-height:240px;object-fit:cover;display:block;">
+                    </a>
+                </div>
+
+                <!-- Refund Info -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+                    <div style="background:#f5f5f4;border-radius:14px;padding:12px;text-align:center;">
+                        <p
+                            style="font-size:10px;font-weight:700;color:#a8a29e;text-transform:uppercase;margin-bottom:4px;">
+                            Refund Amount</p>
+                        <p id="rdm-amount" style="font-size:16px;font-weight:800;color:#1c1917;"></p>
+                    </div>
+                    <div style="background:#f5f5f4;border-radius:14px;padding:12px;text-align:center;">
+                        <p
+                            style="font-size:10px;font-weight:700;color:#a8a29e;text-transform:uppercase;margin-bottom:4px;">
+                            Requested</p>
+                        <p id="rdm-date" style="font-size:13px;font-weight:700;color:#1c1917;"></p>
+                    </div>
+                </div>
+
+                <!-- Dates -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+                    <div style="background:#f5f5f4;border-radius:14px;padding:12px;text-align:center;">
+                        <p
+                            style="font-size:10px;font-weight:700;color:#a8a29e;text-transform:uppercase;margin-bottom:4px;">
+                            Order Date</p>
+                        <p id="rdm-order-date" style="font-size:12px;font-weight:700;color:#1c1917;"></p>
+                    </div>
+                    <div style="background:#f5f5f4;border-radius:14px;padding:12px;text-align:center;">
+                        <p
+                            style="font-size:10px;font-weight:700;color:#a8a29e;text-transform:uppercase;margin-bottom:4px;">
+                            Delivered</p>
+                        <p id="rdm-delivered-date" style="font-size:12px;font-weight:700;color:#1c1917;"></p>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div id="rdm-admin-wrap" style="display:none;margin-bottom:16px;">
+                    <p
+                        style="font-size:10px;font-weight:700;color:#a8a29e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">
+                        Notes</p>
+                    <div id="rdm-admin-notes"
+                        style="background:#dbeafe;border-radius:12px;padding:12px 14px;font-size:13px;color:#1e40af;font-weight:600;">
+                    </div>
+                </div>
+
+                <!-- Farmer Action Buttons -->
+                <div id="rdm-actions"
+                    style="display:none;margin-top:20px;padding-top:20px;border-top:2px solid #f5f5f4;">
+                    <p
+                        style="font-size:10px;font-weight:700;color:#a8a29e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">
+                        Your Response</p>
+                    <textarea id="rdm-farmer-notes" rows="2"
+                        placeholder="Add notes for the customer (required if rejecting)..."
+                        style="width:100%;border:1.5px solid #e7e5e4;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;outline:none;resize:none;box-sizing:border-box;margin-bottom:12px;"></textarea>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <button onclick="submitFarmerReturnAction('approved')" id="rdm-approve-btn"
+                            style="padding:14px;background:#059669;color:white;border:none;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;"
+                            onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">
+                            Approve Return
+                        </button>
+                        <button onclick="submitFarmerReturnAction('rejected')" id="rdm-reject-btn"
+                            style="padding:14px;background:white;color:#dc2626;border:2px solid #fecaca;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;"
+                            onmouseover="this.style.background='#fef2f2';this.style.borderColor='#dc2626'"
+                            onmouseout="this.style.background='white';this.style.borderColor='#fecaca'">
+                            Reject Return
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function logout() {
+            try {
+                await fetch('../../backend/api/auth/logout.php');
+                window.location.href = '../auth/login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        window.onload = async () => {
+            if (typeof CurrencyManager !== 'undefined') await CurrencyManager.init();
+            loadFarmerWallet();
+            loadFarmerReturns('all');
+            loadFarmerRefundHistory();
+        };
+
+        async function loadFarmerWallet() {
+            try {
+                // Fetch stats to get Total Revenue (Gross - Refunds)
+                const res = await fetch('../../backend/api/analytics/get-farmer-stats.php');
+                const data = await res.json();
+                if (data.success && data.stats) {
+                    const rawRevenue = data.stats.revenue !== undefined ? data.stats.revenue : 0;
+                    const rev = parseFloat(rawRevenue);
+                    const formatted = CurrencyManager.format(isNaN(rev) ? 0 : rev);
+                    document.getElementById('farmer-wallet-balance').innerText = formatted;
+                }
+            } catch (e) {
+                console.error('Farmer revenue load error', e);
+            }
+        }
+
+        async function loadFarmerRefundHistory() {
+            try {
+                const res = await fetch('../../backend/api/returns/get-farmer-refund-history.php');
+                const data = await res.json();
+                if (!data.success) return;
+
+                const container = document.getElementById('farmer-refund-history');
+                const refunds = data.refunds || [];
+
+                if (refunds.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align:center;padding:32px;">
+                            <img src="https://api.iconify.design/lucide:history.svg?color=%23a8a29e" width="32" style="margin: 0 auto 12px;">
+                            <p style="color:#a8a29e;font-size:12px;font-weight:600;">No refunds processed yet</p>
+                        </div>`;
+                    return;
+                }
+
+                container.innerHTML = refunds.map(r => {
+                    const date = new Date(r.updated_at).toLocaleDateString('en-GB');
+                    const amt = parseFloat(r.refund_amount || 0);
+                    return `
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f5f5f4;">
+                        <div style="width:36px;height:36px;background:#d1fae5;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <img src="https://api.iconify.design/lucide:check-circle.svg?color=%23059669" width="18">
+                        </div>
+                        <div style="flex:1;min-width:0;">
+                            <p style="font-size:13px;font-weight:700;color:#1c1917;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.product_name}</p>
+                            <p style="font-size:11px;color:#78716c;font-weight:600;">${r.customer_name} &bull; ORD-${r.order_id.toString().padStart(5, '0')} &bull; ${date}</p>
+                        </div>
+                        <div style="flex-shrink:0;text-align:right;">
+                            <p style="font-size:14px;font-weight:800;color:#059669;">${CurrencyManager.format(amt)}</p>
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch (e) {
+                console.error('Refund history error:', e);
+            }
+        }
+
+        const RET_STATUS_CONFIG = {
+            requested: { label: 'Requested', bg: '#fef3c7', color: '#92400e' },
+            under_review: { label: 'Under Review', bg: '#dbeafe', color: '#1e40af' },
+            approved: { label: 'Approved', bg: '#d1fae5', color: '#065f46' },
+            rejected: { label: 'Rejected', bg: '#fee2e2', color: '#991b1b' },
+            refund_processing: { label: 'Processing', bg: '#ede9fe', color: '#5b21b6' },
+            refund_completed: { label: 'Refunded', bg: '#d1fae5', color: '#065f46' },
+        };
+
+        const RET_REASON_LABELS = {
+            damaged: 'Damaged', wrong_item: 'Wrong Item', expired: 'Expired',
+            quality_issue: 'Quality Issue', other: 'Other'
+        };
+
+        async function loadFarmerReturns(status = 'all') {
+            document.querySelectorAll('.return-tab-btn').forEach(btn => {
+                const isActive = btn.id === 'rtab-' + status;
+                btn.style.background = isActive ? '#1c1917' : 'white';
+                btn.style.color = isActive ? 'white' : '#78716c';
+                btn.style.fontWeight = '700';
+                btn.style.border = isActive ? '1px solid #1c1917' : '1px solid #e7e5e4';
+            });
+
+            const container = document.getElementById('farmer-returns-list');
+            container.innerHTML = '<div style="text-align:center;padding:40px;"><img src="https://api.iconify.design/lucide:loader-2.svg" style="width:28px;height:28px;animation:spin 1s linear infinite;margin:0 auto;"></div>';
+
+            try {
+                const url = '../../backend/api/returns/get-farmer-returns.php' + (status !== 'all' ? '?status=' + status : '');
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (!data.success) {
+                    container.innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;font-weight:700;">Failed to load returns.</div>';
+                    return;
+                }
+
+                const s = data.summary || {};
+                const badgesEl = document.getElementById('return-stats-badges');
+                const requested = s.requested || 0;
+                const total = s.total || 0;
+                badgesEl.innerHTML = `
+                <span style="padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;background:#f5f5f4;color:#78716c;">${total} Total</span>
+                ${requested > 0 ? `<span style="padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;">${requested} Pending</span>` : ''}
+                `;
+
+                const returns = data.returns || [];
+                if (returns.length === 0) {
+                    container.innerHTML = `
+                <div style="text-align:center;padding:48px;background:white;border-radius:20px;border:1px solid #e7e5e4;">
+                    <div style="font-size:36px;margin-bottom:12px;color:#059669;">
+                        <img src="https://api.iconify.design/lucide:check-circle.svg" width="48" style="margin: 0 auto;">
+                    </div>
+                    <h4 style="font-size:16px;font-weight:700;color:#1c1917;margin-bottom:4px;">No Return Requests</h4>
+                    <p style="color:#a8a29e;font-size:12px;">No returns match this filter. Great job!</p>
+                </div>`;
+                    return;
+                }
+
+                container.innerHTML = returns.map(r => {
+                    const sc = RET_STATUS_CONFIG[r.status] || RET_STATUS_CONFIG['requested'];
+                    const date = new Date(r.created_at).toLocaleDateString('en-GB');
+                    const amount = parseFloat(r.refund_amount || 0);
+                    const rJson = encodeURIComponent(JSON.stringify(r));
+                    let displayReason = r.reason.startsWith('Other: ') ? r.reason : (RET_REASON_LABELS[r.reason] || r.reason);
+                    if (displayReason === 'other') displayReason = 'Other';
+                    return `
+                    <div style="background:white;border:1px solid #e7e5e4;border-radius:24px;padding:24px;margin-bottom:16px;transition:all 0.2s;"
+                        onmouseover="this.style.boxShadow='0 8px 32px rgba(0,0,0,0.06)'" onmouseout="this.style.boxShadow='none'">
+                        <div style="display:flex;align-items:flex-start;gap:16px;">
+                            <div style="width:56px;height:56px;border-radius:14px;background:#f5f5f4;overflow:hidden;flex-shrink:0;">
+                                <img src="${r.image_url ? '../../' + r.image_url : 'https://images.unsplash.com/photo-1596040033229?auto=format&fit=crop&w=200'}"
+                                    style="width:100%;height:100%;object-fit:cover;"
+                                    onerror="this.src='https://images.unsplash.com/photo-1596040033229?auto=format&fit=crop&w=200'">
+                            </div>
+                            <div style="flex:1;min-width:0;">
+                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+                                    <span
+                                        style="background:${sc.bg};color:${sc.color};padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;">${sc.label}</span>
+                                    <span style="font-size:11px;color:#a8a29e;font-weight:600;">ORD-${r.order_id.toString().padStart(5, '0')}</span>
+                                </div>
+                                <h3 style="font-size:16px;font-weight:700;color:#1c1917;margin-bottom:4px;">${r.product_name}</h3>
+                                <div style="font-size:12px;color:#78716c;font-weight:600;display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+                                    <span style="display:flex;align-items:center;gap:4px;"><img src="https://api.iconify.design/lucide:user.svg?color=%2378716c" width="12"> ${r.customer_name}</span>
+                                    <span style="display:flex;align-items:center;gap:4px;"><img src="https://api.iconify.design/lucide:info.svg?color=%2378716c" width="12"> ${displayReason}</span>
+                                    <span style="display:flex;align-items:center;gap:4px;"><img src="https://api.iconify.design/lucide:banknote.svg?color=%2378716c" width="12"> ${CurrencyManager.format(amount)}</span>
+                                    <span style="display:flex;align-items:center;gap:4px;"><img src="https://api.iconify.design/lucide:calendar.svg?color=%2378716c" width="12"> ${date}</span>
+                                </div>
+                                ${r.description ? `<p style="margin-top:8px;font-size:12px;color:#78716c;background:#f5f5f4;border-radius:8px;padding:8px 12px;">${r.description}</p>` : ''}
+                                ${r.image_path ? `<a href="../../${r.image_path}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:#FF7E21;font-weight:700;text-decoration:none;"><img src="https://api.iconify.design/lucide:camera.svg" width="12"> View proof image</a>` : ''}
+                            </div>
+                            <div style="flex-shrink:0;align-self:center;">
+                                <button onclick='openReturnDetail(decodeURIComponent("${rJson}"))'
+                                    style="padding:10px 20px;background:#FF7E21;color:white;border:none;border-radius:12px;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;transition:all 0.2s;"
+                                    onmouseover="this.style.background='#E66D1A'" onmouseout="this.style.background='#FF7E21'">View Details</button>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+
+            } catch (e) {
+                console.error('Farmer returns error:', e);
+                container.innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;font-weight:700;">Connection error. Please refresh.</div>';
+            }
+        }
+
+        function openReturnDetail(jsonStr) {
+            const r = JSON.parse(jsonStr);
+            const sc = RET_STATUS_CONFIG[r.status] || RET_STATUS_CONFIG['requested'];
+            const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-GB') : 'Pending';
+
+            document.getElementById('rdm-title').innerText = 'ORD-' + String(r.order_id).padStart(5, '0');
+            document.getElementById('rdm-subtitle').innerText = r.product_name + ' · ' + r.customer_name;
+
+            const prodImg = r.image_url ? '../../' + r.image_url :
+                'https://images.unsplash.com/photo-1596040033229?auto=format&fit=crop&w=200';
+            document.getElementById('rdm-product-img').src = prodImg;
+            document.getElementById('rdm-product-name').innerText = r.product_name;
+            document.getElementById('rdm-order-id').innerText = 'ORD-' + String(r.order_id).padStart(5, '0');
+
+            document.getElementById('rdm-customer-name').innerText = r.customer_name || 'Customer';
+            document.getElementById('rdm-customer-email').innerText = r.customer_email || '';
+            document.getElementById('rdm-reason').innerText = RET_REASON_LABELS[r.reason] || r.reason;
+
+            const descWrap = document.getElementById('rdm-desc-wrap');
+            if (r.description) {
+                descWrap.style.display = 'block';
+                document.getElementById('rdm-description').innerText = r.description;
+            } else {
+                descWrap.style.display = 'none';
+            }
+
+            const proofWrap = document.getElementById('rdm-proof-wrap');
+            if (r.image_path) {
+                proofWrap.style.display = 'block';
+                document.getElementById('rdm-proof-img').src = '../../' + r.image_path;
+                document.getElementById('rdm-proof-link').href = '../../' + r.image_path;
+            } else {
+                proofWrap.style.display = 'none';
+            }
+
+            document.getElementById('rdm-amount').innerText = CurrencyManager.format(r.refund_amount || 0);
+            document.getElementById('rdm-date').innerText = fmtDate(r.created_at);
+
+            const adminWrap = document.getElementById('rdm-admin-wrap');
+            if (r.admin_notes) {
+                adminWrap.style.display = 'block';
+                document.getElementById('rdm-admin-notes').innerText = r.admin_notes;
+            } else {
+                adminWrap.style.display = 'none';
+            }
+
+            document.getElementById('rdm-order-date').innerText = fmtDate(r.order_date);
+            document.getElementById('rdm-delivered-date').innerText = fmtDate(r.delivered_at);
+
+            const pipelineSteps = [
+                { key: 'requested', label: 'Requested', icon: 'https://api.iconify.design/lucide:file-text.svg' },
+                { key: 'approved', label: 'Approved', icon: 'https://api.iconify.design/lucide:check-circle.svg' },
+                { key: 'refund_completed', label: 'Refunded', icon: 'https://api.iconify.design/lucide:heart.svg' },
+            ];
+            const rejected = r.status === 'rejected';
+            const currentIdx = rejected ? -1 : pipelineSteps.findIndex(s => s.key === r.status);
+
+            let pipeHtml = '';
+            if (rejected) {
+                pipeHtml = `<div style="flex:1;text-align:center;padding:8px;background:#fee2e2;border-radius:12px;">
+        <img src="https://api.iconify.design/lucide:x-circle.svg?color=%23991b1b" width="18" style="margin: 0 auto;">
+        <p style="font-size:10px;font-weight:700;color:#991b1b;margin-top:4px;">REJECTED</p>
+    </div>`;
+            } else {
+                pipeHtml = pipelineSteps.map((step, idx) => {
+                    const isRefunded = step.key === 'refund_completed' && r.status === 'refund_completed';
+                    const done = idx <= currentIdx;
+                    const isCurrent = idx === currentIdx && !isRefunded;
+                    const bg = isCurrent ? '#FF7E21' : (done ? '#d1fae5' : '#f5f5f4');
+                    const txtColor = isCurrent ? 'white' : (done ? '#065f46' : '#a8a29e');
+                    const connector = idx < pipelineSteps.length - 1 ? `<div style="width:20px;height:2px;background:${done ? '#10b981' : '#e7e5e4'};flex-shrink:0;"></div>` : '';
+                    return `<div style="flex:1;min-width:56px;text-align:center;padding:8px 4px;background:${bg};border-radius:12px;${isCurrent ? 'box-shadow:0 4px 12px rgba(255,126,33,0.25);' : ''}">
+                        <img src="${step.icon}?color=${encodeURIComponent(txtColor)}" width="16" style="margin: 0 auto;">
+                        <p style="font-size:9px;font-weight:700;color:${txtColor};margin-top:2px;">${step.label}</p>
+                    </div>${connector}`;
+                }).join('');
+            }
+            document.getElementById('rdm-pipeline').innerHTML = pipeHtml;
+
+            const actionsDiv = document.getElementById('rdm-actions');
+            const actionableStatuses = ['requested', 'under_review'];
+            if (actionableStatuses.includes(r.status)) {
+                actionsDiv.style.display = 'block';
+                document.getElementById('rdm-farmer-notes').value = '';
+            } else {
+                actionsDiv.style.display = 'none';
+            }
+
+            document.getElementById('returnDetailModal').dataset.returnId = r.id;
+            document.getElementById('returnDetailModal').style.display = 'flex';
+        }
+
+        function closeReturnDetail() {
+            document.getElementById('returnDetailModal').style.display = 'none';
+        }
+
+        document.getElementById('returnDetailModal').addEventListener('click', function (e) {
+            if (e.target === this) closeReturnDetail();
+        });
+
+        function showFarmerToast(msg, type = 'success') {
+            const t = document.createElement('div');
+            t.style.cssText = `position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:9999;background:${type
+                === 'error' ? '#fee2e2' : '#d1fae5'};color:${type === 'error' ? '#991b1b' : '#065f46'};padding:14px
+        24px;border-radius:12px;font-weight:700;font-size:14px;box-shadow:0 8px 24px
+        rgba(0,0,0,0.1);font-family:'Outfit',sans-serif;`;
+            t.innerText = (type === 'error' ? '✕ ' : '✓ ') + msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3500);
+        }
+
+        async function submitFarmerReturnAction(action) {
+            const returnId = document.getElementById('returnDetailModal').dataset.returnId;
+            const notes = document.getElementById('rdm-farmer-notes').value.trim();
+
+            if (action === 'rejected' && !notes) {
+                showFarmerToast('Please provide a reason for rejection.', 'error');
+                return;
+            }
+
+            const approveBtn = document.getElementById('rdm-approve-btn');
+            const rejectBtn = document.getElementById('rdm-reject-btn');
+            approveBtn.disabled = true;
+            rejectBtn.disabled = true;
+            const originalText = action === 'approved' ? approveBtn.innerText : rejectBtn.innerText;
+            const targetBtn = action === 'approved' ? approveBtn : rejectBtn;
+            targetBtn.innerText = 'Updating...';
+
+            try {
+                const res = await fetch('../../backend/api/returns/update-return-status.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        return_id: parseInt(returnId),
+                        status: action,
+                        admin_notes: notes
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showFarmerToast(data.message || (action === 'approved' ? 'Return approved & refunded!' : 'Return has been rejected.'), 'success');
+                    closeReturnDetail();
+                    loadFarmerReturns('all');
+                    loadFarmerWallet();
+                    loadFarmerRefundHistory();
+                } else {
+                    showFarmerToast(data.message || 'Failed to update.', 'error');
+                }
+            } catch (e) {
+                showFarmerToast('Connection error. Please try again.', 'error');
+            } finally {
+                approveBtn.disabled = false;
+                rejectBtn.disabled = false;
+                targetBtn.innerText = originalText;
+            }
+        }
+    </script>
+
+    <style>
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/custom-ui.js?v=1.8"></script>
+</body>
+
+</html>

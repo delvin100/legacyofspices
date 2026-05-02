@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart | Legacy of Spices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../assets/js/custom-ui.js?v=1.6"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-stone-50 text-stone-800 font-['Outfit'] antialiased selection:bg-orange-100 selection:text-orange-600">
+        <aside style="width: 240px; background: white; border-right: 1px solid #e7e5e4; position: fixed; height: 100vh; padding: 24px; z-index: 50; overflow-y: auto; display: flex; flex-direction: column;">
+        <div class="logo" style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
+            <img src="../assets/images/logo.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 22px; color: #1c1917; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">Legacy</h3>
+                <span style="font-size: 11px; color: #ff7e21; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; margin-top: 2px;">Of Spices</span>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+            <a href="customer-dashboard.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:layout-dashboard.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Dashboard</span>
+            </a>
+            <a href="catalog.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:book-open.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Catalog</span>
+            </a>
+            <a href="orders.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shopping-bag.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Orders</span>
+            </a>
+            <a href="cart.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: white; background: #FF7E21; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(255, 126, 33, 0.2);">
+                <img src="https://api.iconify.design/lucide:shopping-cart.svg?color=white" width="20" alt="">
+                <span style="white-space: nowrap;">Cart</span>
+            </a>
+            <a href="auctions.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:gavel.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Auctions</span>
+            </a>
+
+            <a href="market-analytics.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:trending-up.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Analytics</span>
+            </a>
+            <a href="returns.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:rotate-ccw.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Returns & Refunds</span>
+            </a>
+
+            <a href="profile.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:user.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Profile</span>
+            </a>
+        </nav>
+
+        <div style="margin-top: auto; padding-top: 24px;">
+            <button onclick="logout()" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; text-decoration: none; color: #ef4444; background: #fef2f2; border: 1px solid #fee2e2; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'">
+                <img src="https://api.iconify.design/lucide:log-out.svg?color=%23ef4444" width="18" style="transform: rotate(180deg);" alt="">
+                Sign Out
+            </button>
+        </div>
+        <script>
+            async function logout() {
+                try {
+                    await fetch('../../backend/api/auth/logout.php');
+                    window.location.href = '../auth/login.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            }
+        </script>
+    </aside>
+
+    <main style="margin-left: 240px;" class="p-10 max-w-7xl mx-auto min-h-screen">
+        <header class="flex justify-between items-end mb-8 animate-fade-in">
+            <div>
+                <h1 class="text-4xl font-bold tracking-tight text-stone-900">Your Cart</h1>
+                <p class="text-stone-500 mt-2 font-medium text-base">You're just a few steps away from your order.</p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- Left: Cart Items List -->
+            <div class="lg:col-span-8 space-y-6" id="cart-items-container">
+                <!-- Loading State -->
+                <div class="py-24 text-center bg-white rounded-2xl shadow-sm border border-stone-100">
+                    <img src="https://api.iconify.design/line-md:loading-loop.svg?color=%23FF7E21"
+                        class="w-12 h-12 mx-auto mb-4">
+                    <p class="text-stone-400 font-bold uppercase tracking-widest text-xs">Loading your picks...</p>
+                </div>
+            </div>
+
+            <!-- Right: Sticky Price Details -->
+            <div class="lg:col-span-4 sticky top-8 space-y-4">
+                <div
+                    class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-100 overflow-hidden">
+                    <div class="p-6 pb-4 border-b border-stone-100 bg-stone-50/50">
+                        <h2 class="text-stone-800 font-bold text-lg">Order Summary</h2>
+                    </div>
+
+                    <div class="p-6 space-y-4">
+                        <div class="flex justify-between text-stone-600">
+                            <span id="price-count-label">Price (0 items)</span>
+                            <span id="price-subtotal" class="font-medium text-stone-900">$0.00</span>
+                        </div>
+
+                        <!-- List of selected items (Dynamically filled) -->
+                        <div id="summary-items-list"
+                            class="hidden text-xs text-stone-500 space-y-1 max-h-40 overflow-y-auto border-t border-dashed border-stone-100 pt-2">
+                        </div>
+
+                        <div class="border-t border-dashed border-stone-200 my-2 pt-4">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-xl text-stone-900">Total</span>
+                                <span id="price-total" class="font-bold text-2xl text-primary">$0.00</span>
+                            </div>
+                            <p class="text-right text-xs text-stone-400 mt-1">Including all taxes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-50/50 border border-green-100 p-4 rounded-xl flex items-center gap-3">
+                    <div class="bg-green-100 p-2 rounded-full text-green-600">
+                        <img src="https://api.iconify.design/lucide:shield-check.svg" class="w-5 h-5">
+                    </div>
+                    <p class="text-xs text-green-800 font-medium leading-relaxed">
+                        Safe and Secure Payments.<br>100% Authentic Products.
+                    </p>
+                </div>
+
+                <button onclick="checkout()" id="checkout-btn" disabled
+                    class="group w-full bg-gradient-to-r from-[#FF7E21] to-[#ff9f57] hover:from-[#e66d1a] hover:to-[#ff8d3b] text-white py-4 rounded-xl font-bold text-base shadow-[0_4px_14px_rgba(255,126,33,0.4)] transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none disabled:active:scale-100 flex justify-center items-center gap-2">
+                    <span>BUY NOW</span>
+                    <img src="https://api.iconify.design/lucide:arrow-right.svg?color=white"
+                        class="w-5 h-5 group-hover:translate-x-1 transition-transform">
+                </button>
+            </div>
+        </div>
+    </main>
+
+
+    <script>
+        let cartItems = [];
+        let selectedItems = new Set(); // Stores IDs of selected items
+
+        async function loadCart() {
+            try {
+                const response = await fetch('../../backend/api/cart/get-cart.php');
+                const result = await response.json();
+                const container = document.getElementById('cart-items-container');
+
+                if (result.success && result.items.length > 0) {
+                    cartItems = result.items.reverse().map(item => {
+                        // Initialize display unit and quantity
+                        item.displayUnit = item.unit || 'kg';
+                        item.displayQuantity = parseFloat(item.quantity);
+                        return item;
+                    });
+                    container.innerHTML = '';
+
+                    cartItems.forEach(item => {
+                        const lineTotal = item.price * item.quantity;
+                        const imgSrc = item.image_url ? '../../' + item.image_url : 'https://images.unsplash.com/photo-1596040033229-a9821ebd05ed?auto=format&fit=crop&w=400&q=80';
+                        const isChecked = selectedItems.has(item.id) ? 'checked' : '';
+                        const isOutOfStock = parseFloat(item.stock) <= 0;
+
+                        container.innerHTML += `
+                            <div class="group bg-white rounded-2xl p-5 flex gap-6 shadow-sm border border-stone-100 hover:shadow-md transition-all duration-300 relative overflow-hidden ${isOutOfStock ? 'opacity-60 grayscale-[0.5]' : ''}">
+                                
+                                <!-- Checkbox -->
+                                <div class="pt-2">
+                                    <div class="relative flex items-center">
+                                        <input type="checkbox" class="cart-checkbox peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-stone-300 checked:border-primary checked:bg-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed" 
+                                            value="${item.id}" onchange="toggleSelection('${item.id}', this.checked)" ${isChecked} ${isOutOfStock ? 'disabled' : ''}>
+                                        <svg class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100 w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+                                            <path d="M3 8L6 11L11 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+ 
+                                <!-- Image -->
+                                <div class="w-32 h-32 flex-shrink-0 bg-stone-50 rounded-xl p-2 border border-stone-100">
+                                    <img src="${imgSrc}" class="w-full h-full object-contain mx-auto mix-blend-multiply group-hover:scale-105 transition-transform duration-500">
+                                </div>
+                                
+                                <!-- Details -->
+                                <div class="flex-1 flex flex-col justify-between">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="text-lg font-bold text-stone-900 mb-1 leading-snug hover:text-primary cursor-pointer transition-colors max-w-sm line-clamp-2">${item.product_name}</h3>
+                                            <p class="text-sm text-stone-500 font-medium mb-1">Sold by ${item.shop_name || item.farmer_name}</p>
+                                            ${isOutOfStock ? '<span class="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full uppercase tracking-widest">OUT OF STOCK</span>' : ''}
+                                        </div>
+                                        <div class="text-right">
+                                            <!-- CLEAN PRICE DISPLAY: NO FAKE OFFERS -->
+                                            <p class="text-xl font-bold text-stone-900">${formatPrice(item.price)}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-end justify-between mt-4">
+                                        <!-- Actions -->
+                                        <div class="flex items-center gap-6">
+                                            <!-- Quantity -->
+                                            <div class="flex items-center gap-1 bg-stone-100 rounded-lg p-1 ${isOutOfStock ? 'opacity-40 pointer-events-none' : ''}">
+                                                <button onclick="updateQuantity('${item.id}', -1)" 
+                                                    class="w-8 h-8 rounded-md flex items-center justify-center bg-white text-stone-600 shadow-sm hover:text-primary hover:shadow transition-all disabled:opacity-40 disabled:hover:text-stone-600" ${item.displayQuantity <= 0 ? 'disabled' : ''}>
+                                                    <span class="font-bold text-lg leading-none mb-0.5">-</span>
+                                                </button>
+                                                <input id="qty-${item.id}" type="number" step="${item.displayUnit === 'g' ? 1 : 0.001}" min="0" value="${item.displayQuantity}" 
+                                                    oninput="updateQuantity('${item.id}', 0)"
+                                                    class="w-16 text-center font-bold text-stone-900 text-sm bg-transparent border-none outline-none focus:ring-0 appearance-none p-0">
+                                                <button onclick="updateQuantity('${item.id}', 1)" 
+                                                    class="w-8 h-8 rounded-md flex items-center justify-center bg-white text-stone-600 shadow-sm hover:text-primary hover:shadow transition-all">
+                                                    <span class="font-bold text-lg leading-none mb-0.5">+</span>
+                                                </button>
+
+                                                <!-- Unit Selector -->
+                                                <div class="relative w-12 flex-shrink-0 h-8 flex items-center justify-center bg-white rounded-md border border-stone-200 ml-1">
+                                                    <select id="unit-${item.id}" onchange="changeUnit('${item.id}')"
+                                                        class="w-full h-full bg-transparent border-none font-bold text-xs text-black outline-none focus:ring-0 cursor-pointer appearance-none text-center pr-4">
+                                                        <option value="kg" ${item.displayUnit === 'kg' ? 'selected' : ''}>kg</option>
+                                                        <option value="g" ${item.displayUnit === 'g' ? 'selected' : ''}>g</option>
+                                                    </select>
+                                                    <div class="absolute right-0.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                                                        <img src="https://api.iconify.design/lucide:chevron-down.svg?color=%23000000" width="10">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Remove -->
+                                            <button onclick="removeItem('${item.id}')" 
+                                                class="flex items-center gap-1.5 text-stone-400 hover:text-red-500 transition-colors text-sm font-semibold group/remove px-2 py-1.5 rounded-md hover:bg-red-50">
+                                                <img src="https://api.iconify.design/lucide:trash-2.svg" class="w-4 h-4 opacity-70 group-hover/remove:text-red-500 group-hover/remove:opacity-100 transition-opacity">
+                                                <span>Remove</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    updateSummary();
+                } else {
+                    container.innerHTML = `
+                        <div class="py-24 text-center bg-white rounded-2xl shadow-sm border border-dashed border-stone-200">
+                            <div class="bg-orange-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <img src="https://api.iconify.design/lucide:shopping-cart.svg?color=%23FF7E21" class="w-10 h-10 opacity-80">
+                            </div>
+                            <h3 class="text-xl font-bold text-stone-900 mb-2">Your cart is currently empty</h3>
+                            <p class="text-stone-500 mb-8 max-w-xs mx-auto">Looks like you haven't added anything to your cart yet.</p>
+                            <button onclick="window.location.href='catalog.html'" 
+                                class="bg-primary hover:bg-[#e66d1a] text-white px-8 py-3.5 rounded-xl font-bold shadow-lg shadow-orange-200 transition-all hover:-translate-y-1">
+                                Start Shopping
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('checkout-btn').disabled = true;
+                    document.getElementById('price-subtotal').innerText = formatPrice(0);
+                    document.getElementById('price-total').innerText = formatPrice(0);
+                }
+            } catch (error) { console.error(error); }
+        }
+
+        function toggleSelection(id, isChecked) {
+            if (isChecked) selectedItems.add(id);
+            else selectedItems.delete(id);
+            updateSummary();
+        }
+
+        function changeUnit(cartId) {
+            const item = cartItems.find(i => i.id == cartId);
+            if (!item) return;
+
+            const unitSelect = document.getElementById(`unit-${cartId}`);
+            const input = document.getElementById(`qty-${cartId}`);
+            const oldUnit = item.displayUnit;
+            const newUnit = unitSelect.value;
+
+            if (oldUnit === newUnit) return;
+
+            let val = parseFloat(input.value);
+            if (isNaN(val)) val = item.displayQuantity;
+
+            // Convert value
+            if (oldUnit === 'kg' && newUnit === 'g') {
+                val = val * 1000;
+                input.step = 1;
+                input.min = 0;
+            } else if (oldUnit === 'g' && newUnit === 'kg') {
+                val = val / 1000;
+                input.step = 0.001;
+                input.min = 0;
+            }
+
+            // Rounding
+            val = Math.round(val * 1000) / 1000;
+            input.value = val;
+
+            item.displayUnit = newUnit;
+            item.displayQuantity = val;
+
+            updateSummary();
+        }
+
+        function updateSummary() {
+            let subtotal = 0;
+            let unitTotal = 0;
+            let count = 0;
+            let nameListHTML = '';
+
+            selectedItems.forEach(id => {
+                const item = cartItems.find(i => i.id == id);
+                if (item) {
+                    // Always calculate based on product base unit for price consistency
+                    // item.price is per product unit (e.g. per kg)
+                    // item.quantity is quantity in product base unit
+                    subtotal += item.price * item.quantity;
+                    unitTotal += parseFloat(item.price);
+                    count++;
+
+                    const displayQty = item.displayQuantity || item.quantity;
+                    const displayUnit = item.displayUnit || item.unit || 'kg';
+                    nameListHTML += `<div class="truncate flex justify-between"><span>${displayQty}${displayUnit} x ${item.product_name}</span> <span class="font-medium">${formatPrice(item.price * item.quantity)}</span></div>`;
+                }
+            });
+
+            document.getElementById('price-count-label').innerText = `Price (${count} items)`;
+            document.getElementById('price-subtotal').innerText = formatPrice(unitTotal);
+            document.getElementById('price-total').innerText = formatPrice(subtotal);
+
+            const summaryListEl = document.getElementById('summary-items-list');
+            if (summaryListEl) {
+                if (count > 0) {
+                    summaryListEl.innerHTML = nameListHTML;
+                    summaryListEl.classList.remove('hidden');
+                } else {
+                    summaryListEl.classList.add('hidden');
+                }
+            }
+
+            const checkoutBtn = document.getElementById('checkout-btn');
+            checkoutBtn.disabled = count === 0;
+
+            if (count > 0) {
+                checkoutBtn.innerHTML = `
+                    <span>PROCEED TO CHECKOUT</span>
+                    <img src="https://api.iconify.design/lucide:arrow-right.svg?color=white" class="w-5 h-5 group-hover:translate-x-1 transition-transform">
+                `;
+            } else {
+                checkoutBtn.innerText = "PROCEED TO CHECKOUT";
+            }
+        }
+
+        async function updateQuantity(cartId, change) {
+            const item = cartItems.find(i => i.id == cartId);
+            if (!item) return;
+
+            const input = document.getElementById(`qty-${cartId}`);
+            let currentDisplayVal = parseFloat(input ? input.value : item.displayQuantity);
+            if (isNaN(currentDisplayVal)) currentDisplayVal = parseFloat(item.displayQuantity);
+
+            const displayUnit = item.displayUnit || 'kg';
+            const step = 1; // Always increment by integer steps (1kg, 1g)
+
+            let newDisplayQty = currentDisplayVal + (change * step);
+            newDisplayQty = Math.round(newDisplayQty * 1000) / 1000;
+
+            const min = 0;
+            if (newDisplayQty < min) newDisplayQty = min;
+
+            item.displayQuantity = newDisplayQty;
+
+            // Convert back to product base unit for storage and calculation
+            const productUnit = item.unit || 'kg';
+            let qtyForBackend = newDisplayQty;
+
+            if (productUnit === 'kg' && displayUnit === 'g') {
+                qtyForBackend = newDisplayQty / 1000;
+            } else if (productUnit === 'g' && displayUnit === 'kg') {
+                qtyForBackend = newDisplayQty * 1000;
+            }
+
+            item.quantity = qtyForBackend;
+
+            if (input && change !== 0) input.value = newDisplayQty;
+
+            // Update button state
+            const minusBtn = input ? input.previousElementSibling : null;
+            if (minusBtn) minusBtn.disabled = newDisplayQty <= min;
+
+            updateSummary();
+
+            try {
+                const response = await fetch('../../backend/api/cart/update-cart.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cart_id: cartId, quantity: qtyForBackend })
+                });
+
+                const text = await response.text();
+                let res;
+                try {
+                    res = JSON.parse(text);
+                } catch (err) {
+                    console.error('SERVER ERROR:', text);
+                    throw new Error('Server returned invalid JSON. See console.');
+                }
+
+                if (!res.success) {
+                    throw new Error(res.message);
+                }
+            } catch (e) {
+                console.error(e);
+                // On error, we should ideally revert, but for now just log
+                // Reverting might be confusing if user is typing fast
+                if (change !== 0) showToast(e.message || "Failed to update quantity", 'error');
+            }
+        }
+
+        async function removeItem(id) {
+            try {
+                const response = await fetch('../../backend/api/cart/remove-from-cart.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cart_id: id })
+                });
+                const text = await response.text();
+                let result;
+                try { result = JSON.parse(text); } catch (e) { console.error('Delete error parsing:', text); return; }
+
+                if (result.success) {
+                    selectedItems.delete(id);
+                    loadCart();
+                }
+            } catch (error) { console.error(error); }
+        }
+
+        async function checkout() {
+            let subtotal = 0;
+            let itemDetails = [];
+
+            selectedItems.forEach(id => {
+                const item = cartItems.find(i => i.id == id);
+                if (item) {
+                    subtotal += item.price * item.quantity;
+                    const dQty = item.displayQuantity || item.quantity;
+                    const dUnit = item.displayUnit || item.unit || 'kg';
+                    itemDetails.push(`${dQty}${dUnit} ${item.product_name}`);
+                }
+            });
+
+            const itemsStr = itemDetails.map(item => `â€¢ <b>${item}</b>`).join('<br>');
+            const totalStr = formatPrice(subtotal);
+
+            const msg = `
+                <div class="text-left bg-stone-50 p-4 rounded-2xl border border-stone-100 my-4 max-h-48 overflow-y-auto">
+                    ${itemsStr}
+                </div>
+                <div class="text-center font-semibold text-lg">
+                    Confirm purchase for <span class="text-primary font-bold">${totalStr}</span>?
+                </div>
+            `;
+
+            const confirmed = await showConfirm(msg);
+            if (confirmed) confirmCheckout();
+        }
+
+        async function confirmCheckout() {
+            const address = "Default Address";
+            const btn = document.getElementById('checkout-btn');
+            btn.disabled = true;
+            btn.innerHTML = `<img src="https://api.iconify.design/line-md:loading-loop.svg?color=white" class="w-5 h-5 animate-spin"> Processing...`;
+
+            const selectedIds = Array.from(selectedItems);
+
+            try {
+                const response = await fetch('../../backend/api/cart/checkout.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        delivery_address: address,
+                        selected_cart_ids: selectedIds,
+                        currency_code: window.CurrencyManager.settings.code,
+                        exchange_rate: window.CurrencyManager.settings.rate || 1
+                    })
+                });
+                const text = await response.text();
+                let result;
+                try { result = JSON.parse(text); } catch (e) { throw new Error("Invalid server response at checkout"); }
+
+                if (result.success && result.order_ids && result.order_ids.length > 0) {
+                    // Direct redirect to payment page, matching Catalog flow
+                    const idsParam = result.order_ids.join(',');
+                    window.location.href = `payment.html?order_ids=${idsParam}&source=cart`;
+                } else {
+                    showToast(result.message || "Checkout failed", 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = `
+                        <span>PROCEED TO CHECKOUT</span>
+                        <img src="https://api.iconify.design/lucide:arrow-right.svg?color=white" class="w-5 h-5 group-hover:translate-x-1 transition-transform">
+                    `;
+                    updateSummary();
+                }
+            } catch (error) {
+                console.error(error);
+                showToast(error.message, 'error');
+                btn.disabled = false;
+                updateSummary();
+            }
+        }
+
+        window.onload = async () => {
+            await CurrencyManager.init();
+            loadCart();
+        };
+    </script>
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

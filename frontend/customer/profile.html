@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>My Profile | Legacy of Spices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/country-selector.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7E21',
+                        'primary-hover': '#E66D1A',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body style="background: #fafaf9; color: #1c1917; font-family: 'Outfit', sans-serif;">
+        <aside style="width: 240px; background: white; border-right: 1px solid #e7e5e4; position: fixed; height: 100vh; padding: 24px; z-index: 50; overflow-y: auto; display: flex; flex-direction: column;">
+        <div class="logo" style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
+            <img src="../assets/images/logo.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="font-size: 22px; color: #1c1917; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 0;">Legacy</h3>
+                <span style="font-size: 11px; color: #ff7e21; letter-spacing: 0.1em; font-weight: 800; text-transform: uppercase; margin-top: 2px;">Of Spices</span>
+            </div>
+        </div>
+
+        <nav style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+            <a href="customer-dashboard.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:layout-dashboard.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Dashboard</span>
+            </a>
+            <a href="catalog.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:book-open.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Catalog</span>
+            </a>
+            <a href="orders.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shopping-bag.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Orders</span>
+            </a>
+            <a href="cart.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:shopping-cart.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Cart</span>
+            </a>
+            <a href="auctions.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:gavel.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Auctions</span>
+            </a>
+
+            <a href="market-analytics.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:trending-up.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Analytics</span>
+            </a>
+            <a href="returns.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: #44403c; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fafaf9'; this.style.color='#1c1917'" onmouseout="this.style.background='transparent'; this.style.color='#44403c'">
+                <img src="https://api.iconify.design/lucide:rotate-ccw.svg?color=%2344403c" width="20" alt="">
+                <span style="white-space: nowrap;">Returns & Refunds</span>
+            </a>
+
+            <a href="profile.html" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: white; background: #FF7E21; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(255, 126, 33, 0.2);">
+                <img src="https://api.iconify.design/lucide:user.svg?color=white" width="20" alt="">
+                <span style="white-space: nowrap;">Profile</span>
+            </a>
+        </nav>
+
+        <div style="margin-top: auto; padding-top: 24px;">
+            <button onclick="logout()" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; text-decoration: none; color: #ef4444; background: #fef2f2; border: 1px solid #fee2e2; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'">
+                <img src="https://api.iconify.design/lucide:log-out.svg?color=%23ef4444" width="18" style="transform: rotate(180deg);" alt="">
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <main style="margin-left: 240px; padding: 32px 40px; min-height: 100vh;">
+        <header style="margin-bottom: 40px;">
+            <h1 style="font-size: 28px; font-weight: 700; color: #1c1917;">Personal Profile</h1>
+            <p style="font-size: 15px; color: #1c1917; margin-top: 4px;">Update your personal details and account
+                settings.</p>
+        </header>
+
+        <div style="display: grid; grid-template-columns: 320px 1fr; gap: 40px; align-items: start;">
+            <!-- Profile Card -->
+            <div
+                style="background: white; border: 1px solid #e7e5e4; border-radius: 24px; padding: 32px; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+                <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 20px;">
+                    <div id="avatar-container"
+                        style="width: 100%; height: 100%; border-radius: 50%; background: #FF7E21; color: white; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 700; overflow: hidden; border: 4px solid #fff; box-shadow: 0 10px 15px -3px rgba(255,126,33,0.3);">
+                        <span id="initials"></span>
+                        <img id="profile-img" src="" referrerpolicy="no-referrer"
+                            style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <button onclick="document.getElementById('profile-upload').click()"
+                        style="position: absolute; bottom: 0; right: 0; width: 36px; height: 36px; border-radius: 50%; background: white; border: 1px solid #e7e5e4; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); transition: all 0.2s;"
+                        onmouseover="this.style.background='#fafaf9'" onmouseout="this.style.background='white'">
+                        <img src="https://api.iconify.design/lucide:camera.svg?color=%231c1917" width="18" alt="">
+                    </button>
+                    <input type="file" id="profile-upload" class="hidden" accept="image/*" onchange="uploadImage(this)">
+                </div>
+
+                <h2 id="display-name" style="font-size: 20px; font-weight: 700; color: #1c1917; margin-bottom: 4px;">
+                    Loading...</h2>
+                <div id="display-role"
+                    style="display: inline-block; padding: 4px 12px; background: rgba(255, 126, 33, 0.1); color: #FF7E21; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 24px;">
+                    CUSTOMER</div>
+
+                <div style="text-align: left; background: #fafaf9; border-radius: 16px; padding: 16px;">
+                    <div
+                        style="font-size: 12px; color: #a8a29e; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+                        Account ID</div>
+                    <div id="display-id" style="font-family: monospace; font-size: 14px; color: #1c1917;">#USR-000000
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Form -->
+            <div
+                style="background: white; border: 1px solid #e7e5e4; border-radius: 24px; padding: 40px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+                <form id="profile-form" onsubmit="updateProfile(event)"
+                    style="display: flex; flex-direction: column; gap: 24px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label
+                                style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Full
+                                Name</label>
+                            <input type="text" name="full_name" id="input-name" required
+                                class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all">
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label id="label-email"
+                                style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Email
+                                Address (Read-only)</label>
+                            <input type="email" name="email" id="input-email" readonly
+                                class="w-full bg-[#f5f5f4] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none transition-all cursor-not-allowed">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label
+                                style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Phone
+                                Number</label>
+                            <input type="tel" name="phone" id="input-phone" placeholder="+1234567890" maxlength="16"
+                                oninput="validatePhoneInput(this)"
+                                class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all h-[66px]">
+                            <p class="text-[10px] text-stone-400">Format: <strong>+</strong> followed by <strong>8-15
+                                    digits</strong></p>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label
+                                style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Address</label>
+                            <textarea name="address" id="input-address" rows="2"
+                                placeholder="e.g. Country, State, District, City, Street Name, House Name/House No..."
+                                class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all resize-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Added Country Selector -->
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 24px;">
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label
+                                style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">Country
+                                / Currency</label>
+                            <button type="button" onclick="CountrySelector.show()"
+                                class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none hover:border-primary transition-all text-left flex justify-between items-center group">
+                                <span id="display-country"
+                                    class="text-stone-600 group-hover:text-stone-900 transition-colors">Select
+                                    Country</span>
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        class="text-stone-400 text-[10px] font-bold uppercase tracking-wider currency-code">USD</span>
+                                    <img src="https://api.iconify.design/lucide:chevron-down.svg?color=%23a8a29e"
+                                        class="w-4 h-4 opacity-50" alt="">
+                                </div>
+                            </button>
+                            <input type="hidden" name="country" id="input-country">
+                            <input type="hidden" name="currency_code" id="input-currency-code">
+                            <input type="hidden" name="currency_symbol" id="input-currency-symbol">
+                        </div>
+
+                        <!-- Password Section (Hidden for Google Users) -->
+                        <div id="password-section" style="display: none; flex-direction: column; gap: 8px;">
+                            <label
+                                style="font-size: 12px; font-weight: 700; color: #1c1917; text-transform: uppercase;">New
+                                Password (Optional)</label>
+                            <div style="position: relative;">
+                                <input type="password" name="password" id="input-password"
+                                    placeholder="Min. 8 characters to change"
+                                    class="w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all pr-12">
+                                <button type="button" onclick="togglePasswordVisibility('input-password')"
+                                    style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; padding: 4px;">
+                                    <img src="https://api.iconify.design/lucide:eye.svg?color=%2394a3b8" width="18"
+                                        id="input-password-icon">
+                                </button>
+                            </div>
+                            <p style="font-size: 11px; color: #a8a29e;">Leave blank to keep your current password.</p>
+                        </div>
+
+                        <div
+                            style="padding-top: 24px; margin-top: 24px; border-top: 1px solid #e7e5e4; display: flex; justify-content: space-between; align-items: center;">
+                            <button type="submit" id="save-btn"
+                                style="background: #FF7E21; color: white; padding: 14px 32px; border-radius: 14px; border: none; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(255,126,33,0.3);"
+                                onmouseover="this.style.background='#E66D1A'"
+                                onmouseout="this.style.background='#FF7E21'">
+                                Save Changes
+                            </button>
+
+                            <button type="button" onclick="confirmDelete()"
+                                style="background: none; border: none; color: #ff0000; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
+                                onmouseover="this.style.textDecoration='underline'"
+                                onmouseout="this.style.textDecoration='none'">
+                                <img src="https://api.iconify.design/lucide:trash-2.svg?color=%23ff0000" width="16"
+                                    alt="">
+                                Delete Account
+                            </button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function validatePhoneInput(input) {
+            // 1. Remove invalid characters (only allow 0-9 and +)
+            let value = input.value.replace(/[^0-9+]/g, '');
+            // 2. Ensure + is only at the start
+            value = value.replace(/(?!^)\+/g, '');
+            // 3. Count digits and enforce max 15 digits
+            const digits = value.replace(/[^0-9]/g, '');
+            if (digits.length > 15) {
+                const maxLen = value.startsWith('+') ? 16 : 15;
+                value = value.slice(0, maxLen);
+            }
+            input.value = value;
+        }
+
+        function togglePasswordVisibility(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = document.getElementById(fieldId + '-icon');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.src = 'https://api.iconify.design/lucide:eye-off.svg?color=%2394a3b8';
+            } else {
+                field.type = 'password';
+                icon.src = 'https://api.iconify.design/lucide:eye.svg?color=%2394a3b8';
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('../../backend/api/auth/logout.php');
+                window.location.href = '../auth/login.html';
+            } catch (error) { console.error('Logout error:', error); }
+        }
+
+        window.onload = loadProfile;
+
+        async function loadProfile() {
+            try {
+                const response = await fetch('../../backend/api/auth/get-profile.php');
+                const result = await response.json();
+
+                if (result.success) {
+                    const user = result.data;
+                    document.getElementById('display-name').textContent = user.full_name;
+                    document.getElementById('input-name').value = user.full_name;
+                    document.getElementById('input-phone').value = user.phone || '';
+                    document.getElementById('input-address').value = user.address || '';
+                    document.getElementById('input-email').value = user.email;
+                    document.getElementById('display-id').textContent = '#USR-' + user.id.toString().padStart(6, '0');
+                    document.getElementById('display-id').textContent = '#USR-' + user.id.toString().padStart(6, '0');
+                    document.getElementById('display-role').textContent = user.role;
+
+                    // Populate Country/Currency
+                    if (user.country) {
+                        document.getElementById('input-country').value = user.country;
+                        document.getElementById('input-currency-code').value = user.currency_code;
+                        document.getElementById('input-currency-symbol').value = user.currency_symbol;
+                        document.getElementById('display-country').textContent = user.country;
+                        const currencyText = (user.currency_symbol && user.currency_code)
+                            ? `${user.currency_symbol} ${user.currency_code}`
+                            : (user.currency_code || 'USD');
+                        document.querySelectorAll('.currency-code').forEach(el => el.textContent = currencyText);
+                    }
+
+                    // Conditional UI for Google vs Manual
+                    const isGoogleUser = user.google_id !== null && user.google_id !== "";
+                    const emailInput = document.getElementById('input-email');
+                    const emailLabel = document.getElementById('label-email');
+                    const passwordSection = document.getElementById('password-section');
+
+                    if (!isGoogleUser) {
+                        emailInput.readOnly = false;
+                        emailInput.className = "w-full bg-[#fafaf9] border border-[#e7e5e4] rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-all";
+                        emailInput.style.cursor = "text";
+                        emailLabel.textContent = "Email Address";
+                        passwordSection.style.display = "flex";
+                    }
+
+                    // Avatar logic
+                    const img = document.getElementById('profile-img');
+                    const initials = document.getElementById('initials');
+
+                    if (user.profile_image) {
+                        img.onload = () => {
+                            img.style.display = 'block';
+                            initials.style.display = 'none';
+                        };
+                        img.src = user.profile_image.startsWith('http') ? user.profile_image : '../../' + user.profile_image;
+                    } else {
+                        img.style.display = 'none';
+                        initials.textContent = user.full_name.charAt(0).toUpperCase();
+                        initials.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        }
+
+        const validateProfile = (name, email, password, isGoogleUser) => {
+            if (!name || name.length < 2) return "Please enter a valid name.";
+            if (!/^[a-zA-Z\s'-]+$/.test(name)) return "Please enter a valid name.";
+
+            // Allow empty phone (just don't validate if empty)
+            const phone = document.getElementById('input-phone').value;
+            if (phone && !/^\+?[0-9]{10,15}$/.test(phone)) {
+                return "Invalid Phone Number. Use format: +1234567890 (10-15 digits)";
+            }
+
+            if (!isGoogleUser) {
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Please enter a valid email address.";
+
+                if (password && password.length > 0) {
+                    if (password.length < 8) return "Password must be at least 8 characters.";
+                    if (password.includes(' ')) return "Password cannot contain spaces.";
+                }
+            }
+            return null;
+        };
+
+        async function updateProfile(event) {
+            event.preventDefault();
+            const btn = document.getElementById('save-btn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const formData = new FormData(event.target);
+            const name = formData.get('full_name');
+            const email = formData.get('email');
+            const password = formData.get('password');
+            const isGoogleUser = document.getElementById('password-section').style.display === 'none';
+
+            const error = validateProfile(name, email, password, isGoogleUser);
+            if (error) {
+                showToast(error, 'error');
+                btn.disabled = false;
+                btn.textContent = originalText;
+                return;
+            }
+
+            try {
+                const response = await fetch('../../backend/api/auth/update-profile.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Profile updated successfully!', 'success');
+                    loadProfile();
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Update error:', error);
+                showToast('Connection failed', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        async function uploadImage(input) {
+            if (input.files && input.files[0]) {
+                const name = document.getElementById('input-name').value;
+                const isGoogleUser = document.getElementById('password-section').style.display === 'none';
+
+                // We only need to validate the name here since email/password are not sent
+                if (!name || name.length < 2) {
+                    showToast("Name must be at least 2 characters", 'error');
+                    return;
+                }
+                if (!/^[a-zA-Z\s'-]+$/.test(name)) {
+                    showToast("Name contains invalid characters", 'error');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('profile_image', input.files[0]);
+                formData.append('full_name', name);
+
+                try {
+                    const response = await fetch('../../backend/api/auth/update-profile.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        showToast('SUCCESS! Profile image updated!', 'success');
+                        loadProfile();
+                    } else {
+                        showToast(result.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    showToast('Upload failed', 'error');
+                }
+            }
+        }
+
+        async function confirmDelete() {
+            if (await showConfirm('CRITICAL ACTION: Are you sure you want to PERMANENTLY delete your account? All your products and data will be lost forever.')) {
+                if (await showConfirm('Final confirmation: Double-check, this cannot be undone. Delete now?')) {
+                    deleteAccount();
+                }
+            }
+        }
+
+        async function deleteAccount() {
+            try {
+                const response = await fetch('../../backend/api/auth/delete-account.php', { method: 'POST' });
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Your account has been deleted.', 'success');
+                    window.location.href = '../auth/login.html';
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+            }
+        }
+
+        // Initialize Country Selector
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Initialize Selector with Callback
+            CountrySelector.init((country) => {
+                // Set hidden input value
+                document.getElementById('input-country').value = country.name;
+                document.getElementById('input-currency-code').value = country.currency_code;
+                document.getElementById('input-currency-symbol').value = country.currency_symbol;
+
+                // Update UI Display
+                document.getElementById('display-country').textContent = country.name;
+                // ... same as before ...
+                document.querySelectorAll('.currency-code').forEach(el => el.textContent = `${country.currency_symbol} ${country.currency_code}`);
+
+                // 2. Instant Currency Switch (Client-side preview)
+                if (window.CurrencyManager) {
+                    const updateSettings = async () => {
+                        if (Object.keys(CurrencyManager.rates).length === 0) {
+                            await CurrencyManager.fetchRates();
+                        }
+
+                        const rate = CurrencyManager.rates[country.currency_code] || 1;
+                        CurrencyManager.updateSettings({
+                            symbol: country.currency_symbol,
+                            code: country.currency_code,
+                            rate: rate
+                        });
+                    };
+                    updateSettings();
+                }
+            });
+        });
+    </script>
+    <script src="../assets/js/country-selector.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/custom-ui.js?v=1.8"></script>
+</body>
+
+</html>
