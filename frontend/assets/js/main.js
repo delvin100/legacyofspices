@@ -12,6 +12,16 @@
         return '';
     };
 
+    window.getFrontendPath = (relativePath) => {
+        const root = window.getProjectRoot();
+        // If we are in local dev with /frontend/ in path
+        if (root || window.location.pathname.includes('/frontend/')) {
+            return root + '/frontend/' + relativePath;
+        }
+        // If we are on Vercel (root is frontend)
+        return '/' + relativePath;
+    };
+
     const projectRoot = window.getProjectRoot();
 
     // Inject Loader HTML

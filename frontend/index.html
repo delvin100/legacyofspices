@@ -278,15 +278,14 @@
                             window.location.href = 'customer/customer-dashboard.html';
                         }
                     } else {
-                        window.location.href = projectRoot + '/frontend/auth/login.html';
+                        window.location.href = window.getFrontendPath('auth/login.html');
                     }
                 } else {
-                    window.location.href = projectRoot + '/frontend/auth/login.html';
+                    window.location.href = window.getFrontendPath('auth/login.html');
                 }
             } catch (error) {
                 console.error('Session check failed:', error);
-                const projectRoot = window.getProjectRoot ? window.getProjectRoot() : '';
-                window.location.href = projectRoot + '/frontend/auth/login.html';
+                window.location.href = window.getFrontendPath('auth/login.html');
             }
         }
     </script>
