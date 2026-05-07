@@ -2,7 +2,7 @@
 (function () {
     // Helper to detect project root (e.g., /Legacy of Spices)
     // For Vercel deployment, we use a remote backend URL
-    window.BACKEND_URL = ''; // Leave empty for local development, or set to your Railway URL
+    window.BACKEND_URL = 'https://legacyofspices-production.up.railway.app';
 
     window.getProjectRoot = () => {
         const path = window.location.pathname;
