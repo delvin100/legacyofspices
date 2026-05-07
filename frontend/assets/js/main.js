@@ -59,15 +59,15 @@
         let options = args[1] || {};
 
         // 1. Remote Backend Routing: If url points to backend, prepend BACKEND_URL if set
-        if (window.BACKEND_URL && (url.includes('/backend/api/') || url.includes('../../backend/api/'))) {
+        if (window.BACKEND_URL && (url.includes('/api/') || url.includes('../../api/'))) {
             // Convert relative paths to absolute using BACKEND_URL
-            if (url.includes('../../backend/api/')) {
-                url = window.BACKEND_URL + '/backend/api/' + url.split('/backend/api/')[1];
-            } else if (url.startsWith('/backend/api/')) {
+            if (url.includes('../../api/')) {
+                url = window.BACKEND_URL + '/api/' + url.split('/api/')[1];
+            } else if (url.startsWith('/api/')) {
                 url = window.BACKEND_URL + url;
-            } else if (url.includes('/backend/api/')) {
-                // Handle cases like projectRoot + '/backend/api/...'
-                url = window.BACKEND_URL + '/backend/api/' + url.split('/backend/api/')[1];
+            } else if (url.includes('/api/')) {
+                // Handle cases like projectRoot + '/api/...'
+                url = window.BACKEND_URL + '/api/' + url.split('/api/')[1];
             }
             
             // 2. Add credentials for cross-domain session support
@@ -92,7 +92,7 @@
                     window.location.pathname.includes('/admin/');
 
                 if (isProtected) {
-                    window.location.href = projectRoot + '/frontend/auth/login.html';
+                    window.location.href = window.getFrontendPath('auth/login.html');
                 }
             }
 
