@@ -59,28 +59,10 @@ try {
 
     // Handle Image Upload if provided
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $file = $_FILES['image'];
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
-
-        if ($file['size'] > 10 * 1024 * 1024) {
-            throw new Exception('File is too large. Max size is 10MB.');
-        }
-
-        if (!in_array($file['type'], $allowedTypes)) {
-            throw new Exception('Invalid file type.');
-        }
-
-        $uploadDir = '../../../uploads/products/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $fileName = 'prod_' . uniqid() . '.' . $extension;
-        $targetPath = $uploadDir . $fileName;
-
-        if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-            $image_url = 'uploads/products/' . $fileName;
+        require_once '../services/CloudinaryService.php';
+        $uploaded_url = CloudinaryService::upload($_FILES['image']['tmp_name'], 'products');
+        if ($uploaded_url) {
+            $image_url = $uploaded_url;
         }
     }
 

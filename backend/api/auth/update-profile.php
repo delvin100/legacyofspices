@@ -111,24 +111,10 @@ try {
     $profile_image = null;
     // Handle Image Upload
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
-        $file = $_FILES['profile_image'];
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-
-        if (!in_array($file['type'], $allowedTypes)) {
-            throw new Exception('Invalid file type.');
-        }
-
-        $uploadDir = '../../../uploads/profiles/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $fileName = 'user_' . $userId . '_' . uniqid() . '.' . $extension;
-        $targetPath = $uploadDir . $fileName;
-
-        if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-            $profile_image = 'uploads/profiles/' . $fileName;
+        require_once '../services/CloudinaryService.php';
+        $profile_image = CloudinaryService::upload($_FILES['profile_image']['tmp_name'], 'profiles');
+        
+        if ($profile_image) {
             $updateFields[] = "profile_image = ?";
             $params[] = $profile_image;
         }

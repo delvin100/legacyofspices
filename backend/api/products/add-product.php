@@ -53,35 +53,12 @@ try {
         throw new Exception('Product image is required.');
     }
 
-    // Handle Image Upload
-    $image_url = null;
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $file = $_FILES['image'];
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
-
-        if ($file['size'] > 10 * 1024 * 1024) {
-            throw new Exception('File is too large. Max size is 10MB.');
+        require_once '../services/CloudinaryService.php';
+        $image_url = CloudinaryService::upload($file['tmp_name'], 'products');
+        
+        if (!$image_url) {
+            throw new Exception('Failed to upload image to Cloudinary.');
         }
-
-        if (!in_array($file['type'], $allowedTypes)) {
-            throw new Exception('Invalid file type. Only JPG, PNG, WEBP, GIF, and SVG are allowed.');
-        }
-
-        $uploadDir = '../../../uploads/products/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $fileName = 'prod_' . uniqid() . '.' . $extension;
-        $targetPath = $uploadDir . $fileName;
-
-        if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-            $image_url = 'uploads/products/' . $fileName; // Path relative to root
-        } else {
-            throw new Exception('Failed to upload image.');
-        }
-    }
 
     $pdo = getDBConnection();
 

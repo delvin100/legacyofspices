@@ -64,24 +64,13 @@ try {
         exit;
     }
 
-    // ── Create upload directory ──────────────────────────────────────────────
-    $uploadDir = __DIR__ . '/../../../uploads/compliance-docs/' . $farmer_id . '/';
-    if (!is_dir($uploadDir)) {
-        if (!mkdir($uploadDir, 0755, true)) {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'message' => 'Could not create upload directory. Check server permissions.']);
-            exit;
-        }
-    }
-
     // ── Save file ────────────────────────────────────────────────────────────
-    $newFilename = $doc_type . '_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
-    $destPath    = $uploadDir . $newFilename;
-    $dbPath      = 'uploads/compliance-docs/' . $farmer_id . '/' . $newFilename;
-
-    if (!move_uploaded_file($file['tmp_name'], $destPath)) {
+    require_once '../services/CloudinaryService.php';
+    $dbPath = CloudinaryService::upload($file['tmp_name'], 'compliance_docs');
+    
+    if (!$dbPath) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Failed to save file. Check folder permissions.']);
+        echo json_encode(['success' => false, 'message' => 'Failed to upload document to Cloudinary.']);
         exit;
     }
 

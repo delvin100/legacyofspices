@@ -43,22 +43,12 @@ if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
 
 // Handle Image Upload
 if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-    // Use absolute path for upload directory (Root/uploads)
-    $upload_dir = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'auctions' . DIRECTORY_SEPARATOR;
-
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
-    }
-
-    $file_extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-    $file_name = uniqid('auction_') . '.' . $file_extension;
-    $target_file = $upload_dir . $file_name;
-
-    if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
-        // URL relative to root: uploads/auctions/filename
-        // Since frontend is served from root or subfolder, relative links might depend on how it's served.
-        // Usually 'uploads/...' from the root is standard.
-        $image_url = 'uploads/auctions/' . $file_name;
+    require_once '../services/CloudinaryService.php';
+    $image_url = CloudinaryService::upload($_FILES['image']['tmp_name'], 'auctions');
+    
+    if (!$image_url) {
+        echo json_encode(['success' => false, 'message' => 'Failed to upload auction image to Cloudinary']);
+        exit;
     }
 }
 

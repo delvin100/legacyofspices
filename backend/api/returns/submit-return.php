@@ -96,17 +96,8 @@ try {
     // Handle image upload
     $image_path = null;
     if ($isMultipart && isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = '../../../uploads/returns/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-        $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-        if (in_array($ext, $allowed)) {
-            $filename = 'return_' . $order_id . '_' . time() . '.' . $ext;
-            $destination = $uploadDir . $filename;
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
-                $image_path = 'uploads/returns/' . $filename;
-            }
-        }
+        require_once '../services/CloudinaryService.php';
+        $image_path = CloudinaryService::upload($_FILES['image']['tmp_name'], 'returns');
     }
 
     // Insert return request
