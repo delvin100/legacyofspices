@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/cors.php';
 date_default_timezone_set('Asia/Kolkata');
 /**
  * Env Loader helper
@@ -33,8 +34,5 @@ function loadEnv($path)
 
 // Automatically load from root (relative to backend/config)
 loadEnv(__DIR__ . '/../../.env');
-
-// Apply CORS globally
-require_once __DIR__ . '/cors.php';
 
 ?>

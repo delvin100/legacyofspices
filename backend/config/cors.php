@@ -4,21 +4,28 @@
  * Handles cross-origin requests for Vercel + Railway deployment.
  */
 
-// Use FRONTEND_URL from environment variable
-$allowed_origin = getenv('FRONTEND_URL') ?: ($_ENV['FRONTEND_URL'] ?? '');
+// Determine the origin
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-$request_origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+// Allow specific origins
+$allowed_patterns = ['localhost', 'vercel.app', 'railway.app'];
+$is_allowed = false;
 
-// Robust Origin Check
-if (empty($allowed_origin) || $allowed_origin === '*' || $request_origin === $allowed_origin || strpos($request_origin, 'localhost') !== false || strpos($request_origin, 'vercel.app') !== false) {
-    header("Access-Control-Allow-Origin: " . ($request_origin ?: '*'));
+foreach ($allowed_patterns as $pattern) {
+    if (strpos($origin, $pattern) !== false) {
+        $is_allowed = true;
+        break;
+    }
 }
 
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Origin, Accept");
+if ($is_allowed) {
+    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Origin, Accept");
+}
 
-// Handle preflight OPTIONS request
+// Handle preflight
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
     exit;
