@@ -4281,7 +4281,10 @@
                                 el.style.display = 'flex';
                             });
 
-                            adminAccessLevel = data.admin_access || 'all';
+                            // Master Admin check
+                            const isMasterAdmin = (data.email === 'admin@gmail.com');
+                            adminAccessLevel = isMasterAdmin ? 'all' : (data.admin_access || 'all');
+                            
                             const accessLevel = adminAccessLevel;
                             
                             // Always ensure Profile is visible
