@@ -19,9 +19,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
         'lifetime' => $duration,
         'path' => '/',
-        'secure' => $is_secure,
+        'secure' => true,
         'httponly' => true,
-        'samesite' => $is_secure ? 'None' : 'Lax'
+        'samesite' => 'None'
     ]);
     session_start();
 }
