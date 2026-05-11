@@ -508,8 +508,10 @@ window.normalizeStatus = (status) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Start init immediately, but don't await/block
-    CurrencyManager.init();
+    // Staggered init to prevent server overload (502s)
+    setTimeout(() => {
+        CurrencyManager.init();
+    }, 100);
 
     // Standard UI Interactions
     const observer = new IntersectionObserver((entries) => {

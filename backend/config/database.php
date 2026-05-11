@@ -34,7 +34,9 @@ function getDBConnection()
         $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
         return $pdo;
     } catch (PDOException $e) {
-        error_log("Database Connection Error: " . $e->getMessage());
+        // Log details (safely) to help debug 502s
+        error_log("Database Connection Error. Host: " . DB_HOST . ", Port: " . DB_PORT . ", DB: " . DB_NAME);
+        error_log("PDO Message: " . $e->getMessage());
         throw new Exception("Database connection failed. Please check your Railway environment variables.");
     }
 }
