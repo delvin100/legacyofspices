@@ -3,7 +3,7 @@
 <script>
     // Immediate Session Enforcement
     (async () => {
-        const res = await fetch('../../backend/api/auth/check-session.php');
+        const res = await fetch('../../backend/api/auth/check-session.php', { credentials: 'include' });
         const data = await res.json();
         if (!data.logged_in) window.location.href = '../auth/login.html';
     })();
@@ -4272,7 +4272,7 @@
 
                 async function initAccessControl() {
                     try {
-                        const response = await fetch('../../backend/api/auth/check-session.php');
+                        const response = await fetch('../../backend/api/auth/check-session.php', { credentials: 'include' });
                         const data = await response.json();
 
                         if (data.logged_in && data.role === 'admin') {
@@ -4368,7 +4368,7 @@
                     customersList.innerHTML = '<div class="text-center py-8 text-stone-400">Loading customers...</div>';
 
                     try {
-                        const response = await fetch('../../backend/api/analytics/get-revenue-details.php');
+                        const response = await fetch('../../backend/api/analytics/get-revenue-details.php', { credentials: 'include' });
                         const result = await response.json();
 
                         if (result.success) {
@@ -4435,7 +4435,7 @@
 
                 async function logout() {
                     try {
-                        await fetch('../../backend/api/auth/logout.php');
+                        await fetch('../../backend/api/auth/logout.php', { credentials: 'include' });
                         window.location.href = '../auth/login.html';
                     } catch (error) {
                         console.error('Logout error:', error);
@@ -4556,6 +4556,7 @@
                         const response = await fetch('../../backend/api/admin/assign-delivery-agent.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
                             body: JSON.stringify({ order_id: orderId, agent_id: agentId, type: type })
                         });
                         const result = await response.json();
@@ -4594,7 +4595,7 @@
                     container.innerHTML = '<div class="text-center py-4 text-stone-400 text-sm">Loading agents...</div>';
 
                     try {
-                        const response = await fetch('../../backend/api/admin/get-users.php');
+                        const response = await fetch('../../backend/api/admin/get-users.php', { credentials: 'include' });
                         const result = await response.json();
 
                         if (result.success) {
@@ -4669,7 +4670,7 @@
                 async function loadFarmerCerts() {
                     document.getElementById('farmer-certs-list').innerHTML = '<div style="text-align:center; padding:60px; color:#94a3b8;">Loading...</div>';
                     try {
-                        const res = await fetch('../../backend/api/export/admin-get-farmer-certificates.php');
+                        const res = await fetch('../../backend/api/export/admin-get-farmer-certificates.php', { credentials: 'include' });
                         const data = await res.json();
                         if (data.success) {
                             allFarmerCertsData = data.farmers || [];
@@ -4841,6 +4842,7 @@
                         const res = await fetch('../../backend/api/export/admin-verify-certificate.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
                             body: JSON.stringify({ farmer_id: farmerId, cert_type: certType, action, admin_notes: notes })
                         });
                         const data = await res.json();

@@ -199,7 +199,7 @@
         window.onload = async function () {
             // Check for existing session first
             try {
-                const sessionResp = await fetch('../../backend/api/auth/check-session.php');
+                const sessionResp = await fetch('../../backend/api/auth/check-session.php', { credentials: 'include' });
                 const sessionData = await sessionResp.json();
                 if (sessionData.logged_in) {
                     const urlParams = new URLSearchParams(window.location.search);
@@ -213,7 +213,7 @@
             } catch (e) { console.error("Session check failed", e); }
 
             try {
-                const configResponse = await fetch('../../backend/api/config/get-public-config.php');
+                const configResponse = await fetch('../../backend/api/config/get-public-config.php', { credentials: 'include' });
                 const config = await configResponse.json();
 
                 if (!config.google_client_id) {
@@ -256,6 +256,7 @@
                 const response = await fetch('../../backend/api/auth/google_auth.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify(payload)
                 });
 
@@ -316,6 +317,7 @@
                 const response = await fetch('../../backend/api/auth/login.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ email, password, keep_logged: keepLogged })
                 });
 
