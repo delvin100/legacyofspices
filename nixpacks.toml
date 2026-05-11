@@ -1,8 +1,0 @@
-[phases.setup]
-nixPkgs = ["php82", "php82Packages.composer", "php82Extensions.curl", "php82Extensions.mbstring", "php82Extensions.openssl", "php82Extensions.pdo_mysql"]
-
-[phases.install]
-cmds = ["cd backend && composer install --no-dev --optimize-autoloader"]
-
-[start]
-cmd = "php -S 0.0.0.0:$PORT -t backend"
