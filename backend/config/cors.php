@@ -22,23 +22,18 @@ if (empty($origin)) {
     }
 }
 
-if ($is_allowed && !empty($origin)) {
-    header("Access-Control-Allow-Origin: $origin");
+if ($is_allowed) {
+    $allowed_origin = $origin ?: '*';
+    header("Access-Control-Allow-Origin: $allowed_origin");
     header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Origin, Accept");
-    header("X-CORS-Allowed: true"); // Debug header
+    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Origin, Accept, Cache-Control, Pragma");
+    header("X-CORS-Status: Allowed");
 }
 
 // Handle preflight
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
-
-// Handle preflight
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    http_response_code(200);
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
     exit;
 }
 ?>
