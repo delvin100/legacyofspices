@@ -4276,13 +4276,19 @@
                         const data = await response.json();
 
                         if (data.logged_in && data.role === 'admin') {
-                            // Show all nav items first
+                            // Show all nav items by default for any admin
                             document.querySelectorAll('.nav-item').forEach(el => {
                                 el.style.display = 'flex';
                             });
 
                             adminAccessLevel = data.admin_access || 'all';
                             const accessLevel = adminAccessLevel;
+                            
+                            // Always ensure Profile is visible
+                            if (document.getElementById('nav-profile')) {
+                                document.getElementById('nav-profile').style.display = 'flex';
+                            }
+
                             if (accessLevel !== 'all') {
                                 let restrictedIds = ['nav-overview'];
                                 let defaultView = '';
