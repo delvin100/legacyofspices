@@ -1,3 +1,4 @@
 <?php
-header('Content-Type: application/json');
-echo json_encode(['status' => 'ok', 'php_version' => phpversion()]);
+header("Access-Control-Allow-Origin: *");
+echo "Backend API is reachable.";
+?>
