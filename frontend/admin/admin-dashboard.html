@@ -4456,7 +4456,7 @@
                     });
 
                     // Init currency in background - FORCE DEFAULT TO INR IF NOT SET
-                    if (!CurrencyManager.settings.code) {
+                    if (!CurrencyManager.settings || !CurrencyManager.settings.code) {
                         CurrencyManager.settings = {
                             code: 'INR',
                             symbol: '₹',
