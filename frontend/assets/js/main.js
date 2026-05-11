@@ -95,6 +95,7 @@
 
             return response;
         } catch (error) {
+            console.error(`Fetch error for ${url}:`, error);
             throw error;
         } finally {
             if (!isBackground) hideLoader();
@@ -109,8 +110,9 @@
             let path = projectRoot + '/backend/api/auth/check-session.php';
 
             if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('Caravan%20of%20Spices/')) return; // Home skip
+            if (window.location.pathname.includes('/auth/')) return; // Auth skip
 
-            const response = await originalFetch(path);
+            const response = await fetch(path);
             const result = await response.json();
             if (!result.logged_in) {
                 window.location.href = projectRoot + '/frontend/auth/login.html';
