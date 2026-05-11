@@ -74,7 +74,7 @@
         }
 
         // Don't show loader for background tasks like currency check
-        const isBackground = url.includes('get-profile.php') || url.includes('analytics');
+        const isBackground = url.includes('get-profile.php') || url.includes('analytics') || url.includes('get-rates.php');
 
         if (!isBackground) showLoader();
 

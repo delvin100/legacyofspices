@@ -5,8 +5,8 @@
  * Base: USD
  */
 
+require_once '../../config/cors.php';
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
 
 $cacheFile = __DIR__ . '/../../data/exchange_rates.json';
 $cacheTime = 24 * 60 * 60; // 24 hours

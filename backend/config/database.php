@@ -6,31 +6,36 @@
 
 require_once 'env.php';
 
-// Database credentials
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_PORT', getenv('DB_PORT') ?: (getenv('MYSQLPORT') ?: '3306'));
-define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASS', getenv('DB_PASS') ?: '');
-define('DB_NAME', getenv('DB_NAME') ?: 'caravan_db');
+// Prioritize Railway Internal Environment Variables
+define('DB_HOST', getenv('MYSQLHOST') ?: (getenv('DB_HOST') ?: 'localhost'));
+define('DB_PORT', getenv('MYSQLPORT') ?: (getenv('DB_PORT') ?: '3306'));
+define('DB_USER', getenv('MYSQLUSER') ?: (getenv('DB_USER') ?: 'root'));
+define('DB_PASS', getenv('MYSQLPASSWORD') ?: (getenv('DB_PASS') ?: ''));
+define('DB_NAME', getenv('MYSQLDATABASE') ?: (getenv('DB_NAME') ?: 'caravan_db'));
 define('DB_CHARSET', 'utf8mb4');
 
 // Create database connection
 function getDBConnection()
 {
     try {
-        $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+        $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+        if (DB_PORT && DB_PORT !== '3306') {
+            $dsn .= ";port=" . DB_PORT;
+        }
+
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
             PDO::ATTR_CASE => PDO::CASE_LOWER,
+            PDO::ATTR_TIMEOUT => 5, // 5 second timeout
         ];
 
         $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
         return $pdo;
     } catch (PDOException $e) {
         error_log("Database Connection Error: " . $e->getMessage());
-        throw new Exception("Database connection failed. Please check your configuration.");
+        throw new Exception("Database connection failed. Please check your Railway environment variables.");
     }
 }
 
