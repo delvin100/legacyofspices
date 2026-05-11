@@ -38,6 +38,7 @@ if (isset($_SESSION['user_id'])) {
         'logged_in' => true, 
         'redirect' => $redirect, 
         'role' => $role, 
+        'email' => $_SESSION['user_email'] ?? '',
         'admin_access' => $admin_access,
         'is_verified' => $is_verified,
         'currency_code' => $user['currency_code'] ?? 'INR',
