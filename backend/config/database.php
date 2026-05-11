@@ -1,20 +1,34 @@
 <?php
 /**
  * Database Configuration
- * Legacy of Spices - Backend Configuration
+ * Ultra-Robust Railway + Local Configuration
  */
 
 require_once 'env.php';
 
-// Prioritize Railway Internal Environment Variables
-define('DB_HOST', getenv('MYSQLHOST') ?: (getenv('DB_HOST') ?: 'localhost'));
-define('DB_PORT', getenv('MYSQLPORT') ?: (getenv('DB_PORT') ?: '3306'));
-define('DB_USER', getenv('MYSQLUSER') ?: (getenv('DB_USER') ?: 'root'));
-define('DB_PASS', getenv('MYSQLPASSWORD') ?: (getenv('DB_PASS') ?: ''));
-define('DB_NAME', getenv('MYSQLDATABASE') ?: (getenv('DB_NAME') ?: 'caravan_db'));
+// 1. Try to parse MYSQL_URL (Railway's default connection string)
+$mysql_url = getenv('MYSQL_URL');
+if ($mysql_url) {
+    $url = parse_url($mysql_url);
+    define('DB_HOST', $url['host'] ?? 'localhost');
+    define('DB_PORT', $url['port'] ?? '3306');
+    define('DB_USER', $url['user'] ?? 'root');
+    define('DB_PASS', $url['pass'] ?? '');
+    define('DB_NAME', ltrim($url['path'], '/') ?: 'railway');
+} else {
+    // 2. Fallback to individual Railway variables or .env
+    define('DB_HOST', getenv('MYSQLHOST') ?: (getenv('DB_HOST') ?: 'localhost'));
+    define('DB_PORT', getenv('MYSQLPORT') ?: (getenv('DB_PORT') ?: '3306'));
+    define('DB_USER', getenv('MYSQLUSER') ?: (getenv('DB_USER') ?: 'root'));
+    define('DB_PASS', getenv('MYSQLPASSWORD') ?: (getenv('DB_PASS') ?: ''));
+    define('DB_NAME', getenv('MYSQLDATABASE') ?: (getenv('DB_NAME') ?: 'caravan_db'));
+}
+
 define('DB_CHARSET', 'utf8mb4');
 
-// Create database connection
+/**
+ * Create database connection
+ */
 function getDBConnection()
 {
     try {
@@ -27,28 +41,17 @@ function getDBConnection()
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
-            PDO::ATTR_CASE => PDO::CASE_LOWER,
-            PDO::ATTR_TIMEOUT => 5, // 5 second timeout
+            PDO::ATTR_TIMEOUT => 10, // 10 second timeout
         ];
 
-        $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
-        return $pdo;
+        return new PDO($dsn, DB_USER, DB_PASS, $options);
     } catch (PDOException $e) {
-        // Log details (safely) to help debug 502s
-        error_log("Database Connection Error. Host: " . DB_HOST . ", Port: " . DB_PORT . ", DB: " . DB_NAME);
-        error_log("PDO Message: " . $e->getMessage());
-        throw new Exception("Database connection failed. Please check your Railway environment variables.");
-    }
-}
-
-// Test connection function
-function testConnection()
-{
-    try {
-        $pdo = getDBConnection();
-        return ['success' => true, 'message' => 'Database connected successfully'];
-    } catch (Exception $e) {
-        return ['success' => false, 'message' => $e->getMessage()];
+        // Log details to Railway logs for debugging
+        error_log("Database Connection Failed!");
+        error_log("DSN: mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME);
+        error_log("PDO Error: " . $e->getMessage());
+        
+        throw new Exception("Database connection failed. Please verify your Railway environment variables and ensure the MySQL service is running.");
     }
 }
 ?>
