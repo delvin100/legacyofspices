@@ -1,30 +1,35 @@
 <?php
 /**
  * Database Configuration
- * Final Railway Optimization
+ * Ultra-Internal Railway Optimization
  */
 
 require_once 'env.php';
 
-// 1. Try to parse MYSQL_URL (Railway's default connection string)
-$mysql_url = getenv('MYSQL_URL');
-if ($mysql_url) {
-    $url = parse_url($mysql_url);
-    define('DB_HOST', $url['host'] ?? 'localhost');
+// 1. Try Internal Railway Variables FIRST (Highest Reliability)
+if (getenv('MYSQLHOST')) {
+    define('DB_HOST', getenv('MYSQLHOST'));
+    define('DB_PORT', getenv('MYSQLPORT') ?: '3306');
+    define('DB_USER', getenv('MYSQLUSER') ?: 'root');
+    define('DB_PASS', getenv('MYSQLPASSWORD') ?: '');
+    define('DB_NAME', getenv('MYSQL_DATABASE') ?: (getenv('MYSQLDATABASE') ?: 'railway'));
+} 
+// 2. Fallback to MYSQL_URL
+else if (getenv('MYSQL_URL')) {
+    $url = parse_url(getenv('MYSQL_URL'));
+    define('DB_HOST', $url['host']);
     define('DB_PORT', $url['port'] ?? '3306');
     define('DB_USER', $url['user'] ?? 'root');
     define('DB_PASS', $url['pass'] ?? '');
-    
-    // PRIORITIZE the explicit MYSQL_DATABASE variable from your screenshot
-    $db_env_name = getenv('MYSQL_DATABASE') ?: getenv('MYSQLDATABASE');
-    define('DB_NAME', $db_env_name ?: (ltrim($url['path'], '/') ?: 'railway'));
-} else {
-    // 2. Fallback to individual Railway variables or .env
-    define('DB_HOST', getenv('MYSQLHOST') ?: (getenv('DB_HOST') ?: 'localhost'));
-    define('DB_PORT', getenv('MYSQLPORT') ?: (getenv('DB_PORT') ?: '3306'));
-    define('DB_USER', getenv('MYSQLUSER') ?: (getenv('DB_USER') ?: 'root'));
-    define('DB_PASS', getenv('MYSQLPASSWORD') ?: (getenv('DB_PASS') ?: ''));
-    define('DB_NAME', getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: (getenv('DB_NAME') ?: 'railway')));
+    define('DB_NAME', ltrim($url['path'], '/') ?: 'railway');
+}
+// 3. Last Resort: Local/Env
+else {
+    define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+    define('DB_PORT', getenv('DB_PORT') ?: '3306');
+    define('DB_USER', getenv('DB_USER') ?: 'root');
+    define('DB_PASS', getenv('DB_PASS') ?: '');
+    define('DB_NAME', getenv('DB_NAME') ?: 'railway');
 }
 
 define('DB_CHARSET', 'utf8mb4');
@@ -49,8 +54,9 @@ function getDBConnection()
 
         return new PDO($dsn, DB_USER, DB_PASS, $options);
     } catch (PDOException $e) {
-        error_log("Database Connection Failed! Host: " . DB_HOST . ", DB: " . DB_NAME);
-        error_log("PDO Error: " . $e->getMessage());
+        error_log("CRITICAL: Database Connection Failed!");
+        error_log("TARGET -> Host: " . DB_HOST . ", Port: " . DB_PORT . ", DB: " . DB_NAME . ", User: " . DB_USER);
+        error_log("REASON -> " . $e->getMessage());
         throw new Exception("Database connection failed. Please verify your Railway environment variables.");
     }
 }
