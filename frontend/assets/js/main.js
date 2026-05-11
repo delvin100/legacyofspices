@@ -69,6 +69,7 @@
             
             // 2. Add credentials for cross-domain session support
             options.credentials = 'include';
+            console.log("Intercepted Fetch ->", url);
             args[0] = url;
             args[1] = options;
         }
