@@ -4277,17 +4277,22 @@
 
                         if (data.logged_in && data.role === 'admin') {
                             // Show all nav items by default for any admin
-                            document.querySelectorAll('.nav-item').forEach(el => {
-                                el.style.display = 'flex';
-                            });
-
-                            // Master Admin check
-                            const isMasterAdmin = (data.email === 'admin@gmail.com');
-                            adminAccessLevel = isMasterAdmin ? 'all' : (data.admin_access || 'all');
+                            // Master Admin check (Case Insensitive)
+                            const userEmail = (data.email || '').toLowerCase();
+                            const isMasterAdmin = (userEmail === 'admin@gmail.com');
                             
+                            // If master admin, force SHOW ALL and exit early from restrictions
+                            if (isMasterAdmin) {
+                                document.querySelectorAll('.nav-item').forEach(el => {
+                                    el.style.display = 'flex';
+                                });
+                                return; // Stop here, don't hide anything
+                            }
+
+                            adminAccessLevel = data.admin_access || 'all';
                             const accessLevel = adminAccessLevel;
                             
-                            // Always ensure Profile is visible
+                            // Always ensure Profile is visible for any admin
                             if (document.getElementById('nav-profile')) {
                                 document.getElementById('nav-profile').style.display = 'flex';
                             }
