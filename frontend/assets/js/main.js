@@ -61,11 +61,8 @@
         // 1. Remote Backend Routing: If url points to backend, prepend BACKEND_URL if set
         if (window.BACKEND_URL && (url.includes('/api/') || url.includes('../../api/'))) {
             // Convert relative paths to absolute using BACKEND_URL
-            if (url.includes('/api/')) {
-                url = window.BACKEND_URL + '/api/' + url.split('/api/')[1];
-            } else if (url.startsWith('/api/')) {
-                url = window.BACKEND_URL + url;
-            }
+            const apiPath = url.split('/api/')[1];
+            url = window.BACKEND_URL + '/backend/api/' + apiPath;
             
             // 2. Add credentials for cross-domain session support
             options.credentials = 'include';
