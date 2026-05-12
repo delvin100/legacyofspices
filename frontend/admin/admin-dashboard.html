@@ -4412,7 +4412,7 @@
                     }
                 }
 
-                window.onload = function () {
+                document.addEventListener('DOMContentLoaded', () => {
                     // Initialize Access Control
                     initAccessControl();
 
@@ -4452,7 +4452,7 @@
 
                         loadAdminStats();
                     });
-                };
+                });
 
                 // GLOBAL FUNCTIONS FOR DELIVERY ASSIGNMENT
                 window.openAssignModal = async function(orderId, type = 'order') {
