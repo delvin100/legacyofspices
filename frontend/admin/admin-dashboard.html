@@ -4278,16 +4278,20 @@
                         console.log('Access Control Data:', data);
 
                         if (data.logged_in && data.role === 'admin') {
-                            // Show all nav items by default for any admin
-                            // Master Admin check (Case Insensitive)
+                            // Show all nav items by default for any admin (except Add Admins for non-masters)
                             const userEmail = (data.email || '').toLowerCase();
                             const isMasterAdmin = (userEmail === 'admin@gmail.com');
-                            
-                            // If master admin, force SHOW ALL and exit early from restrictions
-                            if (isMasterAdmin) {
-                                document.querySelectorAll('.nav-item').forEach(el => {
+
+                            document.querySelectorAll('.nav-item').forEach(el => {
+                                if (el.id === 'nav-add-admins' && !isMasterAdmin) {
+                                    el.style.display = 'none';
+                                } else {
                                     el.style.display = 'flex';
-                                });
+                                }
+                            });
+                            
+                            // If master admin, exit early from restrictions
+                            if (isMasterAdmin) {
                                 return; // Stop here, don't hide anything
                             }
 
