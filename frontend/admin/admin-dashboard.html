@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<script>
-    // Immediate Session Enforcement
-    (async () => {
-        const res = await fetch('../../backend/api/auth/check-session.php', { credentials: 'include' });
-        const data = await res.json();
-        if (!data.logged_in) window.location.href = '../auth/login.html';
-    })();
-</script>
+
 
 <head>
     <meta charset="UTF-8">
@@ -225,7 +218,7 @@
     </div>
 
     <div id="toast-container" class="toast-container"></div>
-    <aside style="width: 260px; background: #0f172a; position: fixed; height: 100vh; padding: 24px; color: white;">
+    <aside id="main-sidebar" style="display: none; width: 260px; background: #0f172a; position: fixed; height: 100vh; padding: 24px; color: white;">
         <div class="logo"
             style="margin-bottom: 48px; display: flex; align-items: center; gap: 10px; margin-left: -12px;">
             <img src="../assets/images/logo.png" alt="Logo"
@@ -242,59 +235,59 @@
 
         <nav style="display: flex; flex-direction: column; gap: 4px;">
             <a href="#" onclick="switchView('overview')" id="nav-overview" class="nav-item active"
-                style="display: none; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
                 <img src="https://api.iconify.design/lucide:layout-grid.svg?color=%2394a3b8" width="18" alt="">
                 Overview
             </a>
             <a href="#" onclick="switchView('users')" id="nav-users" class="nav-item"
-                style="display: none; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
                 <img src="https://api.iconify.design/lucide:users.svg?color=%2394a3b8" width="18" alt="">
                 Manage Users
             </a>
             <a href="#" onclick="switchView('delivery')" id="nav-delivery" class="nav-item"
-                style="display: none; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
                 <img src="https://api.iconify.design/lucide:truck.svg?color=%2394a3b8" width="18" alt="">
                 Delivery
             </a>
             <a href="#" onclick="switchView('transactions')" id="nav-transactions" class="nav-item"
-                style="display: none; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
                 <img src="https://api.iconify.design/lucide:shopping-cart.svg?color=%2394a3b8" width="20">
                 Transactions
             </a>
             <a href="#" onclick="switchView('auctions')" id="nav-auctions" class="nav-item"
-                style="display: none; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
                 <img src="https://api.iconify.design/lucide:gavel.svg?color=%2394a3b8" width="20">
                 Auctions
             </a>
             <a href="#" onclick="switchView('activity')" id="nav-activity" class="nav-item"
-                style="display: none; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
                 <img src="https://api.iconify.design/lucide:activity.svg?color=%2394a3b8" width="18" alt="">
                 Activity Logs
             </a>
             <a href="#" onclick="switchView('analysis')" id="nav-analysis" class="nav-item"
-                style="display: none; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
                 <img src="https://api.iconify.design/lucide:pie-chart.svg?color=%2394a3b8" width="18" alt="">
                 Analysis
             </a>
             <a href="#" onclick="switchView('returns')" id="nav-returns" class="nav-item"
-                style="display: none; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
                 <img src="https://api.iconify.design/lucide:rotate-ccw.svg?color=%2394a3b8" width="18" alt="">
                 Returns
             </a>
 
 
             <a href="#" onclick="switchView('farmer-certs')" id="nav-farmer-certs" class="nav-item"
-                style="display: none; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
                 <img src="https://api.iconify.design/lucide:shield-check.svg?color=%2394a3b8" width="18" alt="">
                 Certificate Verification
             </a>
             <a href="#" onclick="switchView('add-admins')" id="nav-add-admins" class="nav-item"
-                style="display: none; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
                 <img src="https://api.iconify.design/lucide:user-plus.svg?color=%2394a3b8" width="18" alt="">
                 Add Admins
             </a>
             <a href="#" onclick="switchView('profile')" id="nav-profile" class="nav-item"
-                style="display: none; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
+                style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #94a3b8; font-weight: 500; font-size: 14px;">
                 <img src="https://api.iconify.design/lucide:user.svg?color=%2394a3b8" width="18" alt="">
                 Profile
             </a>
@@ -4277,73 +4270,38 @@
                         
                         console.log('Access Control Data:', data);
 
-                        if (data.logged_in && data.role === 'admin') {
-                            // Show all nav items by default for any admin (except Add Admins for non-masters)
-                            const userEmail = (data.email || '').toLowerCase();
-                            const isMasterAdmin = (userEmail === 'admin@gmail.com');
+                        if (!data.logged_in || data.role !== 'admin') {
+                            window.location.href = '../auth/login.html';
+                            return;
+                        }
 
-                            document.querySelectorAll('.nav-item').forEach(el => {
-                                if (el.id === 'nav-add-admins' && !isMasterAdmin) {
-                                    el.style.display = 'none';
-                                } else {
-                                    el.style.display = 'flex';
-                                }
-                            });
-                            
-                            // If master admin, exit early from restrictions
-                            if (isMasterAdmin) {
-                                return; // Stop here, don't hide anything
-                            }
+                        // Show/Hide based on role/access
+                        const userEmail = (data.email || '').toLowerCase();
+                        const isMasterAdmin = (userEmail === 'admin@gmail.com');
+                        
+                        // 1. Handle Super Admin Only items
+                        const addAdminsNav = document.getElementById('nav-add-admins');
+                        if (addAdminsNav) {
+                            addAdminsNav.style.display = isMasterAdmin ? 'flex' : 'none';
+                        }
 
+                        // 2. Handle Specific Restrictions
+                        if (!isMasterAdmin) {
                             adminAccessLevel = data.admin_access || 'all';
                             const accessLevel = adminAccessLevel;
                             
-                            // Always ensure Profile is visible for any admin
-                            if (document.getElementById('nav-profile')) {
-                                document.getElementById('nav-profile').style.display = 'flex';
-                            }
-
                             if (accessLevel !== 'all') {
                                 let restrictedIds = ['nav-overview'];
                                 let defaultView = '';
                                 
                                 if (accessLevel === 'delivery_only') {
-                                    restrictedIds.push(
-                                        'nav-users',
-                                        'nav-transactions',
-                                        'nav-auctions',
-                                        'nav-activity',
-                                        'nav-analysis',
-                                        'nav-add-admins',
-                                        'nav-returns',
-                                        'nav-farmer-certs',
-                                        'view-all-logs-btn'
-                                    );
+                                    restrictedIds.push('nav-users', 'nav-transactions', 'nav-auctions', 'nav-activity', 'nav-analysis', 'nav-add-admins', 'nav-returns', 'nav-farmer-certs', 'view-all-logs-btn');
                                     defaultView = 'delivery';
                                 } else if (accessLevel === 'cert_only') {
-                                    restrictedIds.push(
-                                        'nav-users',
-                                        'nav-delivery',
-                                        'nav-transactions',
-                                        'nav-auctions',
-                                        'nav-activity',
-                                        'nav-analysis',
-                                        'nav-returns',
-                                        'nav-add-admins',
-                                        'view-all-logs-btn'
-                                    );
+                                    restrictedIds.push('nav-users', 'nav-delivery', 'nav-transactions', 'nav-auctions', 'nav-activity', 'nav-analysis', 'nav-returns', 'nav-add-admins', 'view-all-logs-btn');
                                     defaultView = 'farmer-certs';
                                 } else if (accessLevel === 'delivery_cert') {
-                                    restrictedIds.push(
-                                        'nav-users',
-                                        'nav-transactions',
-                                        'nav-auctions',
-                                        'nav-activity',
-                                        'nav-analysis',
-                                        'nav-returns',
-                                        'nav-add-admins',
-                                        'view-all-logs-btn'
-                                    );
+                                    restrictedIds.push('nav-users', 'nav-transactions', 'nav-auctions', 'nav-activity', 'nav-analysis', 'nav-returns', 'nav-add-admins', 'view-all-logs-btn');
                                     defaultView = 'delivery';
                                 }
 
@@ -4352,13 +4310,18 @@
                                     if (el) el.style.display = 'none';
                                 });
 
-                                if (defaultView) {
-                                    switchView(defaultView);
-                                }
+                                if (defaultView) switchView(defaultView);
                             }
                         }
+
+                        // 3. Finally, show the sidebar
+                        const sidebar = document.getElementById('main-sidebar');
+                        if (sidebar) sidebar.style.display = 'block';
+
                     } catch (e) {
                         console.error('Access control check failed', e);
+                        // Fallback: If session check fails completely, redirect to login
+                        window.location.href = '../auth/login.html';
                     }
                 }
 
