@@ -1,6 +1,6 @@
 <?php
+require_once '../../config/cors.php';
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
 
 require_once '../services/CountryService.php';
 

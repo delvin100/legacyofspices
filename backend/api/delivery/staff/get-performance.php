@@ -1,4 +1,5 @@
 <?php
+require_once '../../../config/cors.php';
 /**
  * Get Staff Performance API
  * Provides daily delivery counts for the last 7 days for the logged-in staff member

@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Advanced Admin Analysis API
  * Provides meaningful metrics for platform growth and performance

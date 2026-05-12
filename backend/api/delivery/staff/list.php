@@ -1,4 +1,5 @@
 <?php
+require_once '../../../config/cors.php';
 /**
  * List Delivery Staff API
  * Returns all staff members associated with the logged-in delivery agent's hub

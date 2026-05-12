@@ -97,7 +97,7 @@ function processExpiredAuctions($pdo)
 
 // Only execute and echo if this script is called directly via URL
 if (basename(__FILE__) == basename($_SERVER['SCRIPT_FILENAME'])) {
-    header("Access-Control-Allow-Origin: *");
+    require_once '../../config/cors.php';
     header("Content-Type: application/json");
     require_once __DIR__ . '/../../config/database.php';
     $pdo = getDBConnection();

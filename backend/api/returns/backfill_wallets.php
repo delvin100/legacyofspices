@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 require_once __DIR__ . '/../../config/database.php';
 
 try {
@@ -52,3 +53,4 @@ try {
     echo "ERROR: " . $e->getMessage();
 }
 ?>
+

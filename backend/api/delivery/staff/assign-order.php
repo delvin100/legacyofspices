@@ -1,4 +1,5 @@
 <?php
+require_once '../../../config/cors.php';
 /**
  * Assign Staff to Order API
  * Allows delivery agents to assign a specific staff member to an order/auction

@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 header('Content-Type: application/json');
 require_once '../../config/database.php';
 require_once '../../config/env.php';
@@ -95,3 +96,4 @@ try {
     echo json_encode(["status" => "error", "message" => "Processing failed: " . $e->getMessage()]);
 }
 ?>
+

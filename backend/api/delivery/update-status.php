@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Update Delivery Status API
  * Changes the status of an order and logs tracking info

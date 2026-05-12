@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Farmer Analytics API
  * Returns aggregated stats, recent activity, and sales performance data

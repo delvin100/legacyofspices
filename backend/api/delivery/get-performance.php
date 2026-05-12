@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Get Delivery Performance API
  * Provides daily delivery counts for the last 7 days

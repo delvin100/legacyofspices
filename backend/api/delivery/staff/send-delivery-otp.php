@@ -1,4 +1,5 @@
 <?php
+require_once '../../../config/cors.php';
 /**
  * Send Delivery OTP API
  * Generates and sends a 4-digit OTP to the customer's email for delivery confirmation
@@ -127,3 +128,4 @@ try {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
 ?>
+

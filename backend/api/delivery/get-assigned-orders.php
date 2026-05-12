@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Get Assigned Orders API for Delivery Agent
  * Fetches all orders assigned to the logged-in delivery agent

@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Delete User API
  * Allows the Super Admin to permanently delete any user account

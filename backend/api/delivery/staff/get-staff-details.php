@@ -1,4 +1,5 @@
 <?php
+require_once '../../../config/cors.php';
 /**
  * Get Staff Details and Activities API
  * Returns full details and recent activities for a specific staff member

@@ -1,9 +1,5 @@
 <?php
-/**
- * Public Config API
- * Responds with public environment variables like GOOGLE_CLIENT_ID
- */
-
+require_once '../../config/cors.php';
 header('Content-Type: application/json');
 require_once '../../config/env.php';
 

@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Reset Password Confirmation API
  * Validates the local token and updates the MySQL database

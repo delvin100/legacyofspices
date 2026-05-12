@@ -1,4 +1,5 @@
 <?php
+require_once '../../../config/cors.php';
 /**
  * Get Staff Assigned Orders API
  * Returns orders/auctions assigned to the logged-in delivery staff member

@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Confirm Order Receipt by Delivery Agent API
  */

@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+require_once '../../config/cors.php';
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Content-Type: application/json");
 
@@ -253,3 +253,4 @@ try {
     fail(500, 'An unexpected error occurred. Please try again.');
 }
 ?>
+

@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Get Delivery Stats API
  * Provides summary metrics for the delivery agent dashboard

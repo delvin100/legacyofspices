@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Assign Order to Other Delivery Agent API
  */

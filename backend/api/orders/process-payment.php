@@ -8,7 +8,7 @@ header('Content-Type: application/json');
 require_once '../../config/database.php';
 
 // Allow any origin for demo purposes, or restrict as needed
-header("Access-Control-Allow-Origin: *");
+require_once '../../config/cors.php';
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 

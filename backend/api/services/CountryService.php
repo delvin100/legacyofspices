@@ -84,7 +84,7 @@ class CountryService
             return [];
 
         return array_values(array_filter($countries, function ($country) use ($query) {
-            return strpos(strtolower($country['name']), $query) === 0;
+            return stripos($country['name'], $query) !== false;
         }));
     }
 }

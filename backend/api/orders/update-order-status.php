@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Update Order Status API
  * Handles status changes: pending -> confirmed (Accept), pending -> cancelled (Reject), confirmed -> shipped (Shipped)

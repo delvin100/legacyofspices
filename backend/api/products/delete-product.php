@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Delete Product API
  */

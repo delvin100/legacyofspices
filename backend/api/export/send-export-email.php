@@ -1,10 +1,10 @@
-﻿<?php
+<?php
 /**
  * Export Request Email Notification Service
  * Called internally (or from other PHP scripts) to send status-change emails.
  * Can also be called via GET/POST for manual trigger.
  */
-header("Access-Control-Allow-Origin: *");
+require_once '../../config/cors.php';
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Content-Type: application/json");
 
@@ -29,13 +29,13 @@ if (!function_exists('sendExportStatusEmail')) {
         $statusLabels = [
             'pending'          => 'Pending Review',
             'under_review'     => 'Under Review',
-            'approved'         => 'Approved âœ…',
-            'rejected'         => 'Rejected âŒ',
-            'quality_testing'  => 'Quality Testing ðŸ”¬',
-            'documentation'    => 'Documentation ðŸ“‘',
-            'shipped'          => 'Shipped ðŸš¢',
-            'delivered'        => 'Delivered ðŸ ',
-            'cancelled'        => 'Cancelled ðŸš«',
+            'approved'         => 'Approved ✅',
+            'rejected'         => 'Rejected ❌',
+            'quality_testing'  => 'Quality Testing 🔬',
+            'documentation'    => 'Documentation 📑',
+            'shipped'          => 'Shipped 🚢',
+            'delivered'        => 'Delivered 🏠',
+            'cancelled'        => 'Cancelled 🚫',
         ];
         $statusColors = [
             'approved'   => '#10b981',
@@ -52,7 +52,7 @@ if (!function_exists('sendExportStatusEmail')) {
         $notesHtml = $notes ? "<p style='background:#fef9c3;padding:12px 16px;border-radius:8px;margin-top:12px;font-size:14px;color:#7c2d12;'><strong>Note:</strong> $notes</p>" : '';
         $roleLabel = $role === 'farmer' ? 'Farmer' : 'Buyer';
 
-        $subject = "[$expRef] Export Request Updated â€” $label | Legacy of Spices";
+        $subject = "[$expRef] Export Request Updated — $label | Legacy of Spices";
 
         $html = "
 <!DOCTYPE html>
@@ -62,7 +62,7 @@ if (!function_exists('sendExportStatusEmail')) {
   <div style='max-width:560px;margin:32px auto;background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);'>
     <!-- Header -->
     <div style='background:linear-gradient(135deg,#FF7E21 0%,#e65c00 100%);padding:32px;text-align:center;'>
-      <h1 style='color:white;margin:0;font-size:22px;letter-spacing:-0.02em;'>ðŸŒ Legacy of Spices</h1>
+      <h1 style='color:white;margin:0;font-size:22px;letter-spacing:-0.02em;'>🌍 Legacy of Spices</h1>
       <p style='color:rgba(255,255,255,0.85);margin:6px 0 0;font-size:13px;'>Export Management System</p>
     </div>
     <!-- Body -->
@@ -84,7 +84,7 @@ if (!function_exists('sendExportStatusEmail')) {
     </div>
     <!-- Footer -->
     <div style='background:#f8fafc;padding:16px 32px;border-top:1px solid #e2e8f0;text-align:center;'>
-      <p style='margin:0;font-size:11px;color:#94a3b8;'>Â© " . date('Y') . " Legacy of Spices. Automated notification â€” please do not reply.</p>
+      <p style='margin:0;font-size:11px;color:#94a3b8;'>© " . date('Y') . " Legacy of Spices. Automated notification — please do not reply.</p>
     </div>
   </div>
 </body>
@@ -158,3 +158,4 @@ if (php_sapi_name() !== 'cli' && $_SERVER['REQUEST_METHOD'] !== 'OPTIONS') {
     }
 }
 ?>
+

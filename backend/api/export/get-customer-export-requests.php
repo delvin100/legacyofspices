@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+require_once '../../config/cors.php';
 header("Access-Control-Allow-Methods: GET");
 header("Content-Type: application/json");
 
@@ -80,3 +80,4 @@ try {
     echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }
 ?>
+

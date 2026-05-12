@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 ob_start();
 header('Content-Type: application/json');
 require_once '../../config/database.php';

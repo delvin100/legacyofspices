@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Get Admin Profile API
  */

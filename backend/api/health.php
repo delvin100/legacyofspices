@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+require_once '../config/cors.php';
 echo json_encode([
     'status' => 'ok',
     'time' => date('Y-m-d H:i:s'),
@@ -8,3 +8,4 @@ echo json_encode([
     'server' => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown'
 ]);
 ?>
+

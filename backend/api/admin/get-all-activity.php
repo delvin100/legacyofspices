@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Admin API: Get All Activity Logs
  * Aggregates activities from orders, products, users, and reviews with details.

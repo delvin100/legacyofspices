@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/cors.php';
 /**
  * Get Farmer Orders API
  * Fetches all orders received by the logged-in farmer

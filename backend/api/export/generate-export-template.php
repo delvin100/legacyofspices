@@ -1,11 +1,11 @@
-﻿<?php
+<?php
 /**
  * Export Document Template Generator
  * Auto-fills a printable HTML export document (Commercial Invoice / Proforma)
  * with farmer, buyer, and product details.
  * Accessible by admin and the farmer who owns the export request.
  */
-header("Access-Control-Allow-Origin: *");
+require_once '../../config/cors.php';
 header("Access-Control-Allow-Methods: GET");
 
 require_once '../../config/database.php';
@@ -83,7 +83,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($docTitle) ?> â€” <?= $ref ?> | Legacy of Spices</title>
+    <title><?= htmlspecialchars($docTitle) ?> — <?= $ref ?> | Legacy of Spices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -134,8 +134,8 @@ try {
 <div class="page">
     <div class="header">
         <div class="header-brand">
-            <h1>ðŸŒ¶ï¸ Legacy of Spices</h1>
-            <p>International Spice Exporters Â· India</p>
+            <h1>🌶️ Legacy of Spices</h1>
+            <p>International Spice Exporters · India</p>
         </div>
         <div class="header-meta">
             <div class="doc-type"><?= htmlspecialchars($docTitle) ?></div>
@@ -149,28 +149,28 @@ try {
 
         <div class="two-col">
             <div class="party-box">
-                <div class="label">ðŸ‡®ðŸ‡³ Exporter (Seller)</div>
+                <div class="label">🇮🇳 Exporter (Seller)</div>
                 <div class="name"><?= htmlspecialchars($exp['farmer_name']) ?></div>
                 <div class="detail">
                     <?= htmlspecialchars($exp['farmer_address'] ?? 'India') ?><br>
-                    ðŸ“§ <?= htmlspecialchars($exp['farmer_email']) ?><br>
-                    ðŸ“ž <?= htmlspecialchars($exp['farmer_phone'] ?? 'â€”') ?>
+                    📧 <?= htmlspecialchars($exp['farmer_email']) ?><br>
+                    📞 <?= htmlspecialchars($exp['farmer_phone'] ?? '—') ?>
                 </div>
             </div>
             <div class="party-box">
-                <div class="label">ðŸŒ Importer (Buyer)</div>
+                <div class="label">🌍 Importer (Buyer)</div>
                 <div class="name"><?= htmlspecialchars($exp['buyer_name']) ?></div>
                 <div class="detail">
-                    Business: <?= htmlspecialchars($exp['business_name'] ?? 'â€”') ?><br>
-                    <?= htmlspecialchars($exp['buyer_address'] ?? $exp['buyer_country'] ?? 'â€”') ?><br>
-                    ðŸ“§ <?= htmlspecialchars($exp['buyer_email']) ?><br>
-                    ðŸ“ž <?= htmlspecialchars($exp['buyer_phone'] ?? 'â€”') ?>
+                    Business: <?= htmlspecialchars($exp['business_name'] ?? '—') ?><br>
+                    <?= htmlspecialchars($exp['buyer_address'] ?? $exp['buyer_country'] ?? '—') ?><br>
+                    📧 <?= htmlspecialchars($exp['buyer_email']) ?><br>
+                    📞 <?= htmlspecialchars($exp['buyer_phone'] ?? '—') ?>
                 </div>
             </div>
         </div>
 
         <!-- Shipment Details -->
-        <div class="section-title">ðŸ“¦ Shipment Details</div>
+        <div class="section-title">📦 Shipment Details</div>
         <table>
             <thead>
                 <tr>
@@ -187,7 +187,7 @@ try {
                     <td><strong><?= htmlspecialchars($exp['product_name']) ?></strong><br>
                         <span style="font-size:11px;color:#64748b;">Country of Origin: India</span>
                     </td>
-                    <td><?= htmlspecialchars($exp['category'] ?? 'â€”') ?></td>
+                    <td><?= htmlspecialchars($exp['category'] ?? '—') ?></td>
                     <td><?= $qty ?></td>
                     <td><?= $unit ?></td>
                     <td><?= $price ?></td>
@@ -203,7 +203,7 @@ try {
         </table>
 
         <!-- Logistics Info -->
-        <div class="section-title">ðŸš¢ Logistics & Payment</div>
+        <div class="section-title">🚢 Logistics & Payment</div>
         <div class="two-col">
             <div class="party-box">
                 <div class="label">Shipping Details</div>
@@ -221,9 +221,9 @@ try {
                 <div class="detail">
                     Payment Terms: <strong><?= $payment ?></strong><br>
                     Currency: <?= htmlspecialchars($currency) ?><br>
-                    Organic Cert: <?= $exp['requires_organic_cert'] ? 'âœ… Required' : 'âŒ Not Required' ?><br>
-                    Phytosanitary: <?= $exp['requires_phytosanitary'] ? 'âœ… Required' : 'âŒ Not Required' ?><br>
-                    Quality Test: <?= $exp['requires_quality_test'] ? 'âœ… Required' : 'âŒ Not Required' ?>
+                    Organic Cert: <?= $exp['requires_organic_cert'] ? '✅ Required' : '❌ Not Required' ?><br>
+                    Phytosanitary: <?= $exp['requires_phytosanitary'] ? '✅ Required' : '❌ Not Required' ?><br>
+                    Quality Test: <?= $exp['requires_quality_test'] ? '✅ Required' : '❌ Not Required' ?>
                 </div>
             </div>
         </div>
@@ -240,7 +240,7 @@ try {
 
         <!-- Terms -->
         <div class="terms">
-            <div class="section-title">ðŸ“‹ Terms & Conditions</div>
+            <div class="section-title">📋 Terms & Conditions</div>
             <p>
                 1. Goods are sold as per the agreed specifications. Quality inspected at origin.<br>
                 2. All disputes subject to jurisdiction of Indian courts.<br>
@@ -254,17 +254,17 @@ try {
         <div class="sig-grid">
             <div class="sig-box">
                 <div class="sig-line"></div>
-                <p>Exporter's Authorized Signature<br><?= htmlspecialchars($exp['farmer_name']) ?> Â· Farmer / Exporter</p>
+                <p>Exporter's Authorized Signature<br><?= htmlspecialchars($exp['farmer_name']) ?> · Farmer / Exporter</p>
             </div>
             <div class="sig-box">
                 <div class="sig-line"></div>
-                <p>Importer's Signature & Stamp<br><?= htmlspecialchars($exp['buyer_name']) ?> Â· Buyer / Importer</p>
+                <p>Importer's Signature & Stamp<br><?= htmlspecialchars($exp['buyer_name']) ?> · Buyer / Importer</p>
             </div>
         </div>
     </div>
 </div>
 
-<button class="print-btn" onclick="window.print()">ðŸ–¨ï¸ Print / Save as PDF</button>
+<button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
 </body>
 </html>
 <?php
@@ -274,3 +274,4 @@ try {
     echo "<h2>Error generating document. Please try again.</h2>";
 }
 ?>
+
